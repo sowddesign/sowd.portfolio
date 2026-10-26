@@ -16,6 +16,23 @@
   --corner-xl: var(--p-number-24);
   --corner-rounded: var(--p-number-999);
 
+  /* icon — tailles d'icônes, ex. <Icon size="var(--icon-md)" /> */
+  --icon-xs: var(--p-number-8);
+  --icon-sm: var(--p-number-16);
+  --icon-md: var(--p-number-24);
+  --icon-lg: var(--p-number-32);
+  --icon-xl: var(--p-number-64);
+
+  /* button-size — hauteurs de bouton */
+  --button-size-sm: var(--p-number-44);
+  --button-size-md: var(--p-number-50);
+  --button-size-lg: var(--p-number-70);
+
+  /* motion — issu des prototypes Figma (pas de variable Figma) */
+  --motion-duration-fast: 100ms; /* changement d'état : dissolve */
+  --motion-duration-base: 200ms; /* barre animée : smart animate */
+  --motion-ease-out: cubic-bezier(0, 0, 0.58, 1); /* « Ease out » Figma */
+
   /* typography/font — familles chargées par next/font dans app/layout.tsx */
   --typography-font-h1: var(--font-plus-jakarta-sans), sans-serif;
   --typography-font-h2h4: var(--font-merriweather-sans), sans-serif;
@@ -68,6 +85,9 @@
 
 @media (min-width: 1024px) {
   :root {
+    --button-size-md: var(--p-number-90);
+    --button-size-lg: var(--p-number-132);
+
     --typography-weight-heading-h1: 400;
 
     --typography-size-h1: var(--p-number-200);
