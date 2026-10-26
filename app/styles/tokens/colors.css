@@ -1,0 +1,70 @@
+/*
+ * Tokens couleur — collection Figma « tokens - color » (mode Dark, seul mode actuel).
+ * Un futur mode se déclarera en redéfinissant ces variables sous un sélecteur dédié.
+ */
+:root {
+  /* background/buttons */
+  --background-buttons-neutral-white: var(--p-color-neutral-0);
+  --background-buttons-neutral-black: var(--p-color-neutral-1000);
+  --background-buttons-neutral-disabled-light: var(--p-color-neutral-200);
+  --background-buttons-neutral-disabled-dark: var(--p-color-neutral-600);
+  --background-buttons-brand-whitish: var(--p-color-brand-100);
+  --background-buttons-brand-bright: var(--p-color-brand-200);
+  --background-buttons-brand-mid: var(--p-color-brand-400);
+  --background-buttons-brand-darkest: var(--p-color-brand-600);
+  --background-buttons-brand-somber: var(--p-color-brand-800);
+
+  /* background */
+  --background-neutral-white: var(--p-color-neutral-0);
+  --background-neutral-black: var(--p-color-neutral-1000);
+  --background-brand-bright: var(--p-color-brand-50);
+  --background-brand-mid: var(--p-color-brand-100);
+  --background-brand-darkest: var(--p-color-brand-200);
+
+  /* text */
+  --text-neutral-white: var(--p-color-neutral-0);
+  --text-neutral-black: var(--p-color-neutral-1000);
+  --text-neutral-disabled-light: var(--p-color-neutral-100);
+  --text-neutral-disabled-dark: var(--p-color-neutral-700);
+  --text-brand-brand: var(--p-color-brand-400);
+  --text-brand-whitish: var(--p-color-brand-100);
+  --text-brand-bright: var(--p-color-brand-300);
+  --text-brand-dark: var(--p-color-brand-600);
+  --text-brand-somber: var(--p-color-brand-800);
+
+  /* border */
+  --border-neutral-white: var(--p-color-neutral-0);
+  --border-neutral-black: var(--p-color-neutral-1000);
+  --border-neutral-disabled-light: var(--p-color-neutral-200);
+  --border-neutral-disabled-dark: var(--p-color-neutral-700);
+  --border-brand-brand: var(--p-color-brand-400);
+  --border-brand-whitish: var(--p-color-brand-100);
+  --border-brand-bright: var(--p-color-brand-300);
+  --border-brand-darkest: var(--p-color-brand-600);
+  --border-brand-somber: var(--p-color-brand-800);
+
+  /* shape (icônes, illustrations, formes) */
+  --shape-neutral-white: var(--p-color-neutral-0);
+  --shape-neutral-black: var(--p-color-neutral-1000);
+  --shape-neutral-disabled-light: var(--p-color-neutral-100);
+  --shape-neutral-disabled-dark: var(--p-color-neutral-700);
+  --shape-brand-brand: var(--p-color-brand-400);
+  --shape-brand-whitish: var(--p-color-brand-100);
+  --shape-brand-bright: var(--p-color-brand-300);
+  --shape-brand-darkest: var(--p-color-brand-600);
+  --shape-brand-somber: var(--p-color-brand-800);
+
+  /* faded */
+  --faded-white-5: color-mix(in srgb, var(--p-color-neutral-0) 5%, transparent);
+  --faded-white-10: color-mix(in srgb, var(--p-color-neutral-0) 10%, transparent);
+  --faded-white-20: color-mix(in srgb, var(--p-color-neutral-0) 20%, transparent);
+  --faded-white-40: color-mix(in srgb, var(--p-color-neutral-0) 40%, transparent);
+  --faded-white-60: color-mix(in srgb, var(--p-color-neutral-0) 60%, transparent);
+  --faded-white-80: color-mix(in srgb, var(--p-color-neutral-0) 80%, transparent);
+  --faded-black-5: color-mix(in srgb, var(--p-color-neutral-1000) 5%, transparent);
+  --faded-black-10: color-mix(in srgb, var(--p-color-neutral-1000) 10%, transparent);
+  --faded-black-20: color-mix(in srgb, var(--p-color-neutral-1000) 20%, transparent);
+  --faded-black-40: color-mix(in srgb, var(--p-color-neutral-1000) 40%, transparent);
+  --faded-black-60: color-mix(in srgb, var(--p-color-neutral-1000) 60%, transparent);
+  --faded-black-80: color-mix(in srgb, var(--p-color-neutral-1000) 80%, transparent);
+}

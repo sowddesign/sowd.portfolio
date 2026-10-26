@@ -1,0 +1,91 @@
+/*
+ * Tokens design — collection Figma « tokens - design » (modes mobile / desktop).
+ * Mobile par défaut, valeurs desktop à partir de 1024px.
+ * Le groupe « devices » de Figma n'est volontairement pas repris.
+ */
+:root {
+  --none: var(--p-number-0);
+
+  /* spacing : déclaré dans theme.css (même espace de noms que Tailwind, --spacing-*) */
+
+  /* corner */
+  --corner-xs: var(--p-number-2);
+  --corner-sm: var(--p-number-4);
+  --corner-md: var(--p-number-8);
+  --corner-lg: var(--p-number-12);
+  --corner-xl: var(--p-number-24);
+  --corner-rounded: var(--p-number-999);
+
+  /* typography/font — familles chargées par next/font dans app/layout.tsx */
+  --typography-font-h1: var(--font-plus-jakarta-sans), sans-serif;
+  --typography-font-h2h4: var(--font-merriweather-sans), sans-serif;
+  --typography-font-h3: var(--font-plus-jakarta-sans), sans-serif;
+  --typography-font-body: var(--font-plus-jakarta-sans), sans-serif;
+  --typography-font-caption: var(--font-plus-jakarta-sans), sans-serif;
+
+  /* typography/weight */
+  --typography-weight-heading-h1: 300;
+  --typography-weight-heading-h2h4: 700;
+  --typography-weight-heading-h3: 500;
+  --typography-weight-heading-subheading: 600;
+  --typography-weight-paragraph-accentuation: 600;
+  --typography-weight-paragraph-regular: 400;
+  --typography-weight-paragraph-italic: 400;
+  --typography-weight-paragraph-light: 300;
+
+  /* typography/size */
+  --typography-size-h1: var(--p-number-54);
+  --typography-size-h2: var(--p-number-32);
+  --typography-size-h3: var(--p-number-28);
+  --typography-size-h4: var(--p-number-24);
+  --typography-size-sub-heading: var(--p-number-20);
+  --typography-size-button: var(--p-number-18);
+  --typography-size-body: var(--p-number-18);
+  --typography-size-caption: var(--p-number-14);
+  --typography-size-small-caption: var(--p-number-11);
+
+  /* typography/line-height */
+  --typography-line-height-h1: var(--p-number-72);
+  --typography-line-height-h2: var(--p-number-40);
+  --typography-line-height-h3: var(--p-number-40);
+  --typography-line-height-h4: var(--p-number-32);
+  --typography-line-height-sub-heading: var(--p-number-28);
+  --typography-line-height-button: var(--p-number-28);
+  --typography-line-height-body: var(--p-number-28);
+  --typography-line-height-caption: var(--p-number-22);
+  --typography-line-height-small-caption: var(--p-number-22);
+
+  /* typography/letter-spacing — valeurs des styles de texte Figma */
+  --typography-letter-spacing-default: -0.02em;
+  --typography-letter-spacing-swiss: -0.06em;
+
+  /* effets — styles Figma « dropshadow » */
+  --dropshadow-bold: 3px 3px 2px 0 #00000080, 8px 6px 4px 0 #00000066;
+  --dropshadow-strong: 2px 2px 3px 0 #00000059, 6px 6px 6px 0 #00000040;
+  --dropshadow-mid: 1.5px 1.5px 1.5px 0 #00000059, 4px 4px 2px 0 #0000004d;
+  --dropshadow-low: 1.5px 2px 4px 0 #00000073, 2px 2px 4px 0 #00000040;
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --typography-weight-heading-h1: 400;
+
+    --typography-size-h1: var(--p-number-200);
+    --typography-size-h2: var(--p-number-80);
+    --typography-size-h3: var(--p-number-64);
+    --typography-size-h4: var(--p-number-40);
+    --typography-size-sub-heading: var(--p-number-32);
+    --typography-size-button: var(--p-number-20);
+    --typography-size-body: var(--p-number-20);
+    --typography-size-caption: var(--p-number-16);
+    --typography-size-small-caption: var(--p-number-14);
+
+    --typography-line-height-h1: var(--p-number-200);
+    --typography-line-height-h2: var(--p-number-88);
+    --typography-line-height-h3: var(--p-number-72);
+    --typography-line-height-h4: var(--p-number-48);
+    --typography-line-height-sub-heading: var(--p-number-40);
+    --typography-line-height-button: var(--p-number-32);
+    --typography-line-height-body: var(--p-number-32);
+  }
+}

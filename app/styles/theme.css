@@ -1,0 +1,314 @@
+/*
+ * Exposition des tokens à Tailwind.
+ * Les palettes, rayons, ombres et polices par défaut de Tailwind sont retirés :
+ * seules les valeurs du design system sont disponibles.
+ */
+@theme inline {
+  /* ---------- Couleurs ---------- */
+  --color-*: initial;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+
+  /* Primitives : bg-brand-500, text-neutral-900… (à réserver aux cas sans token sémantique) */
+  --color-neutral-0: var(--p-color-neutral-0);
+  --color-neutral-50: var(--p-color-neutral-50);
+  --color-neutral-100: var(--p-color-neutral-100);
+  --color-neutral-200: var(--p-color-neutral-200);
+  --color-neutral-300: var(--p-color-neutral-300);
+  --color-neutral-400: var(--p-color-neutral-400);
+  --color-neutral-500: var(--p-color-neutral-500);
+  --color-neutral-600: var(--p-color-neutral-600);
+  --color-neutral-700: var(--p-color-neutral-700);
+  --color-neutral-800: var(--p-color-neutral-800);
+  --color-neutral-900: var(--p-color-neutral-900);
+  --color-neutral-950: var(--p-color-neutral-950);
+  --color-neutral-1000: var(--p-color-neutral-1000);
+  --color-brand-50: var(--p-color-brand-50);
+  --color-brand-100: var(--p-color-brand-100);
+  --color-brand-200: var(--p-color-brand-200);
+  --color-brand-300: var(--p-color-brand-300);
+  --color-brand-400: var(--p-color-brand-400);
+  --color-brand-500: var(--p-color-brand-500);
+  --color-brand-600: var(--p-color-brand-600);
+  --color-brand-700: var(--p-color-brand-700);
+  --color-brand-800: var(--p-color-brand-800);
+  --color-brand-900: var(--p-color-brand-900);
+  --color-brand-950: var(--p-color-brand-950);
+
+  /* Sémantiques : mêmes noms que dans Figma (bg-background-brand-mid, text-text-brand-somber…) */
+  --color-background-buttons-neutral-white: var(--background-buttons-neutral-white);
+  --color-background-buttons-neutral-black: var(--background-buttons-neutral-black);
+  --color-background-buttons-neutral-disabled-light: var(--background-buttons-neutral-disabled-light);
+  --color-background-buttons-neutral-disabled-dark: var(--background-buttons-neutral-disabled-dark);
+  --color-background-buttons-brand-whitish: var(--background-buttons-brand-whitish);
+  --color-background-buttons-brand-bright: var(--background-buttons-brand-bright);
+  --color-background-buttons-brand-mid: var(--background-buttons-brand-mid);
+  --color-background-buttons-brand-darkest: var(--background-buttons-brand-darkest);
+  --color-background-buttons-brand-somber: var(--background-buttons-brand-somber);
+  --color-background-neutral-white: var(--background-neutral-white);
+  --color-background-neutral-black: var(--background-neutral-black);
+  --color-background-brand-bright: var(--background-brand-bright);
+  --color-background-brand-mid: var(--background-brand-mid);
+  --color-background-brand-darkest: var(--background-brand-darkest);
+
+  --color-text-neutral-white: var(--text-neutral-white);
+  --color-text-neutral-black: var(--text-neutral-black);
+  --color-text-neutral-disabled-light: var(--text-neutral-disabled-light);
+  --color-text-neutral-disabled-dark: var(--text-neutral-disabled-dark);
+  --color-text-brand-brand: var(--text-brand-brand);
+  --color-text-brand-whitish: var(--text-brand-whitish);
+  --color-text-brand-bright: var(--text-brand-bright);
+  --color-text-brand-dark: var(--text-brand-dark);
+  --color-text-brand-somber: var(--text-brand-somber);
+
+  --color-border-neutral-white: var(--border-neutral-white);
+  --color-border-neutral-black: var(--border-neutral-black);
+  --color-border-neutral-disabled-light: var(--border-neutral-disabled-light);
+  --color-border-neutral-disabled-dark: var(--border-neutral-disabled-dark);
+  --color-border-brand-brand: var(--border-brand-brand);
+  --color-border-brand-whitish: var(--border-brand-whitish);
+  --color-border-brand-bright: var(--border-brand-bright);
+  --color-border-brand-darkest: var(--border-brand-darkest);
+  --color-border-brand-somber: var(--border-brand-somber);
+
+  --color-shape-neutral-white: var(--shape-neutral-white);
+  --color-shape-neutral-black: var(--shape-neutral-black);
+  --color-shape-neutral-disabled-light: var(--shape-neutral-disabled-light);
+  --color-shape-neutral-disabled-dark: var(--shape-neutral-disabled-dark);
+  --color-shape-brand-brand: var(--shape-brand-brand);
+  --color-shape-brand-whitish: var(--shape-brand-whitish);
+  --color-shape-brand-bright: var(--shape-brand-bright);
+  --color-shape-brand-darkest: var(--shape-brand-darkest);
+  --color-shape-brand-somber: var(--shape-brand-somber);
+
+  --color-faded-white-5: var(--faded-white-5);
+  --color-faded-white-10: var(--faded-white-10);
+  --color-faded-white-20: var(--faded-white-20);
+  --color-faded-white-40: var(--faded-white-40);
+  --color-faded-white-60: var(--faded-white-60);
+  --color-faded-white-80: var(--faded-white-80);
+  --color-faded-black-5: var(--faded-black-5);
+  --color-faded-black-10: var(--faded-black-10);
+  --color-faded-black-20: var(--faded-black-20);
+  --color-faded-black-40: var(--faded-black-40);
+  --color-faded-black-60: var(--faded-black-60);
+  --color-faded-black-80: var(--faded-black-80);
+
+  /* ---------- Espacements : p-md, gap-lg, m-xxl… (l'échelle numérique Tailwind reste dispo) ---------- */
+  /* Figma « tokens - design » spacing/* — identiques en mobile et desktop */
+  --spacing-none: var(--none);
+  --spacing-xxs: var(--p-number-4);
+  --spacing-xs: var(--p-number-8);
+  --spacing-sm: var(--p-number-12);
+  --spacing-md: var(--p-number-16);
+  --spacing-lg: var(--p-number-24);
+  --spacing-xl: var(--p-number-32);
+  --spacing-xxl: var(--p-number-48);
+
+  /* ---------- Rayons : rounded-md, rounded-rounded… ---------- */
+  --radius-*: initial;
+  --radius-none: var(--none);
+  --radius-xs: var(--corner-xs);
+  --radius-sm: var(--corner-sm);
+  --radius-md: var(--corner-md);
+  --radius-lg: var(--corner-lg);
+  --radius-xl: var(--corner-xl);
+  --radius-rounded: var(--corner-rounded);
+
+  /* ---------- Ombres : shadow-low, shadow-mid, shadow-strong, shadow-bold ---------- */
+  --shadow-*: initial;
+  --shadow-low: var(--dropshadow-low);
+  --shadow-mid: var(--dropshadow-mid);
+  --shadow-strong: var(--dropshadow-strong);
+  --shadow-bold: var(--dropshadow-bold);
+
+  /* ---------- Polices : font-jakarta, font-merriweather ---------- */
+  --font-*: initial;
+  --font-jakarta: var(--font-plus-jakarta-sans), sans-serif;
+  --font-merriweather: var(--font-merriweather-sans), sans-serif;
+}
+
+/*
+ * Styles de texte Figma → utilitaires « type-* ».
+ * Ex. <h1 className="type-h1">, <p className="type-body-regular">.
+ */
+@utility type-h1 {
+  font-family: var(--typography-font-h1);
+  font-weight: var(--typography-weight-heading-h1);
+  font-size: var(--typography-size-h1);
+  line-height: var(--typography-line-height-h1);
+  letter-spacing: var(--typography-letter-spacing-default);
+}
+@utility type-h2 {
+  font-family: var(--typography-font-h2h4);
+  font-weight: var(--typography-weight-heading-h2h4);
+  font-size: var(--typography-size-h2);
+  line-height: var(--typography-line-height-h2);
+  letter-spacing: var(--typography-letter-spacing-default);
+}
+@utility type-h3 {
+  font-family: var(--typography-font-h3);
+  font-weight: var(--typography-weight-heading-h3);
+  font-size: var(--typography-size-h3);
+  line-height: var(--typography-line-height-h3);
+  letter-spacing: var(--typography-letter-spacing-default);
+}
+@utility type-h4 {
+  font-family: var(--typography-font-body);
+  font-weight: var(--typography-weight-heading-subheading);
+  font-size: var(--typography-size-h4);
+  line-height: var(--typography-line-height-h4);
+  letter-spacing: var(--typography-letter-spacing-default);
+}
+@utility type-subheading {
+  font-family: var(--typography-font-h2h4);
+  font-weight: var(--typography-weight-heading-subheading);
+  font-size: var(--typography-size-sub-heading);
+  line-height: var(--typography-line-height-sub-heading);
+  letter-spacing: var(--typography-letter-spacing-default);
+}
+
+/* body */
+@utility type-body-accentuation {
+  font-family: var(--typography-font-body);
+  font-weight: var(--typography-weight-paragraph-accentuation);
+  font-size: var(--typography-size-body);
+  line-height: var(--typography-line-height-body);
+  letter-spacing: var(--typography-letter-spacing-default);
+}
+@utility type-body-regular {
+  font-family: var(--typography-font-body);
+  font-weight: var(--typography-weight-paragraph-regular);
+  font-size: var(--typography-size-body);
+  line-height: var(--typography-line-height-body);
+  letter-spacing: var(--typography-letter-spacing-default);
+}
+@utility type-body-italic {
+  font-family: var(--typography-font-body);
+  font-weight: var(--typography-weight-paragraph-italic);
+  font-style: italic;
+  font-size: var(--typography-size-body);
+  line-height: var(--typography-line-height-body);
+  letter-spacing: var(--typography-letter-spacing-default);
+}
+@utility type-body-hyperlien {
+  font-family: var(--typography-font-body);
+  font-weight: var(--typography-weight-paragraph-italic);
+  font-style: italic;
+  font-size: var(--typography-size-body);
+  line-height: var(--typography-line-height-body);
+  letter-spacing: var(--typography-letter-spacing-default);
+  text-decoration-line: underline;
+}
+
+/* bouton (taille dédiée dans Figma, pas encore de style de texte) */
+@utility type-button {
+  font-family: var(--typography-font-body);
+  font-weight: var(--typography-weight-paragraph-accentuation);
+  font-size: var(--typography-size-button);
+  line-height: var(--typography-line-height-button);
+  letter-spacing: var(--typography-letter-spacing-default);
+}
+
+/* captionText */
+@utility type-caption-accentuation {
+  font-family: var(--typography-font-body);
+  font-weight: var(--typography-weight-paragraph-accentuation);
+  font-size: var(--typography-size-caption);
+  line-height: var(--typography-line-height-caption);
+  letter-spacing: var(--typography-letter-spacing-default);
+}
+@utility type-caption-regular {
+  font-family: var(--typography-font-body);
+  font-weight: var(--typography-weight-paragraph-regular);
+  font-size: var(--typography-size-caption);
+  line-height: var(--typography-line-height-caption);
+  letter-spacing: var(--typography-letter-spacing-default);
+}
+@utility type-caption-italic {
+  font-family: var(--typography-font-body);
+  font-weight: var(--typography-weight-paragraph-italic);
+  font-style: italic;
+  font-size: var(--typography-size-caption);
+  line-height: var(--typography-line-height-caption);
+  letter-spacing: var(--typography-letter-spacing-default);
+}
+@utility type-caption-hyperlien {
+  font-family: var(--typography-font-caption);
+  font-weight: var(--typography-weight-paragraph-italic);
+  font-style: italic;
+  font-size: var(--typography-size-caption);
+  line-height: var(--typography-line-height-caption);
+  letter-spacing: var(--typography-letter-spacing-default);
+  text-decoration-line: underline;
+}
+
+/* captionText/small */
+@utility type-caption-small-accentuation {
+  font-family: var(--typography-font-body);
+  font-weight: var(--typography-weight-paragraph-accentuation);
+  font-size: var(--typography-size-small-caption);
+  line-height: var(--typography-line-height-caption);
+  letter-spacing: var(--typography-letter-spacing-default);
+}
+@utility type-caption-small-regular {
+  font-family: var(--typography-font-body);
+  font-weight: var(--typography-weight-paragraph-regular);
+  font-size: var(--typography-size-small-caption);
+  line-height: var(--typography-line-height-caption);
+  letter-spacing: var(--typography-letter-spacing-default);
+}
+@utility type-caption-small-italic {
+  font-family: var(--typography-font-body);
+  font-weight: var(--typography-weight-paragraph-italic);
+  font-style: italic;
+  font-size: var(--typography-size-small-caption);
+  line-height: var(--typography-line-height-caption);
+  letter-spacing: var(--typography-letter-spacing-default);
+}
+
+/* captionSwiss (approche resserrée) */
+@utility type-swiss-accentuation {
+  font-family: var(--typography-font-body);
+  font-weight: var(--typography-weight-paragraph-accentuation);
+  font-size: var(--typography-size-caption);
+  line-height: var(--typography-line-height-caption);
+  letter-spacing: var(--typography-letter-spacing-swiss);
+}
+@utility type-swiss-regular {
+  font-family: var(--typography-font-body);
+  font-weight: var(--typography-weight-paragraph-regular);
+  font-size: var(--typography-size-caption);
+  line-height: var(--typography-line-height-caption);
+  letter-spacing: var(--typography-letter-spacing-swiss);
+}
+@utility type-swiss-italic {
+  font-family: var(--typography-font-body);
+  font-weight: var(--typography-weight-paragraph-italic);
+  font-style: italic;
+  font-size: var(--typography-size-caption);
+  line-height: var(--typography-line-height-caption);
+  letter-spacing: var(--typography-letter-spacing-swiss);
+}
+@utility type-swiss-small-accentuation {
+  font-family: var(--typography-font-body);
+  font-weight: var(--typography-weight-paragraph-accentuation);
+  font-size: var(--typography-size-small-caption);
+  line-height: var(--typography-line-height-caption);
+  letter-spacing: var(--typography-letter-spacing-swiss);
+}
+@utility type-swiss-small-regular {
+  font-family: var(--typography-font-body);
+  font-weight: var(--typography-weight-paragraph-regular);
+  font-size: var(--typography-size-small-caption);
+  line-height: var(--typography-line-height-caption);
+  letter-spacing: var(--typography-letter-spacing-swiss);
+}
+@utility type-swiss-small-italic {
+  font-family: var(--typography-font-body);
+  font-weight: var(--typography-weight-paragraph-italic);
+  font-style: italic;
+  font-size: var(--typography-size-small-caption);
+  line-height: var(--typography-line-height-caption);
+  letter-spacing: var(--typography-letter-spacing-swiss);
+}
