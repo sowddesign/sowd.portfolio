@@ -32,6 +32,7 @@
   --motion-duration-fast: 100ms; /* changement d'état : dissolve */
   --motion-duration-base: 200ms; /* barre animée : smart animate */
   --motion-ease-out: cubic-bezier(0, 0, 0.58, 1); /* « Ease out » Figma */
+  --motion-ease-linear: linear; /* « Linear » Figma : contour animé de iconButton */
 
   /* typography/font — familles chargées par next/font dans app/layout.tsx */
   --typography-font-h1: var(--font-plus-jakarta-sans), sans-serif;

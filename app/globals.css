@@ -5,6 +5,13 @@
 @import "./styles/tokens/design.css";
 @import "./styles/theme.css";
 
+/* Progression du contour animé de IconButton (0 → 4 traits), interpolable grâce à @property. */
+@property --border-trace {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
 body {
   background: var(--background-neutral-white);
   color: var(--text-neutral-black);
