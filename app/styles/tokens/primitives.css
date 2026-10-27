@@ -1,0 +1,83 @@
+/*
+ * Primitives — collection Figma « primitive ».
+ * Valeurs brutes : les composants passent par les tokens sémantiques (colors.css, design.css).
+ * Les nombres Figma (px) sont convertis en rem (base 16px).
+ */
+:root {
+  /* color/neutral */
+  --p-color-neutral-0: #ffffff;
+  --p-color-neutral-50: #f2f2f2;
+  --p-color-neutral-100: #e6e6e6;
+  --p-color-neutral-200: #cccccc;
+  --p-color-neutral-300: #b3b3b3;
+  --p-color-neutral-400: #999999;
+  --p-color-neutral-500: #808080;
+  --p-color-neutral-600: #666666;
+  --p-color-neutral-700: #4d4d4d;
+  --p-color-neutral-800: #333333;
+  --p-color-neutral-900: #1a1a1a;
+  --p-color-neutral-950: #121212;
+  --p-color-neutral-1000: #000000;
+
+  /* color/brand */
+  --p-color-brand-50: #fef7e6;
+  --p-color-brand-100: #feefcd;
+  --p-color-brand-200: #fcdf9c;
+  --p-color-brand-300: #fbd06a;
+  --p-color-brand-400: #fac038;
+  --p-color-brand-500: #f9b006;
+  --p-color-brand-600: #c78d05;
+  --p-color-brand-700: #956a04;
+  --p-color-brand-800: #634603;
+  --p-color-brand-900: #322301;
+  --p-color-brand-950: #231901;
+
+  /* numbers */
+  --p-number-0: 0rem;
+  --p-number-1: 0.0625rem;
+  --p-number-2: 0.125rem;
+  --p-number-3: 0.1875rem;
+  --p-number-4: 0.25rem;
+  --p-number-5: 0.3125rem;
+  --p-number-6: 0.375rem;
+  --p-number-7: 0.4375rem;
+  --p-number-8: 0.5rem;
+  --p-number-11: 0.6875rem;
+  --p-number-12: 0.75rem;
+  --p-number-14: 0.875rem;
+  --p-number-16: 1rem;
+  --p-number-18: 1.125rem;
+  --p-number-20: 1.25rem;
+  --p-number-22: 1.375rem;
+  --p-number-24: 1.5rem;
+  --p-number-28: 1.75rem;
+  --p-number-32: 2rem;
+  --p-number-34: 2.125rem;
+  --p-number-40: 2.5rem;
+  --p-number-44: 2.75rem;
+  --p-number-48: 3rem;
+  --p-number-50: 3.125rem;
+  --p-number-54: 3.375rem;
+  --p-number-60: 3.75rem;
+  --p-number-64: 4rem;
+  --p-number-68: 4.25rem;
+  --p-number-70: 4.375rem;
+  --p-number-72: 4.5rem;
+  --p-number-80: 5rem;
+  --p-number-88: 5.5rem;
+  --p-number-90: 5.625rem;
+  --p-number-96: 6rem;
+  --p-number-104: 6.5rem;
+  --p-number-112: 7rem;
+  --p-number-120: 7.5rem;
+  --p-number-128: 8rem;
+  --p-number-132: 8.25rem;
+  --p-number-136: 8.5rem;
+  --p-number-144: 9rem;
+  --p-number-152: 9.5rem;
+  --p-number-160: 10rem;
+  --p-number-176: 11rem;
+  --p-number-192: 12rem;
+  --p-number-200: 12.5rem;
+  --p-number-999: 999px;
+}

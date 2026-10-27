@@ -1,24 +1,19 @@
 @import "tailwindcss";
 
-@theme {
-  --font-sans: var(--font-plus-jakarta-sans), "Plus Jakarta Sans", sans-serif;
-  --font-heading: var(--font-merriweather-sans), "Merriweather Sans", sans-serif;
+@import "./styles/tokens/primitives.css";
+@import "./styles/tokens/colors.css";
+@import "./styles/tokens/design.css";
+@import "./styles/theme.css";
 
-  --color-brand-bright: #fcdf9c;
-  --color-brand-50: #fef7e6;
-  --color-neutral-300: #b3b3b3;
+/* Progression du contour animé de IconButton (0 → 4 traits), interpolable grâce à @property. */
+@property --border-trace {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
 }
 
-/* Figma design token aliases */
-:root {
-  --brand-bright: #fcdf9c;
-  --brand-50: #fef7e6;
-}
-
-.content-stretch {
-  align-content: stretch;
-}
-
-* {
-  box-sizing: border-box;
+body {
+  background: var(--background-neutral-white);
+  color: var(--text-neutral-black);
+  font-family: var(--typography-font-body);
 }
