@@ -1,0 +1,13 @@
+/*
+ * Breakpoints — la borne haute est incluse dans chaque plage.
+ *   mobile          : ≤ 740px          (styles par défaut, sans variante)
+ *   tablette petite : > 740px à 1080px  → tablet:
+ *   grande tablette : > 1080px à 1300px → tablet-lg:
+ *   desktop         : > 1300px          → desktop:
+ * La grande tablette reprend les valeurs du mode Figma « tablet » : un composant
+ * qui n'a qu'une variante tablet utilise tablet: pour les deux tablettes.
+ * Ex. <div className="col-span-4 tablet:col-span-8 desktop:col-span-6">
+ */
+@custom-variant tablet (@media (width > 740px));
+@custom-variant tablet-lg (@media (width > 1080px));
+@custom-variant desktop (@media (width > 1300px));
