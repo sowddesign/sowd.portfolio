@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { ButtonHTMLAttributes } from "react";
 import { Icon, type IconName } from "../Icon";
 import {
@@ -11,6 +12,7 @@ import {
 
 /*
  * Bouton icône — composant Figma « iconButton (new) » (fichier portfolio, node 5061:26772).
+ * Avec href : rendu en lien (next/link), même apparence.
  */
 
 export type IconButtonVariant = ButtonVariant;
@@ -23,6 +25,8 @@ type BaseProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "color" | "disabl
   label: string;
   /** Propriété Figma « style ». */
   variant?: IconButtonVariant;
+  /** Destination : rend un lien (next/link) au lieu d'un bouton. */
+  href?: string;
 };
 
 export type IconButtonProps = BaseProps &
@@ -58,26 +62,23 @@ export function IconButton({
   disabled = false,
   className = "",
   type = "button",
+  href,
   ...rest
 }: IconButtonProps) {
   const tone = disabled
     ? disabledButtonTones[variant][color as ButtonDisabledColor]
     : buttonTones[variant][color];
 
-  return (
-    <button
-      type={type}
-      disabled={disabled}
-      aria-label={label}
-      className={[
-        "group relative flex size-(--button-size-sm) shrink-0 items-center justify-center",
-        disabled ? "cursor-not-allowed" : "cursor-pointer",
-        colorTransition,
-        tone.root,
-        className,
-      ].join(" ")}
-      {...rest}
-    >
+  const rootClassName = [
+    "group relative flex size-(--button-size-sm) shrink-0 items-center justify-center",
+    disabled ? "cursor-not-allowed" : "cursor-pointer",
+    colorTransition,
+    tone.root,
+    className,
+  ].join(" ");
+
+  const content = (
+    <>
       <Icon name={icon} size="var(--icon-md)" className={`${colorTransition} ${tone.icon}`} />
 
       {/* Contour 1px intérieur (secondary), même cadre que le tracé animé pour qu'il le recouvre exactement. */}
@@ -97,6 +98,20 @@ export function IconButton({
           ))}
         </span>
       )}
+    </>
+  );
+
+  if (href !== undefined && !disabled) {
+    return (
+      <Link href={href} aria-label={label} className={rootClassName}>
+        {content}
+      </Link>
+    );
+  }
+
+  return (
+    <button type={type} disabled={disabled} aria-label={label} className={rootClassName} {...rest}>
+      {content}
     </button>
   );
 }

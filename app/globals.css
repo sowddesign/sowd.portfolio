@@ -48,8 +48,9 @@
   }
 }
 
-/* Défilement fluide vers les ancres, y compris depuis une autre page (ex. /projects → /#ux-process).
-   Next.js 16 conserve ce réglage pendant la navigation (sans data-scroll-behavior sur <html>). */
+/* Défilement fluide vers les ancres. Changement de page : arrivée directe en haut, car <html> porte
+   data-scroll-behavior="smooth" (Next.js coupe alors l'animation pendant la navigation).
+   Ancre d'une autre page (ex. /projects → /#ux-process) : défilement fluide rétabli par AnchorScroll. */
 html {
   scroll-behavior: smooth;
 }

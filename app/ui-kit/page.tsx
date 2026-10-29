@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { Metadata } from "next";
 import {
   TextualButton,
@@ -13,6 +14,8 @@ import { FooterVisual } from "@/components/ui/FooterVisual";
 import { FooterSeparation } from "@/components/ui/FooterSeparation";
 import { PageFooter } from "@/components/ui/PageFooter";
 import { PageHeader } from "@/components/ui/PageHeader";
+import { ProjetHubContainer } from "@/components/ui/ProjetHubContainer";
+import { PageHead } from "@/components/ui/PageHead";
 
 export const metadata: Metadata = { title: "UI kit — sowd design" };
 
@@ -157,6 +160,40 @@ export default function UiKitPage() {
       <section className="flex flex-col gap-md pt-xxl">
         <h2 className="type-h4 px-(--grid-spacing)">PageFooter (footerSeparation + navigationContainer)</h2>
         <PageFooter />
+      </section>
+      <section className="flex flex-col bg-background-neutral-black py-xxl">
+        <PageHead title="PageHead H1" />
+        <PageHead type="H2" details="Détails" title="PageHead H2" />
+      </section>
+      <section className="flex flex-col gap-xl bg-background-neutral-black px-(--grid-spacing) py-xxl text-text-neutral-white">
+        <h2 className="type-h4">ProjetHubContainer — layout default</h2>
+        <ProjetHubContainer
+          title="Title"
+          type="Personnel"
+          year="2026"
+          tags={["UX  researcher", "DSM", "DA", "Documentation"]}
+          image={<Image src="/projects/placeholder.png" alt="" fill sizes="100vw" className="object-cover" />}
+          href="/projects"
+        />
+        <h2 className="type-h4">ProjetHubContainer — layout new (isNew)</h2>
+        <ProjetHubContainer
+          layout="new"
+          isNew
+          title="Title"
+          type="Personnel"
+          year="2026"
+          tags={["UX  researcher", "DSM", "DA", "Documentation"]}
+          image={<Image src="/projects/placeholder.png" alt="" fill sizes="100vw" className="object-cover" />}
+          href="/projects"
+        />
+        <h2 className="type-h4">ProjetHubContainer — layout autres</h2>
+        <ProjetHubContainer
+          layout="autres"
+          title="Title"
+          year="2026"
+          image={<Image src="/projects/placeholder.png" alt="" fill sizes="100vw" className="object-cover" />}
+          href="/projects"
+        />
       </section>
       <section className="flex flex-col gap-xl bg-background-neutral-black p-xxl text-text-neutral-white">
         <h2 className="type-h4">TextualButton — fond sombre</h2>
