@@ -15,7 +15,8 @@ import { TextualButton } from "../TextualButton";
  *
  * Les grilles suivent la grille du site (adaptativeGrid) : gouttière --grid-spacing ;
  * rangée de tags sur 4 colonnes en mobile, 8 en tablette, 6 en desktop (moitié de 12).
- * Visuel en noir et blanc, couleurs révélées au survol (pointeur) ou au toucher (:active) de l'image seule.
+ * Visuel en noir et blanc, couleurs révélées au survol (pointeur) ou au toucher (:active) de l'image seule ;
+ * sur écran tactile, aussi quand c'est le visuel le plus proche du centre de l'écran (data-centered, posé par CenterReveal).
  * Essai validé sans maquette Figma : fondu --motion-duration-base, courbe --motion-ease-out.
  *
  * Hauteurs des frames Figma (valeurs fixes sans variable, validées par l'utilisateur) :
@@ -24,7 +25,7 @@ import { TextualButton } from "../TextualButton";
 
 /** Filtre noir et blanc du visuel, retiré au survol ou au toucher. */
 const imageReveal =
-  "grayscale transition-[filter] duration-(--motion-duration-base) ease-(--motion-ease-out) hover:grayscale-0 active:grayscale-0";
+  "grayscale transition-[filter] duration-(--motion-duration-base) ease-(--motion-ease-out) hover:grayscale-0 active:grayscale-0 data-centered:grayscale-0";
 
 export type ProjetHubContainerProps = {
   layout?: "default" | "new" | "autres";
@@ -61,7 +62,7 @@ export function ProjetHubContainer({
       <article className={`flex h-[230px] w-full flex-col overflow-hidden text-text-neutral-white ${className}`}>
         {/* Image Section */}
         <div className="relative flex min-h-0 w-full flex-1 flex-col items-end justify-end p-sm">
-          <div className={`absolute inset-0 ${imageReveal}`}>{image}</div>
+          <div data-reveal className={`absolute inset-0 ${imageReveal}`}>{image}</div>
           <IconButton icon="ArrowRight" label={`Voir le projet ${title}`} variant="primary" color="white" href={href} />
         </div>
 
@@ -88,7 +89,7 @@ export function ProjetHubContainer({
         }`}
       >
         {/* Image Section */}
-        <div className={`relative ${imageReveal} ${isSplit ? "desktop:col-start-2 desktop:row-start-1" : ""}`}>{image}</div>
+        <div data-reveal className={`relative ${imageReveal} ${isSplit ? "desktop:col-start-2 desktop:row-start-1" : ""}`}>{image}</div>
 
         {/* infoContainer */}
         <div className={`flex flex-col justify-end gap-lg ${isSplit ? "desktop:col-start-1 desktop:row-start-1" : ""}`}>

@@ -8,7 +8,7 @@
 title: graine
 
 # Type de projet, affiché sur la tuile « new » (facultatif)
-type: Projet fin d'étude
+type: Projet  de  fin  d'étude
 
 # Année (obligatoire)
 year: 2026

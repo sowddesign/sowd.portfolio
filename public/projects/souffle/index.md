@@ -5,20 +5,20 @@
 # Les lignes commençant par « # » sont des commentaires, tu peux les supprimer.
 
 # Titre du projet (obligatoire)
-title: graine
+title: Souffle
 
 # Type de projet, affiché sur la tuile « new » (facultatif)
-type: Projet fin d'étude
+type: Projet  scolaire
 
 # Année (obligatoire)
 year: 2026
 
 # Tags, affichés sur la tuile « new » : un tag par ligne, précédé de « - » (facultatif)
 tags:
-  - UX  researcher 
+  - UX/UI  designer 
   - DSM
   - DA
-  - Documentation
+  - Présentation
 
 # Position sur la page des projets : 1 en premier, puis 2, 3…
 order: 5

@@ -5,10 +5,10 @@
 # Les lignes commençant par « # » sont des commentaires, tu peux les supprimer.
 
 # Titre du projet (obligatoire)
-title: graine
+title: La pointe courte
 
 # Type de projet, affiché sur la tuile « new » (facultatif)
-type: Projet fin d'étude
+type: Projet scolaire
 
 # Année (obligatoire)
 year: 2026
