@@ -1,5 +1,6 @@
 import { PageFooter } from "@/components/ui/PageFooter";
 import { PageHeader } from "@/components/ui/PageHeader";
+import { AnchorScroll } from "./AnchorScroll";
 
 /* Pages du site : en-tête et pied de page communs (le UI kit reste hors de ce groupe). */
 
@@ -9,6 +10,7 @@ export default function SiteLayout({ children }: LayoutProps<"/">) {
       <PageHeader />
       <main className="flex flex-1 flex-col">{children}</main>
       <PageFooter />
+      <AnchorScroll />
     </>
   );
 }
