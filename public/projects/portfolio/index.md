@@ -5,10 +5,10 @@
 # Les lignes commençant par « # » sont des commentaires, tu peux les supprimer.
 
 # Titre du projet (obligatoire)
-title: graine
+title: Portfolio
 
 # Type de projet, affiché sur la tuile « new » (facultatif)
-type: Projet fin d'étude
+type: Pro/perso
 
 # Année (obligatoire)
 year: 2026

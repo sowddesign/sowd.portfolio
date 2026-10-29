@@ -5,10 +5,10 @@
 # Les lignes commençant par « # » sont des commentaires, tu peux les supprimer.
 
 # Titre du projet (obligatoire)
-title: graine
+title: Flashinvaders
 
 # Type de projet, affiché sur la tuile « new » (facultatif)
-type: Projet fin d'étude
+type: Rework UI
 
 # Année (obligatoire)
 year: 2026
@@ -16,8 +16,7 @@ year: 2026
 # Tags, affichés sur la tuile « new » : un tag par ligne, précédé de « - » (facultatif)
 tags:
   - UX  researcher 
-  - DSM
-  - DA
+  - UX/UI designer
   - Documentation
 
 # Position sur la page des projets : 1 en premier, puis 2, 3…
