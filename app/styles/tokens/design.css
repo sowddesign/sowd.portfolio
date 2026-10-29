@@ -1,6 +1,7 @@
 /*
- * Tokens design — collection Figma « tokens - design » (modes mobile / desktop).
- * Mobile par défaut, valeurs desktop à partir de 1024px.
+ * Tokens design — collection Figma « tokens - design » (modes mobile / tablet / desktop).
+ * Mobile par défaut, valeurs tablet au-delà de 740px (petite et grande tablette),
+ * valeurs desktop au-delà de 1300px (voir breakpoints.css).
  * Le groupe « devices » de Figma n'est volontairement pas repris.
  */
 :root {
@@ -23,6 +24,10 @@
   --icon-lg: var(--p-number-32);
   --icon-xl: var(--p-number-64);
 
+  /* grid — style de grille Figma « adaptativeGrid » (colonnes étirées) */
+  --grid-columns: 4; /* grid/columns → numbers/4 ; nombre entier sans unité */
+  --grid-spacing: var(--p-number-16); /* grid/spacing : gouttière et marge latérale */
+
   /* button-size — hauteurs de bouton */
   --button-size-sm: var(--p-number-44);
   --button-size-md: var(--p-number-50);
@@ -33,6 +38,9 @@
   --motion-duration-base: 200ms; /* barre animée : smart animate */
   --motion-ease-out: cubic-bezier(0, 0, 0.58, 1); /* « Ease out » Figma */
   --motion-ease-linear: linear; /* « Linear » Figma : contour animé de iconButton */
+  /* menu de navigation (pageHeader ouvert) — valeurs de test, sans variable Figma */
+  --motion-menu-stagger: 20ms; /* décalage entre deux lignes de texte */
+  --motion-menu-offset: var(--p-number-8); /* remontée du texte à l’apparition (= spacing/xs) */
 
   /* typography/font — familles chargées par next/font dans app/layout.tsx */
   --typography-font-h1: var(--font-plus-jakarta-sans), sans-serif;
@@ -52,6 +60,7 @@
   --typography-weight-paragraph-light: 300;
 
   /* typography/size */
+  --typography-size-hero: var(--p-number-48);
   --typography-size-h1: var(--p-number-54);
   --typography-size-h2: var(--p-number-32);
   --typography-size-h3: var(--p-number-28);
@@ -63,6 +72,7 @@
   --typography-size-small-caption: var(--p-number-11);
 
   /* typography/line-height */
+  --typography-line-height-hero: var(--p-number-54);
   --typography-line-height-h1: var(--p-number-72);
   --typography-line-height-h2: var(--p-number-40);
   --typography-line-height-h3: var(--p-number-40);
@@ -84,13 +94,41 @@
   --dropshadow-low: 1.5px 2px 4px 0 #00000073, 2px 2px 4px 0 #00000040;
 }
 
-@media (min-width: 1024px) {
-  :root {
+:root {
+  @variant tablet {
+    --grid-columns: 8; /* grid/columns → numbers/8 */
+    --grid-spacing: var(--p-number-24);
+
+    --button-size-md: var(--p-number-76);
+    --button-size-lg: var(--p-number-94);
+
+    --typography-size-hero: var(--p-number-72);
+    --typography-size-h1: var(--p-number-94);
+    --typography-size-h2: var(--p-number-64);
+    --typography-size-h3: var(--p-number-54);
+    --typography-size-h4: var(--p-number-32);
+    --typography-size-sub-heading: var(--p-number-24);
+
+    --typography-line-height-hero: var(--p-number-80);
+    --typography-line-height-h1: var(--p-number-120);
+    --typography-line-height-h2: var(--p-number-72);
+    --typography-line-height-h3: var(--p-number-64);
+    --typography-line-height-h4: var(--p-number-40);
+    --typography-line-height-sub-heading: var(--p-number-32);
+  }
+}
+
+:root {
+  @variant desktop {
+    --grid-columns: 12; /* grid/columns → numbers/12 */
+    --grid-spacing: var(--p-number-24);
+
     --button-size-md: var(--p-number-90);
     --button-size-lg: var(--p-number-132);
 
     --typography-weight-heading-h1: 400;
 
+    --typography-size-hero: var(--p-number-94);
     --typography-size-h1: var(--p-number-200);
     --typography-size-h2: var(--p-number-80);
     --typography-size-h3: var(--p-number-64);
@@ -101,6 +139,7 @@
     --typography-size-caption: var(--p-number-16);
     --typography-size-small-caption: var(--p-number-14);
 
+    --typography-line-height-hero: var(--p-number-120);
     --typography-line-height-h1: var(--p-number-200);
     --typography-line-height-h2: var(--p-number-88);
     --typography-line-height-h3: var(--p-number-72);

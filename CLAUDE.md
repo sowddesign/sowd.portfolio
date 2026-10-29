@@ -18,3 +18,6 @@ Règle permanente, à appliquer à la lettre pour chaque composant.
 7. Fournir le tableau « propriété Figma → token utilisé ».
 
 Interdit : ajouter un état ou une variante absent de Figma sans demander.
+
+### Décisions
+Faire uniquement ce que l'utilisateur demande. Ne jamais déduire ni choisir soi-même une valeur ou un comportement de design (mise en page tablette, durée, courbe, taille…) : conseiller, proposer des options, et laisser l'utilisateur décider.

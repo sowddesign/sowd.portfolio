@@ -4,6 +4,9 @@
  * seules les valeurs du design system sont disponibles.
  */
 @theme inline {
+  /* ---------- Breakpoints : ceux de Tailwind (sm, md, lg…) sont retirés, voir breakpoints.css ---------- */
+  --breakpoint-*: initial;
+
   /* ---------- Couleurs ---------- */
   --color-*: initial;
   --color-transparent: transparent;
@@ -95,7 +98,7 @@
   --color-faded-black-80: var(--faded-black-80);
 
   /* ---------- Espacements : p-md, gap-lg, m-xxl… (l'échelle numérique Tailwind reste dispo) ---------- */
-  /* Figma « tokens - design » spacing/* — identiques en mobile et desktop */
+  /* Figma « tokens - design » spacing/* — identiques en mobile, tablet et desktop */
   --spacing-none: var(--none);
   --spacing-xxs: var(--p-number-4);
   --spacing-xs: var(--p-number-8);
@@ -126,6 +129,18 @@
   --font-*: initial;
   --font-jakarta: var(--font-plus-jakarta-sans), sans-serif;
   --font-merriweather: var(--font-merriweather-sans), sans-serif;
+}
+
+/*
+ * Grille Figma « adaptativeGrid » : 4 colonnes en mobile, 8 en tablette, 12 en desktop,
+ * gouttière et marges latérales = --grid-spacing.
+ * Ex. <section className="grid-layout"><div className="col-span-4 desktop:col-span-6">…</div></section>
+ */
+@utility grid-layout {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
+  column-gap: var(--grid-spacing);
+  padding-inline: var(--grid-spacing);
 }
 
 /*
@@ -207,6 +222,22 @@
   font-weight: var(--typography-weight-paragraph-accentuation);
   font-size: var(--typography-size-button);
   line-height: var(--typography-line-height-button);
+  letter-spacing: var(--typography-letter-spacing-default);
+}
+
+/* special/button-lg, special/button-md (navigationButton) */
+@utility type-button-lg {
+  font-family: var(--typography-font-h1);
+  font-weight: var(--typography-weight-heading-h1);
+  font-size: var(--typography-size-hero);
+  line-height: var(--typography-line-height-hero);
+  letter-spacing: var(--typography-letter-spacing-default);
+}
+@utility type-button-md {
+  font-family: var(--typography-font-h1);
+  font-weight: var(--typography-weight-heading-h1);
+  font-size: var(--typography-size-h3);
+  line-height: var(--typography-line-height-h3);
   letter-spacing: var(--typography-letter-spacing-default);
 }
 
@@ -311,4 +342,19 @@
   font-size: var(--typography-size-small-caption);
   line-height: var(--typography-line-height-caption);
   letter-spacing: var(--typography-letter-spacing-swiss);
+}
+
+/*
+ * Apparition d'une ligne du menu de navigation (pageHeader) : fondu + légère remontée.
+ * Ex. animate-menu-line, avec animation-delay propre à chaque ligne.
+ */
+@theme {
+  --animate-menu-line: menu-line var(--motion-duration-fast) var(--motion-ease-out) both;
+
+  @keyframes menu-line {
+    from {
+      opacity: 0;
+      translate: 0 var(--motion-menu-offset);
+    }
+  }
 }

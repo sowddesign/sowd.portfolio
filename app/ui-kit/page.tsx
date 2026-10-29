@@ -5,6 +5,14 @@ import {
   type TextualButtonVariant,
 } from "@/components/ui/TextualButton";
 import { IconButton } from "@/components/ui/IconButton";
+import { NavigationButton } from "@/components/ui/NavigationButton";
+import { NavigationContainer } from "@/components/ui/NavigationContainer";
+import { LogoButton } from "@/components/ui/LogoButton";
+import { FooterSavoirPlus } from "@/components/ui/FooterSavoirPlus";
+import { FooterVisual } from "@/components/ui/FooterVisual";
+import { FooterSeparation } from "@/components/ui/FooterSeparation";
+import { PageFooter } from "@/components/ui/PageFooter";
+import { PageHeader } from "@/components/ui/PageHeader";
 
 export const metadata: Metadata = { title: "UI kit — sowd design" };
 
@@ -84,11 +92,71 @@ function IconButtonGrid({ colors, disabledColor }: { colors: TextualButtonColor[
 export default function UiKitPage() {
   return (
     <main className="flex flex-col">
+      {/* En-tête réel : fixé en haut, page active déduite de l'URL (aucune sur /ui-kit). */}
+      <PageHeader />
+      <section className="flex flex-col gap-md bg-background-neutral-white py-xxl text-text-neutral-black">
+        <h2 className="type-h4 px-(--grid-spacing)">Grille — adaptativeGrid</h2>
+        <div className="grid-layout">
+          {Array.from({ length: 12 }, (_, i) => (
+            <div
+              key={i}
+              data-grid-column
+              className={`${i >= 8 ? "hidden desktop:flex" : i >= 4 ? "hidden tablet:flex" : "flex"} h-xxl items-center justify-center bg-faded-black-10 type-caption-small-regular`}
+            >
+              {i + 1}
+            </div>
+          ))}
+        </div>
+      </section>
       <section className="flex flex-col gap-xl bg-background-brand-bright p-xxl text-text-neutral-black">
         <h1 className="type-h4">TextualButton — fond clair</h1>
         <ButtonGrid colors={["brand", "black", "active"]} disabledColor="black" />
         <h2 className="type-h4">IconButton — fond clair</h2>
         <IconButtonGrid colors={["brand", "black", "active"]} disabledColor="black" />
+        <h2 className="type-h4">NavigationButton — fond clair</h2>
+        <div className="flex flex-col gap-lg">
+          {(["lg", "md"] as const).map((size) =>
+            (["black", "active"] as const).map((color) => (
+              <div key={`${size}-${color}`} className="flex flex-col gap-xs">
+                <span className="type-caption-small-regular">
+                  {size} · {color}
+                </span>
+                <NavigationButton size={size} color={color}>
+                  navButton
+                </NavigationButton>
+              </div>
+            )),
+          )}
+        </div>
+      </section>
+      <section className="flex flex-col gap-md bg-background-neutral-white py-xxl text-text-neutral-black">
+        <h2 className="type-h4 px-(--grid-spacing)">LogoButton</h2>
+        <div className="px-(--grid-spacing)">
+          <LogoButton className="max-w-fit" />
+        </div>
+        <h2 className="type-h4 px-(--grid-spacing)">PageHeader — activePage</h2>
+        {(["home", "projects", "about", "contact"] as const).map((page) => (
+          <div key={page} className="flex flex-col gap-xs">
+            <span className="type-caption-small-regular px-(--grid-spacing)">{page}</span>
+            <PageHeader activePage={page} />
+          </div>
+        ))}
+      </section>
+      <section className="flex flex-col gap-md bg-background-neutral-black pt-xxl text-text-neutral-white">
+        <h2 className="type-h4 px-(--grid-spacing)">FooterSavoirPlus</h2>
+        <FooterSavoirPlus />
+        <h2 className="type-h4 px-(--grid-spacing)">FooterVisual</h2>
+        <FooterVisual />
+        <h2 className="type-h4 px-(--grid-spacing)">FooterSeparation</h2>
+        <FooterSeparation />
+      </section>
+      <section className="flex flex-col gap-md bg-background-brand-bright pt-xxl">
+        <h2 className="type-h4 px-(--grid-spacing)">NavigationContainer (navigationContent + meContacterContent)</h2>
+        <NavigationContainer />
+      </section>
+      <section className="flex flex-col gap-md pt-xxl">
+        <h2 className="type-h4 px-(--grid-spacing)">PageFooter (footerSeparation + navigationContainer)</h2>
+        <PageFooter />
       </section>
       <section className="flex flex-col gap-xl bg-background-neutral-black p-xxl text-text-neutral-white">
         <h2 className="type-h4">TextualButton — fond sombre</h2>

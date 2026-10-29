@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
+@import "./styles/breakpoints.css";
 @import "./styles/tokens/primitives.css";
 @import "./styles/tokens/colors.css";
 @import "./styles/tokens/design.css";
@@ -10,6 +11,47 @@
   syntax: "<number>";
   inherits: true;
   initial-value: 0;
+}
+
+/*
+ * Barre de défilement — composant Figma « scrollBar » (fichier portfolio, node 5470:23673), partout.
+ * Piste shape/neutral/white, curseur icon/xs de large avec une marge spacing/xxs (= --p-number-4) tout autour.
+ * États Figma → CSS : hovered = :hover, pressed = :active ; changement instantané (pas de prototype Figma).
+ * Firefox n'accepte que les couleurs : curseur noir sur piste blanche, sans largeur ni états.
+ */
+::-webkit-scrollbar {
+  width: calc(var(--icon-xs) + 2 * var(--p-number-4));
+  height: calc(var(--icon-xs) + 2 * var(--p-number-4));
+}
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner {
+  background: var(--shape-neutral-white);
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--shape-neutral-black);
+  background-clip: content-box;
+  border: var(--p-number-4) solid transparent;
+  /* Arrondi corner/xs visible sur le curseur (demandé hors Figma, Figma : none) : la marge transparente
+     est incluse dans le rayon, d'où + spacing/xxs. */
+  border-radius: calc(var(--corner-xs) + var(--p-number-4));
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--shape-brand-bright);
+}
+::-webkit-scrollbar-thumb:active {
+  background-color: var(--shape-brand-somber);
+}
+/* Réservé à Firefox : ailleurs, scrollbar-color désactiverait les styles ::-webkit-scrollbar. */
+@supports (-moz-appearance: none) {
+  * {
+    scrollbar-color: var(--shape-neutral-black) var(--shape-neutral-white);
+  }
+}
+
+/* Défilement fluide vers les ancres, y compris depuis une autre page (ex. /projects → /#ux-process).
+   Next.js 16 conserve ce réglage pendant la navigation (sans data-scroll-behavior sur <html>). */
+html {
+  scroll-behavior: smooth;
 }
 
 body {
