@@ -21,9 +21,6 @@ tags:
   - DA
   - Documentation
 
-# Position sur la page des projets : 1 en premier, puis 2, 3…
-order: 8
-
 # Nom du fichier image de la tuile, placé dans public/projects/mon-projet/ (obligatoire)
 image: grainePFE.png
 ---

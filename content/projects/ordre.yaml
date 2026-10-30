@@ -1,0 +1,14 @@
+# ORDRE DES PROJETS — une ligne par projet, du premier affiché au dernier.
+# Chaque ligne est le nom du dossier du projet (content/projects/<dossier>/).
+# Le premier de la liste est le projet nouveau : libellé « Nouveau » et grande tuile « new ».
+# Pour changer l'ordre, déplace les lignes. Un projet absent de la liste est masqué (ni tuile ni page).
+# Les lignes commençant par « # » sont des commentaires.
+
+- graine
+- c-media
+- portfolio
+- souffle
+- pointe-courte
+- dirty-rains
+- scholar
+- flashinvaders

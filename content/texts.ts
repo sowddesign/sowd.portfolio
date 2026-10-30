@@ -64,6 +64,10 @@ export const commun = texts("commun.md", communSource, [
   "infos_numero",
   "infos_question",
   "infos_reponse",
+  "photos_precedente",
+  "photos_suivante",
+  "photos_fermer",
+  "photos_appuie",
 ]);
 
 export const accueil = texts("pages/accueil.md", accueilSource, ["titre", "showreel", "demarche_ux"]);

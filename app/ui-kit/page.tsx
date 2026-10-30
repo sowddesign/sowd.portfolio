@@ -17,6 +17,8 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { ProjetHubContainer } from "@/components/ui/ProjetHubContainer";
 import { PageHead } from "@/components/ui/PageHead";
 import { InfosContent, InfosContentGroup } from "@/components/ui/InfosContent";
+import { Photos } from "@/components/ui/Photos";
+import { getPhotos } from "@/lib/photos";
 
 export const metadata: Metadata = { title: "UI kit — sowd design" };
 
@@ -216,6 +218,13 @@ export default function UiKitPage() {
             <p>Réponse développée</p>
           </InfosContent>
         </InfosContentGroup>
+      </section>
+      <section className="flex flex-col gap-md bg-background-neutral-black py-xxl text-text-neutral-white">
+        <h2 className="type-h4 px-(--grid-spacing)">Photos — mosaïque, vue photo au clic</h2>
+        {/* Hauteur de démonstration, en attendant une maquette. */}
+        <div className="h-[60vh] w-full">
+          <Photos photos={getPhotos()} />
+        </div>
       </section>
       <section className="flex flex-col gap-xl bg-background-neutral-black p-xxl text-text-neutral-white">
         <h2 className="type-h4">TextualButton — fond sombre</h2>

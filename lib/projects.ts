@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync, existsSync } from "node:fs";
+import { readFileSync, existsSync } from "node:fs";
 import path from "node:path";
 import { parse } from "yaml";
 
@@ -6,13 +6,14 @@ import { parse } from "yaml";
  * Contenu des projets : un dossier par projet dans content/projects/<slug>/ avec un index.md
  * (infos en en-tête, puis texte de la page projet), hors de public pour ne pas être téléchargeable ;
  * ses images dans public/projects/<slug>/ (servies par le site).
- * Les dossiers commençant par « _ » sont ignorés (ex. _modele, à dupliquer pour un nouveau projet).
- * « order » numérote les projets dans l'ordre d'ajout : le plus grand s'affiche en premier
- * et devient automatiquement le projet nouveau (libellé « Nouveau », tuile « new ») ; les autres ont la tuile « default ».
+ * L'ordre d'affichage est la liste de content/projects/ordre.yaml : le premier de la liste
+ * est automatiquement le projet nouveau (libellé « Nouveau », tuile « new ») ; les autres ont la tuile « default ».
+ * Un dossier absent de la liste est masqué (ni tuile ni page) ; ex. _modele, à dupliquer pour un nouveau projet.
  * À n'utiliser que côté serveur (lecture du disque).
  */
 
 const PROJECTS_DIR = path.join(process.cwd(), "content", "projects");
+const ORDER_FILE = path.join(PROJECTS_DIR, "ordre.yaml");
 const IMAGES_DIR = path.join(process.cwd(), "public", "projects");
 
 export type Project = {
@@ -22,10 +23,8 @@ export type Project = {
   type?: string;
   year: string;
   tags: string[];
-  /** Projet le plus récent (plus grand « order ») : libellé « Nouveau ». */
+  /** Premier projet de ordre.yaml : libellé « Nouveau ». */
   isNew: boolean;
-  /** Numéro d'ajout : le plus grand s'affiche en premier. */
-  order: number;
   /** Chemin public de l'image de la tuile, ex. /projects/mon-projet/cover.jpg. */
   image: string;
   href: string;
@@ -39,17 +38,20 @@ function fail(slug: string, message: string): never {
   throw new Error(`Projet « ${slug} » (content/projects/${slug}/index.md) : ${message}`);
 }
 
+function failOrder(message: string): never {
+  throw new Error(`Ordre des projets (content/projects/ordre.yaml) : ${message}`);
+}
+
 function readProject(slug: string): Omit<Project, "isNew" | "layout"> {
   const source = readFileSync(path.join(PROJECTS_DIR, slug, "index.md"), "utf8");
   const match = source.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/);
   if (!match) fail(slug, "l'en-tête doit être entouré de deux lignes « --- ».");
 
   const data = (parse(match[1]) ?? {}) as Record<string, unknown>;
-  const { title, type, year, tags = [], order, image } = data;
+  const { title, type, year, tags = [], image } = data;
 
   if (typeof title !== "string" || !title) fail(slug, "« title » est obligatoire.");
   if (year === undefined || year === null || year === "") fail(slug, "« year » est obligatoire.");
-  if (typeof order !== "number") fail(slug, "« order » doit être un nombre.");
   if (typeof image !== "string" || !image) fail(slug, "« image » est obligatoire (nom du fichier, ex. cover.jpg).");
   if (!existsSync(path.join(IMAGES_DIR, slug, image))) fail(slug, `l'image « ${image} » est introuvable dans public/projects/${slug}/.`);
   if (!Array.isArray(tags)) fail(slug, "« tags » doit être une liste.");
@@ -60,27 +62,31 @@ function readProject(slug: string): Omit<Project, "isNew" | "layout"> {
     type: typeof type === "string" && type ? type : undefined,
     year: String(year),
     tags: tags.map(String),
-    order,
     image: `/projects/${slug}/${image}`,
     href: `/projects/${slug}`,
     content: match[2].trim(),
   };
 }
 
-/** Tous les projets, du plus grand « order » au plus petit ; le premier est le projet nouveau. */
-export function getProjects(): Project[] {
-  const projects = readdirSync(PROJECTS_DIR, { withFileTypes: true })
-    .filter((entry) => entry.isDirectory() && !entry.name.startsWith("_"))
-    .filter((entry) => existsSync(path.join(PROJECTS_DIR, entry.name, "index.md")))
-    .map((entry) => readProject(entry.name))
-    .sort((a, b) => b.order - a.order);
+/** Noms des dossiers listés dans ordre.yaml, dans l'ordre d'affichage. */
+function readOrder(): string[] {
+  if (!existsSync(ORDER_FILE)) failOrder("fichier introuvable.");
+  const order = parse(readFileSync(ORDER_FILE, "utf8")) ?? [];
+  if (!Array.isArray(order)) failOrder("le fichier doit être une liste (une ligne « - dossier » par projet).");
 
-  projects.forEach((project, i) => {
-    const next = projects[i + 1];
-    if (next && next.order === project.order) {
-      fail(project.slug, `« order: ${project.order} » est déjà utilisé par le projet « ${next.slug} ».`);
+  const slugs = order.map(String);
+  slugs.forEach((slug, i) => {
+    if (slugs.indexOf(slug) !== i) failOrder(`« ${slug} » est listé deux fois.`);
+    if (!existsSync(path.join(PROJECTS_DIR, slug, "index.md"))) {
+      failOrder(`« ${slug} » ne correspond à aucun dossier content/projects/${slug}/ avec un index.md.`);
     }
   });
+  return slugs;
+}
 
-  return projects.map((project, i) => ({ ...project, isNew: i === 0, layout: i === 0 ? "new" : "default" }));
+/** Projets listés dans ordre.yaml, dans cet ordre ; le premier est le projet nouveau. */
+export function getProjects(): Project[] {
+  return readOrder()
+    .map(readProject)
+    .map((project, i) => ({ ...project, isNew: i === 0, layout: i === 0 ? "new" : "default" }));
 }

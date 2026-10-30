@@ -59,4 +59,11 @@ tuile_voir_projet: Voir le projet
 infos_numero: N°
 infos_question: "Question :"
 infos_reponse: "Réponse :"
+
+# Carrousel de photos : boutons, lus par les lecteurs d'écran
+photos_precedente: Photo précédente
+photos_suivante: Photo suivante
+photos_fermer: Revenir à la mosaïque
+# Consigne animée sur écran tactile, en bas à gauche de la mosaïque
+photos_appuie: Appuie
 ---

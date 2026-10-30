@@ -1,0 +1,26 @@
+# ORDRE DES PHOTOS — une entrée par photo, de la première affichée à la dernière.
+# « fichier » : nom de l'image placée dans public/photos/ (obligatoire).
+# « description » : texte affiché au survol de la photo et lu par les lecteurs d'écran (obligatoire).
+# « bouton » : couleur des boutons de la vue photo (fermeture et chevrons), selon le fond de la photo : blanc ou noir (obligatoire).
+# Pour changer l'ordre, déplace les entrées (toutes leurs lignes ensemble). Une photo absente de la liste n'est pas affichée.
+# Après la dernière photo, le carrousel revient à la première (et inversement).
+# Les lignes commençant par « # » sont des commentaires.
+
+- fichier: photo-01.png
+  description: Description à écrire
+  bouton: blanc
+- fichier: photo-02.png
+  description: Description à écrire
+  bouton: noir
+- fichier: photo-03.png
+  description: Description à écrire
+  bouton: blanc
+- fichier: photo-09.png
+  description: Description à écrire
+  bouton: blanc
+- fichier: photo-05.jpg
+  description: Description à écrire
+  bouton: blanc
+- fichier: photo-07.png
+  description: Description à écrire
+  bouton: blanc

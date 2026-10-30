@@ -20,9 +20,6 @@ tags:
   - DSM
   - Documentation
 
-# Position sur la page des projets : 1 en premier, puis 2, 3…
-order: 7
-
 # Nom du fichier image de la tuile, placé dans public/projects/mon-projet/ (obligatoire)
 image: cmediaAlternance.png
 ---
