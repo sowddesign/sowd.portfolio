@@ -66,4 +66,7 @@ photos_suivante: Photo suivante
 photos_fermer: Revenir à la mosaïque
 # Consigne animée sur écran tactile, en bas à gauche de la mosaïque
 photos_appuie: Appuie
+
+# Champ de formulaire : bouton qui efface la saisie (infobulle au survol prolongé, lecteurs d'écran)
+champ_supprimer: Supprimer
 ---

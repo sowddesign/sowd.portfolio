@@ -6,21 +6,63 @@
 # Après la dernière photo, le carrousel revient à la première (et inversement).
 # Les lignes commençant par « # » sont des commentaires.
 
+- fichier: BG Canard2.5.png
+  description: Description à écrire
+  bouton: blanc
+- fichier: "device=desktop, state=default.png"
+  description: Description à écrire
+  bouton: blanc
+- fichier: WhatsApp Image 2026-08-31 at 09.20.48.jpeg
+  description: Description à écrire
+  bouton: blanc
+- fichier: "device=desktop, state=diamonds.png"
+  description: Description à écrire
+  bouton: blanc
+- fichier: dark.png
+  description: Description à écrire
+  bouton: blanc
+- fichier: hf_20260712_203942_903b3059-e324-4b78-9e08-edbacf0e4531.png
+  description: Description à écrire
+  bouton: blanc
 - fichier: photo-01.png
   description: Description à écrire
   bouton: blanc
 - fichier: photo-02.png
   description: Description à écrire
   bouton: noir
-- fichier: photo-03.png
+- fichier: DSC_01554_5.jpg
   description: Description à écrire
   bouton: blanc
-- fichier: photo-09.png
+- fichier: WhatsApp Image 2026-04-22 at 10.02.36.jpeg
   description: Description à écrire
   bouton: blanc
 - fichier: photo-05.jpg
   description: Description à écrire
   bouton: blanc
+- fichier: logoMusico.png
+  description: Description à écrire
+  bouton: blanc
+- fichier: photo-09.png
+  description: Description à écrire
+  bouton: blanc
+- fichier: logoMetro.png
+  description: Description à écrire
+  bouton: blanc
+- fichier: logoMetroDodo.png
+  description: Description à écrire
+  bouton: blanc
+- fichier: logoBoulot.png
+  description: Description à écrire
+  bouton: blanc
+- fichier: Plan de travail 1.jpg
+  description: Description à écrire
+  bouton: blanc
+- fichier: photo-03.png
+  description: Description à écrire
+  bouton: blanc
 - fichier: photo-07.png
+  description: Description à écrire
+  bouton: blanc
+- fichier: hf_20260707_211051_9361c2ab-b4b1-425b-9c05-8657376c69f0.png
   description: Description à écrire
   bouton: blanc

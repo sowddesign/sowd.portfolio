@@ -248,7 +248,6 @@ export function Photos({ photos, sizes = "45vw", className = "" }: PhotosProps) 
   const grid = { "--card-width": `${CARD_WIDTH}cqw`, "--plane-size": `${PLANE_SIZE}cqw` } as CSSProperties;
   // Première apparition de chaque photo dans le premier motif : seule tuile lue et atteignable au clavier.
   const firstTiles = new Set<number>();
-  const rowShift = Math.max(1, Math.floor(count / 2));
   const flying = phase === "opening" || phase === "closing";
 
   return (
@@ -266,9 +265,10 @@ export function Photos({ photos, sizes = "45vw", className = "" }: PhotosProps) 
               <div key={row} className="pb-md">
                 <div data-slide={row % 2 ? "right" : "left"} className="flex w-max">
                   {Array.from({ length: COLUMNS * 2 }, (_, column) => {
-                    // Même photo à la même place dans chaque répétition du motif, pour boucler sans saut ;
-                    // chaque rangée décale la liste de moitié pour que deux photos voisines diffèrent.
-                    const index = ((row % ROWS) * rowShift + (column % COLUMNS)) % count;
+                    // Même photo à la même place dans chaque répétition du motif, pour boucler sans saut.
+                    // Les photos se suivent dans l'ordre de ordre.yaml, rangée après rangée : toutes apparaissent,
+                    // chacune autant de fois (à une près), et une même photo revient le plus loin possible.
+                    const index = ((row % ROWS) * COLUMNS + (column % COLUMNS)) % count;
                     const photo = photos[index];
                     const first = row < ROWS && column < COLUMNS && !firstTiles.has(index);
                     if (first) firstTiles.add(index);

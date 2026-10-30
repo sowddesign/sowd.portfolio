@@ -25,7 +25,7 @@ import type { Photo } from "../Photos";
  * sur ordinateur, seuls les chevrons changent de photo.
  * Au relâcher, la photo change si le geste dépasse SWIPE_THRESHOLD de la largeur, sinon elle revient en place.
  *
- * Calques Figma : photo (object-cover) puis voile extra/backgroundColorHoverVisual/screeneffect, sans coins arrondis.
+ * Calques Figma : photo (object-cover) puis voile extra/backgroundColor/hoverVisual/screeneffect, sans coins arrondis.
  * Pour des coins arrondis, le conteneur parent les applique avec overflow-clip : il recadre les photos.
  */
 

@@ -1,0 +1,1 @@
+export { PhotosContainer } from "./PhotosContainer";

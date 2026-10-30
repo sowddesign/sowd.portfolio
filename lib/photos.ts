@@ -38,6 +38,7 @@ export function getPhotos(): Photo[] {
     if (!existsSync(path.join(IMAGES_DIR, fichier))) fail(`l'image « ${fichier} » est introuvable dans public/photos/.`);
     files.push(fichier);
 
-    return { src: `/photos/${fichier}`, description, buttonColor: BUTTON_COLORS[bouton] };
+    // Nom encodé : les noms de fichier avec « = » ou « , » cassent sinon l'optimiseur d'images (erreur 404).
+    return { src: `/photos/${encodeURIComponent(fichier)}`, description, buttonColor: BUTTON_COLORS[bouton] };
   });
 }
