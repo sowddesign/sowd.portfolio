@@ -62,7 +62,8 @@ export function InfosContent({
   if (type === "heading") {
     return (
       <div className={`flex w-full flex-col gap-sm bg-background-neutral-white text-text-neutral-black ${className}`}>
-        <div className="flex gap-xxs px-md py-sm type-caption-regular tablet:grid tablet:grid-cols-12 tablet:gap-lg tablet:px-lg">
+        {/* captionText/accentuation : demandé par l'utilisateur (regular dans Figma). */}
+        <div className="flex gap-xxs px-md py-sm type-caption-accentuation tablet:grid tablet:grid-cols-12 tablet:gap-lg tablet:px-lg">
           {/* Largeur fixe de 24px (valeur Figma validée) : même espace avec un numéro à deux chiffres. */}
           <p className="w-[24px] shrink-0 tablet:col-span-3 tablet:w-auto">{commun.infos_numero}</p>
           <p className="flex-1 tablet:col-span-3 desktop:col-start-7">{commun.infos_question}</p>

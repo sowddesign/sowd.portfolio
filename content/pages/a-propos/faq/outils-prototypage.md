@@ -4,5 +4,5 @@ question: Quels outils sont utilisés pour le prototypage ?
 double: yes
 ---
 
-Figma (motion au besoin).
-Claude.AI.
+[Figma](https://www.figma.com/) (motion au besoin).
+[Claude.AI](https://claude.ai/).
