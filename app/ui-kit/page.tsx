@@ -17,6 +17,12 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { ProjetHubContainer } from "@/components/ui/ProjetHubContainer";
 import { PageHead } from "@/components/ui/PageHead";
 import { InfosContent, InfosContentGroup } from "@/components/ui/InfosContent";
+import { Photos } from "@/components/ui/Photos";
+import { ColorBackground } from "@/components/ui/ColorBackground";
+import { PhotosContainer } from "@/components/ui/PhotosContainer";
+import { TextField } from "@/components/ui/TextField";
+import { ContacterContainer } from "@/components/ui/ContacterContainer";
+import { getPhotos } from "@/lib/photos";
 
 export const metadata: Metadata = { title: "UI kit — sowd design" };
 
@@ -216,6 +222,41 @@ export default function UiKitPage() {
             <p>Réponse développée</p>
           </InfosContent>
         </InfosContentGroup>
+      </section>
+      <section className="flex flex-col gap-md bg-background-neutral-black py-xxl text-text-neutral-white">
+        <h2 className="type-h4 px-(--grid-spacing)">Photos — mosaïque, vue photo au clic</h2>
+        {/* Hauteur de démonstration, en attendant une maquette. */}
+        <div className="h-[60vh] w-full">
+          <Photos photos={getPhotos()} />
+        </div>
+      </section>
+      <section className="flex flex-col gap-md bg-background-neutral-white p-xxl text-text-neutral-black">
+        <h2 className="type-h4">ColorBackground</h2>
+        {/* Taille de la variante desktop de photosContainer (719,5 × 562). */}
+        <div className="h-[562px] w-[719.5px] max-w-full">
+          <ColorBackground />
+        </div>
+      </section>
+      <section className="flex flex-col gap-md bg-background-neutral-white py-xxl text-text-neutral-black">
+        <h2 className="type-h4 px-(--grid-spacing)">PhotosContainer</h2>
+        {/* Largeur de la maquette : tout l'écran en mobile, 50 % à partir de la tablette. */}
+        <div className="flex w-full tablet:w-1/2">
+          <PhotosContainer photos={getPhotos()} />
+        </div>
+      </section>
+      <section className="flex flex-col gap-xxl bg-background-neutral-black p-xxl text-text-neutral-white">
+        <h2 className="type-h4">TextField — textField, textArea</h2>
+        <div className="flex w-full flex-col gap-xxl tablet:w-1/2">
+          <TextField label="Title" required details="détails détaillés" />
+          <TextField label="Titre sans icône ni détails" iconBefore={false} />
+          <TextField label="Titre assez long pour passer à la ligne une fois le bord du champ atteint" required />
+          <TextField label="Champ déjà rempli" defaultValue="Placeholder" details="détails détaillés" />
+          <TextField type="textArea" label="Title" required details="détails détaillés" />
+        </div>
+      </section>
+      <section className="flex flex-col gap-md bg-background-neutral-black py-xxl text-text-neutral-white">
+        <h2 className="type-h4 px-(--grid-spacing)">ContacterContainer (textes et champs : content/pages/contact.md)</h2>
+        <ContacterContainer />
       </section>
       <section className="flex flex-col gap-xl bg-background-neutral-black p-xxl text-text-neutral-white">
         <h2 className="type-h4">TextualButton — fond sombre</h2>

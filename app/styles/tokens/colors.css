@@ -67,4 +67,15 @@
   --faded-black-40: color-mix(in srgb, var(--p-color-neutral-1000) 40%, transparent);
   --faded-black-60: color-mix(in srgb, var(--p-color-neutral-1000) 60%, transparent);
   --faded-black-80: color-mix(in srgb, var(--p-color-neutral-1000) 80%, transparent);
+
+  /* extra/backgroundColor/hoverVisual — valeur brute de la variable Figma (sans primitive) */
+  --extra-background-color-hover-visual-screeneffect: #e0eaff0f; /* voile « écran » des photos */
+
+  /* extra/backgroundColor/gradientShadow — valeurs brutes des variables Figma (sans primitive), couleurs du style shadowBehindVisual */
+  --extra-background-color-gradient-shadow-full-space: #000000;
+  --extra-background-color-gradient-shadow-separation-shadow: #2a2a2ade;
+  --extra-background-color-gradient-shadow-empty-space: #ffffff00;
+
+  /* extra/backgroundColor/behindVisual — valeur brute de la variable Figma (sans primitive) */
+  --extra-background-color-behind-visual-assombrissement: #00000059; /* voile sur le visuel de photosContainer */
 }

@@ -8,6 +8,8 @@
   --none: var(--p-number-0);
 
   /* spacing : déclaré dans theme.css (même espace de noms que Tailwind, --spacing-*) */
+  /* spacing/exs : seul espacement qui change selon le mode (mobile et tablet 4, desktop 2) */
+  --exs: var(--p-number-4);
 
   /* corner */
   --corner-xs: var(--p-number-2);
@@ -96,6 +98,18 @@
   --dropshadow-strong: 2px 2px 3px 0 #00000059, 6px 6px 6px 0 #00000040;
   --dropshadow-mid: 1.5px 1.5px 1.5px 0 #00000059, 4px 4px 2px 0 #0000004d;
   --dropshadow-low: 1.5px 2px 4px 0 #00000073, 2px 2px 4px 0 #00000040;
+
+  /*
+   * dégradé — style Figma « shadowBehindVisual » : ombre simulée derrière le visuel (colorBackground).
+   * Angle et positions des couleurs repris du style ; le style applique 18 % d'opacité à son dégradé
+   * (valeur fixe du style, sans variable), d'où le color-mix sur chaque couleur.
+   */
+  --shadow-behind-visual: linear-gradient(
+    -64.19deg,
+    color-mix(in srgb, var(--extra-background-color-gradient-shadow-full-space) 18%, transparent) 4.02%,
+    color-mix(in srgb, var(--extra-background-color-gradient-shadow-separation-shadow) 18%, transparent) 25.59%,
+    color-mix(in srgb, var(--extra-background-color-gradient-shadow-empty-space) 18%, transparent) 77.97%
+  );
 }
 
 :root {
@@ -126,6 +140,8 @@
   @variant desktop {
     --grid-columns: 12; /* grid/columns → numbers/12 */
     --grid-spacing: var(--p-number-24);
+
+    --exs: var(--p-number-2);
 
     --button-size-md: var(--p-number-90);
     --button-size-lg: var(--p-number-132);

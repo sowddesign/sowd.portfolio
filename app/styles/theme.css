@@ -97,9 +97,13 @@
   --color-faded-black-60: var(--faded-black-60);
   --color-faded-black-80: var(--faded-black-80);
 
+  --color-extra-screeneffect: var(--extra-background-color-hover-visual-screeneffect);
+  --color-extra-assombrissement: var(--extra-background-color-behind-visual-assombrissement);
+
   /* ---------- Espacements : p-md, gap-lg, m-xxl… (l'échelle numérique Tailwind reste dispo) ---------- */
-  /* Figma « tokens - design » spacing/* — identiques en mobile, tablet et desktop */
+  /* Figma « tokens - design » spacing/* — identiques en mobile, tablet et desktop, sauf exs (design.css) */
   --spacing-none: var(--none);
+  --spacing-exs: var(--exs);
   --spacing-xxs: var(--p-number-4);
   --spacing-xs: var(--p-number-8);
   --spacing-sm: var(--p-number-12);
