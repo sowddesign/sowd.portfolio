@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { PageHead } from "@/components/ui/PageHead";
 import { ProjetHubContainer } from "@/components/ui/ProjetHubContainer";
+import { projets } from "@/content/texts";
 import { getProjects, type Project } from "@/lib/projects";
 
 /*
@@ -33,8 +34,8 @@ export default function Projects() {
       {/* Content Container */}
       <div className="flex w-full flex-col gap-lg">
         <div className="flex w-full flex-col">
-          <PageHead title="Projets" />
-          <PageHead type="H2" details="Découvrir :" title="le plus récent" />
+          <PageHead title={projets.titre} />
+          <PageHead type="H2" details={projets.recent_details} title={projets.recent_titre} />
         </div>
         {latest && (
           <div className="w-full px-md tablet:px-lg">
@@ -46,7 +47,7 @@ export default function Projects() {
       {/* appliquerContent */}
       {others.length > 0 && (
         <div className="flex w-full flex-col gap-xxl pt-xxl">
-          <PageHead type="H2" details="En  découvrir :" title="d’autres" />
+          <PageHead type="H2" details={projets.autres_details} title={projets.autres_titre} />
           {/* Project List : gouttière desktop = --grid-spacing (24px), écart vertical spacing/xxl. */}
           <div className="flex w-full flex-col gap-xxl px-md tablet:px-lg desktop:grid desktop:grid-cols-2 desktop:gap-x-(--grid-spacing)">
             {others.map((project) => (

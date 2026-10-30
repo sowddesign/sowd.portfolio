@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Merriweather_Sans, Plus_Jakarta_Sans } from "next/font/google";
+import { commun } from "@/content/texts";
 import "./globals.css";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
@@ -14,8 +15,8 @@ const merriweatherSans = Merriweather_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "sowd design — portfolio",
-  description: "Portfolio de sowd design",
+  title: commun.site_titre,
+  description: commun.site_description,
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

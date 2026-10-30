@@ -3,15 +3,17 @@ import path from "node:path";
 import { parse } from "yaml";
 
 /*
- * Contenu des projets : un dossier par projet dans public/projects/<slug>/,
- * avec un index.md (infos en en-tête, puis texte de la page projet) et ses images.
+ * Contenu des projets : un dossier par projet dans content/projects/<slug>/ avec un index.md
+ * (infos en en-tête, puis texte de la page projet), hors de public pour ne pas être téléchargeable ;
+ * ses images dans public/projects/<slug>/ (servies par le site).
  * Les dossiers commençant par « _ » sont ignorés (ex. _modele, à dupliquer pour un nouveau projet).
  * « order » numérote les projets dans l'ordre d'ajout : le plus grand s'affiche en premier
  * et devient automatiquement le projet nouveau (libellé « Nouveau », tuile « new ») ; les autres ont la tuile « default ».
  * À n'utiliser que côté serveur (lecture du disque).
  */
 
-const PROJECTS_DIR = path.join(process.cwd(), "public", "projects");
+const PROJECTS_DIR = path.join(process.cwd(), "content", "projects");
+const IMAGES_DIR = path.join(process.cwd(), "public", "projects");
 
 export type Project = {
   /** Nom du dossier, utilisé dans l'URL de la page projet. */
@@ -34,7 +36,7 @@ export type Project = {
 };
 
 function fail(slug: string, message: string): never {
-  throw new Error(`Projet « ${slug} » (public/projects/${slug}/index.md) : ${message}`);
+  throw new Error(`Projet « ${slug} » (content/projects/${slug}/index.md) : ${message}`);
 }
 
 function readProject(slug: string): Omit<Project, "isNew" | "layout"> {
@@ -49,7 +51,7 @@ function readProject(slug: string): Omit<Project, "isNew" | "layout"> {
   if (year === undefined || year === null || year === "") fail(slug, "« year » est obligatoire.");
   if (typeof order !== "number") fail(slug, "« order » doit être un nombre.");
   if (typeof image !== "string" || !image) fail(slug, "« image » est obligatoire (nom du fichier, ex. cover.jpg).");
-  if (!existsSync(path.join(PROJECTS_DIR, slug, image))) fail(slug, `l'image « ${image} » est introuvable dans le dossier.`);
+  if (!existsSync(path.join(IMAGES_DIR, slug, image))) fail(slug, `l'image « ${image} » est introuvable dans public/projects/${slug}/.`);
   if (!Array.isArray(tags)) fail(slug, "« tags » doit être une liste.");
 
   return {

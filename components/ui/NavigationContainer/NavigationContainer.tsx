@@ -1,3 +1,4 @@
+import { commun } from "@/content/texts";
 import { Icon } from "../Icon";
 import { MeContacterContent } from "../MeContacterContent";
 import { NavigationContent } from "../NavigationContent";
@@ -27,16 +28,16 @@ export function NavigationContainer({ className = "" }: NavigationContainerProps
         <div className="col-span-2 flex items-end tablet:col-start-4">
           <div className="flex gap-xxs">
             <div className="flex">
-              <span className="type-swiss-small-regular">sowd.design</span>
+              <span className="type-swiss-small-regular">{commun.pied_signature}</span>
               <Icon name="Copyright" size="var(--icon-xs)" className="text-shape-neutral-black" />
             </div>
-            <span className="type-swiss-small-regular">2026</span>
+            <span className="type-swiss-small-regular">{commun.pied_annee}</span>
           </div>
         </div>
 
         <div className="col-span-2 col-start-3 flex items-end justify-end gap-sm tablet:col-start-7 desktop:col-start-11">
-          {/* Double espace de Figma : espace insécable + espace. */}
-          <span className="type-swiss-small-regular">design&nbsp; par</span>
+          {/* whitespace-pre : conserve le double espace de Figma (« design  par »). */}
+          <span className="type-swiss-small-regular whitespace-pre">{commun.pied_design_par}</span>
           <NamedStylized className="text-shape-neutral-black" />
         </div>
       </div>

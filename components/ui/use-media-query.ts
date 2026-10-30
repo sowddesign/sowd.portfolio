@@ -16,3 +16,5 @@ export function useMediaQuery(query: string) {
 /** Appareil tactile : pas de survol possible avec le pointeur principal. */
 export const touchQuery = "(hover: none)";
 export const reducedMotionQuery = "(prefers-reduced-motion: reduce)";
+/** Tablette et au-delà (breakpoint tablet: de app/styles/breakpoints.css). */
+export const tabletQuery = "(width > 740px)";

@@ -1,12 +1,13 @@
 "use client";
 
+import { commun } from "@/content/texts";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { IconButton } from "../IconButton";
 import { edgeCompanions, patternLogos } from "../LogoPattern";
 import { TextualButton } from "../TextualButton";
 import { PaintHint } from "./PaintHint";
 import { PaintReveal, type PaintOverlay } from "./PaintReveal";
-import { reducedMotionQuery, touchQuery, useMediaQuery } from "./use-media-query";
+import { reducedMotionQuery, touchQuery, useMediaQuery } from "../use-media-query";
 
 /*
  * Visuel de pied de page — composant Figma « footerVisual » (fichier portfolio, node 5036:64225).
@@ -120,13 +121,13 @@ export function FooterVisual({ className = "" }: FooterVisualProps) {
         // Largeur ajustée au contenu (le textualButton occupe toute la largeur de son parent).
         <div className="relative">
           <TextualButton variant="primary" color="white" icon="ArrowCounterClockwise" iconPosition="right" onClick={restart}>
-            <span className="whitespace-nowrap">{paintedAll && !revealed ? "Bien joué ! Recommencer" : "Recommencer"}</span>
+            <span className="whitespace-nowrap">{paintedAll && !revealed ? commun.visuel_bien_joue : commun.visuel_recommencer}</span>
           </TextualButton>
         </div>
       ) : (
         <IconButton
           icon="Eye"
-          label="Afficher tous les logos"
+          label={commun.visuel_afficher}
           // Tertiary tant qu'aucun logo n'est coloré (attire moins l'attention), primary ensuite (Figma).
           variant={started ? "primary" : "tertiary"}
           color="white"
@@ -138,7 +139,7 @@ export function FooterVisual({ className = "" }: FooterVisualProps) {
       {started && !done && (
         <IconButton
           icon="ArrowCounterClockwise"
-          label="Remettre les logos en noir"
+          label={commun.visuel_remettre_noir}
           variant="primary"
           color="black"
           className="relative"

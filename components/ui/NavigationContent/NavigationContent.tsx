@@ -1,5 +1,6 @@
 "use client";
 
+import { commun } from "@/content/texts";
 import { NavigationButton } from "../NavigationButton";
 import { pageHrefs, useActivePage, type PageKey } from "../navigation";
 
@@ -25,27 +26,27 @@ export function NavigationContent({ activePage, showTitle = true, className = ""
     <div className={`flex w-full flex-col gap-lg text-text-neutral-black ${className}`}>
       {showTitle && (
         <div className="flex items-center gap-sm">
-          <p className="type-body-accentuation">Naviguer :</p>
+          <p className="type-body-accentuation">{commun.naviguer_titre}</p>
         </div>
       )}
 
       <div className="flex w-full flex-col gap-lg">
         <div className="flex w-full flex-col gap-sm">
           <NavigationButton size="lg" color={colorFor("home")} href={pageHrefs.home}>
-            Accueil
+            {commun.naviguer_accueil}
           </NavigationButton>
           <NavigationButton size="md" href="/#showreel">
-            Showreel
+            {commun.naviguer_showreel}
           </NavigationButton>
           <NavigationButton size="md" href="/#ux-process">
-            Démarche UX
+            {commun.naviguer_demarche_ux}
           </NavigationButton>
         </div>
         <NavigationButton size="lg" color={colorFor("projects")} href={pageHrefs.projects}>
-          Projets
+          {commun.naviguer_projets}
         </NavigationButton>
         <NavigationButton size="lg" color={colorFor("about")} href={pageHrefs.about}>
-          À propos
+          {commun.naviguer_a_propos}
         </NavigationButton>
       </div>
     </div>
