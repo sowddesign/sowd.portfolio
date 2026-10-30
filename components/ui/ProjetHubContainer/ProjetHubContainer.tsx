@@ -1,3 +1,4 @@
+import { commun } from "@/content/texts";
 import type { ReactNode } from "react";
 import { IconButton } from "../IconButton";
 import { TextualButton } from "../TextualButton";
@@ -55,7 +56,7 @@ export function ProjetHubContainer({
   href,
   className = "",
 }: ProjetHubContainerProps) {
-  const newLabel = isNew && <span className="type-swiss-regular text-text-brand-whitish">Nouveau</span>;
+  const newLabel = isNew && <span className="type-swiss-regular text-text-brand-whitish">{commun.tuile_nouveau}</span>;
 
   if (layout === "autres") {
     return (
@@ -63,7 +64,7 @@ export function ProjetHubContainer({
         {/* Image Section */}
         <div className="relative flex min-h-0 w-full flex-1 flex-col items-end justify-end p-sm">
           <div data-reveal className={`absolute inset-0 ${imageReveal}`}>{image}</div>
-          <IconButton icon="ArrowRight" label={`Voir le projet ${title}`} variant="primary" color="white" href={href} />
+          <IconButton icon="ArrowRight" label={`${commun.tuile_voir_projet} ${title}`} variant="primary" color="white" href={href} />
         </div>
 
         {/* infoContainer */}
@@ -128,7 +129,7 @@ export function ProjetHubContainer({
             <div className="flex w-full flex-col gap-lg">
               <span aria-hidden className="h-px w-full shrink-0 bg-shape-neutral-white" />
               <TextualButton variant="primary" color="white" icon="ArrowRight" iconPosition="right" href={href}>
-                Voir le projet
+                {commun.tuile_voir_projet}
               </TextualButton>
               <span aria-hidden className="h-px w-full shrink-0 bg-shape-neutral-white" />
             </div>

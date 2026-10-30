@@ -1,3 +1,4 @@
+import { commun } from "@/content/texts";
 import { TextualButton } from "../TextualButton";
 import { pageHrefs } from "../pages";
 
@@ -19,7 +20,7 @@ export function FooterSavoirPlus({ className = "" }: FooterSavoirPlusProps) {
       <div className="flex w-full flex-col">
         <div className="flex w-full items-center justify-between px-md py-lg tablet:px-lg">
           <div className="flex w-full items-center gap-sm">
-            <p className="type-body-accentuation text-text-neutral-white">Tu veux en savoir plus ?</p>
+            <p className="type-body-accentuation text-text-neutral-white">{commun.savoir_plus_titre}</p>
           </div>
         </div>
         <span aria-hidden className="h-px w-full shrink-0 bg-shape-neutral-white" />
@@ -35,13 +36,13 @@ export function FooterSavoirPlus({ className = "" }: FooterSavoirPlusProps) {
           href="/cv/Tom_Lamy_Designer_CV.pdf"
           download="Tom_Lamy_Designer_CV.pdf"
         >
-          Télécharger mon CV
+          {commun.savoir_plus_cv}
         </TextualButton>
         <TextualButton variant="secondary" color="white" icon="ArrowRight" iconPosition="right" href="/#ux-process">
-          Voir ma démarche UX
+          {commun.savoir_plus_demarche_ux}
         </TextualButton>
         <TextualButton variant="tertiary" color="white" icon="ArrowRight" iconPosition="right" href={pageHrefs.contact}>
-          Me contacter
+          {commun.savoir_plus_contacter}
         </TextualButton>
       </div>
 

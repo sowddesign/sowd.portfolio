@@ -12,6 +12,12 @@ const nextConfig: NextConfig = {
         loaders: ["@tailwindcss/turbopack"],
         as: "*.css",
       },
+      // Textes du site : content/**/*.md → objet { clé: texte } (voir content/texts.ts).
+      "*.md": {
+        condition: { path: /^content\// },
+        loaders: ["./scripts/texts-loader.cjs"],
+        as: "*.js",
+      },
     },
   },
 };

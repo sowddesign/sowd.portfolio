@@ -214,6 +214,11 @@
   line-height: var(--typography-line-height-body);
   letter-spacing: var(--typography-letter-spacing-default);
   text-decoration-line: underline;
+  text-decoration-style: solid;
+  text-decoration-color: var(--border-brand-bright);
+  text-decoration-thickness: var(--hyperlink-thickness);
+  text-underline-offset: var(--hyperlink-offset);
+  text-decoration-skip-ink: auto;
 }
 
 /* bouton (taille dédiée dans Figma, pas encore de style de texte) */
@@ -272,6 +277,11 @@
   line-height: var(--typography-line-height-caption);
   letter-spacing: var(--typography-letter-spacing-default);
   text-decoration-line: underline;
+  text-decoration-style: solid;
+  text-decoration-color: var(--border-brand-bright);
+  text-decoration-thickness: var(--hyperlink-thickness);
+  text-underline-offset: var(--hyperlink-offset);
+  text-decoration-skip-ink: auto;
 }
 
 /* captionText/small */

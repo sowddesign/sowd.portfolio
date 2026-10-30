@@ -16,6 +16,7 @@ import { PageFooter } from "@/components/ui/PageFooter";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { ProjetHubContainer } from "@/components/ui/ProjetHubContainer";
 import { PageHead } from "@/components/ui/PageHead";
+import { InfosContent, InfosContentGroup } from "@/components/ui/InfosContent";
 
 export const metadata: Metadata = { title: "UI kit — sowd design" };
 
@@ -194,6 +195,27 @@ export default function UiKitPage() {
           image={<Image src="/projects/placeholder.png" alt="" fill sizes="100vw" className="object-cover" />}
           href="/projects"
         />
+      </section>
+      <section className="flex flex-col gap-md bg-background-neutral-white py-xxl text-text-neutral-black">
+        <h2 className="type-h4 px-(--grid-spacing)">InfosContent — heading, default, double (une seule réponse ouverte à la fois en mobile)</h2>
+        <InfosContentGroup>
+          <InfosContent type="heading" />
+          <InfosContent questionN="01" questionText="Combien de temps dure un projet ?">
+            <p>Réponse développée</p>
+          </InfosContent>
+          <InfosContent questionN="02" questionText="Quels outils utilises-tu ?">
+            <p>Première ligne de la réponse.</p>
+            <p>Deuxième ligne de la réponse.</p>
+            <p>Troisième ligne de la réponse.</p>
+          </InfosContent>
+          <InfosContent
+            double
+            questionN="03"
+            questionText="Une question plus longue qui passe sur deux lignes en mobile pour tester la variante double ?"
+          >
+            <p>Réponse développée</p>
+          </InfosContent>
+        </InfosContentGroup>
       </section>
       <section className="flex flex-col gap-xl bg-background-neutral-black p-xxl text-text-neutral-white">
         <h2 className="type-h4">TextualButton — fond sombre</h2>

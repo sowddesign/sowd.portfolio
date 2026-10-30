@@ -1,5 +1,6 @@
 "use client";
 
+import { commun } from "@/content/texts";
 import { useEffect, useId, useRef, useState, type MouseEvent } from "react";
 import { IconButton } from "../IconButton";
 import { LogoButton } from "../LogoButton";
@@ -72,7 +73,7 @@ export function PageHeader({ activePage, className = "" }: PageHeaderProps) {
             variant="tertiary"
             color="black"
             icon={open ? "X" : "List"}
-            label={open ? "Fermer le menu" : "Ouvrir le menu"}
+            label={open ? commun.menu_fermer : commun.menu_ouvrir}
             aria-expanded={open}
             aria-controls={menuId}
             onClick={() => setOpen((value) => !value)}
@@ -86,7 +87,7 @@ export function PageHeader({ activePage, className = "" }: PageHeaderProps) {
             iconPosition="right"
             href={pageHrefs.contact}
           >
-            contact
+            {commun.entete_contact}
           </TextualButton>
         </div>
         <div className="col-span-2 col-start-7 hidden tablet:block desktop:hidden">
@@ -98,7 +99,7 @@ export function PageHeader({ activePage, className = "" }: PageHeaderProps) {
             iconPosition="right"
             href={pageHrefs.contact}
           >
-            contact
+            {commun.entete_contact}
           </TextualButton>
         </div>
 
@@ -113,7 +114,7 @@ export function PageHeader({ activePage, className = "" }: PageHeaderProps) {
             color={colorFor("home")}
             href={pageHrefs.home}
           >
-            accueil
+            {commun.entete_accueil}
           </TextualButton>
         </div>
         <div className="col-start-9 hidden desktop:block">
@@ -123,7 +124,7 @@ export function PageHeader({ activePage, className = "" }: PageHeaderProps) {
             color={colorFor("projects")}
             href={pageHrefs.projects}
           >
-            projets
+            {commun.entete_projets}
           </TextualButton>
         </div>
         <div className="col-start-10 hidden desktop:block">
@@ -133,7 +134,7 @@ export function PageHeader({ activePage, className = "" }: PageHeaderProps) {
             color={colorFor("about")}
             href={pageHrefs.about}
           >
-            à propos
+            {commun.entete_a_propos}
           </TextualButton>
         </div>
         <div className="col-start-12 hidden desktop:block">
@@ -145,7 +146,7 @@ export function PageHeader({ activePage, className = "" }: PageHeaderProps) {
             iconPosition="right"
             href={pageHrefs.contact}
           >
-            contact
+            {commun.entete_contact}
           </TextualButton>
         </div>
       </div>

@@ -42,6 +42,10 @@
   --motion-menu-stagger: 20ms; /* décalage entre deux lignes de texte */
   --motion-menu-offset: var(--p-number-8); /* remontée du texte à l’apparition (= spacing/xs) */
 
+  /* hyperlien — soulignement du style Figma captionText/hyperlien (valeurs fixes, sans variable Figma) */
+  --hyperlink-thickness: 1.5px;
+  --hyperlink-offset: 2.3px;
+
   /* typography/font — familles chargées par next/font dans app/layout.tsx */
   --typography-font-h1: var(--font-plus-jakarta-sans), sans-serif;
   --typography-font-h2h4: var(--font-merriweather-sans), sans-serif;
