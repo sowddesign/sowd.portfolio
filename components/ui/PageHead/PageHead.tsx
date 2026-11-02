@@ -12,20 +12,20 @@ export type PageHeadProps = {
   title: string;
   /** Texte au-dessus du titre en H2, ex. « Découvrir : ». */
   details?: string;
-  /** Balise du titre en H2 : h1 quand il nomme la page (style H2 inchangé). */
+  /** Balise du titre (style inchangé) : par défaut h1 en H1, h2 en H2. Ex. h2 pour un H1 de section dans une page. */
   headingLevel?: "h1" | "h2";
   /** Trait blanc sous le bloc (masqué dans l'instance de headPage Container). */
   divider?: boolean;
   className?: string;
 };
 
-export function PageHead({ type = "H1", title, details, headingLevel = "h2", divider = true, className = "" }: PageHeadProps) {
-  const Heading = headingLevel;
+export function PageHead({ type = "H1", title, details, headingLevel, divider = true, className = "" }: PageHeadProps) {
+  const Heading = headingLevel ?? (type === "H1" ? "h1" : "h2");
   return (
     <div className={`flex w-full flex-col text-text-neutral-white ${className}`}>
       {type === "H1" ? (
         <div className="flex w-full items-center px-md py-sm tablet:p-lg desktop:py-xl">
-          <h1 className="type-h1 min-w-0 flex-1">{title}</h1>
+          <Heading className="type-h1 min-w-0 flex-1">{title}</Heading>
         </div>
       ) : (
         <div className="flex w-full flex-col items-start justify-end gap-xxs px-md pt-lg pb-sm tablet:gap-xs tablet:px-lg tablet:pt-xxl">

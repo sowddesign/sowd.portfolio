@@ -74,6 +74,7 @@ export function PageHeader({ activePage, className = "" }: PageHeaderProps) {
             color="black"
             icon={open ? "X" : "List"}
             label={open ? commun.menu_fermer : commun.menu_ouvrir}
+            cursorLabel={open ? commun.curseur_menu_fermer : commun.curseur_menu_ouvrir}
             aria-expanded={open}
             aria-controls={menuId}
             onClick={() => setOpen((value) => !value)}

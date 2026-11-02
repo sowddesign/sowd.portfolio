@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import type { ButtonHTMLAttributes } from "react";
+import { useCursorLabel } from "../CursorLabel";
 import { Icon, type IconName } from "../Icon";
 import {
   buttonTones,
@@ -13,6 +16,8 @@ import {
 /*
  * Bouton icône — composant Figma « iconButton (new) » (fichier portfolio, node 5061:26772).
  * Avec href : rendu en lien (next/link), même apparence.
+ * Curseur texte (décision de l'utilisateur, tous les boutons icône) : au survol à la souris, le curseur
+ * est remplacé par cursorLabel (texte dédié, défini avec l'utilisateur pour chaque bouton). Rien si désactivé.
  */
 
 export type IconButtonVariant = ButtonVariant;
@@ -23,6 +28,9 @@ type BaseProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "color" | "disabl
   icon: IconName;
   /** Texte accessible : le bouton n'a pas de texte visible. */
   label: string;
+  /** Texte qui remplace le curseur au survol (à définir avec l'utilisateur pour chaque bouton) ;
+   *  null seulement pour un bouton qui n'apparaît qu'au toucher (jamais de curseur). */
+  cursorLabel: string | null;
   /** Propriété Figma « style ». */
   variant?: IconButtonVariant;
   /** Destination : rend un lien (next/link) au lieu d'un bouton. */
@@ -57,6 +65,7 @@ const traceSides = [
 export function IconButton({
   icon,
   label,
+  cursorLabel,
   variant = "primary",
   color = "brand",
   disabled = false,
@@ -68,10 +77,12 @@ export function IconButton({
   const tone = disabled
     ? disabledButtonTones[variant][color as ButtonDisabledColor]
     : buttonTones[variant][color];
+  const cursor = useCursorLabel(disabled ? undefined : (cursorLabel ?? undefined));
 
   const rootClassName = [
     "group relative flex size-(--button-size-sm) shrink-0 items-center justify-center",
     disabled ? "cursor-not-allowed" : "cursor-pointer",
+    cursor.className,
     colorTransition,
     tone.root,
     className,
@@ -98,19 +109,21 @@ export function IconButton({
           ))}
         </span>
       )}
+
+      {cursor.node}
     </>
   );
 
   if (href !== undefined && !disabled) {
     return (
-      <Link href={href} aria-label={label} className={rootClassName}>
+      <Link href={href} aria-label={label} className={rootClassName} {...cursor.handlers}>
         {content}
       </Link>
     );
   }
 
   return (
-    <button type={type} disabled={disabled} aria-label={label} className={rootClassName} {...rest}>
+    <button type={type} disabled={disabled} aria-label={label} className={rootClassName} {...rest} {...cursor.handlers}>
       {content}
     </button>
   );

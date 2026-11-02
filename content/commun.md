@@ -40,6 +40,10 @@ savoir_plus_cv: Télécharger mon CV
 savoir_plus_demarche_ux: Voir ma démarche UX
 savoir_plus_contacter: Me contacter
 
+# Message vers la démarche UX (bloc cliquable, la barre « | » fait partie de la DA)
+message_curieux: Curieux|se ?
+message_decouvre: Découvre comment je travaille
+
 # Visuel à colorier du pied de page
 visuel_afficher: Afficher tous les logos
 visuel_remettre_noir: Remettre les logos en noir
@@ -69,4 +73,39 @@ photos_appuie: Appuie
 
 # Champ de formulaire : bouton qui efface la saisie (infobulle au survol prolongé, lecteurs d'écran)
 champ_supprimer: Supprimer
+
+# Texte qui remplace le curseur au survol des boutons icône (souris)
+curseur_menu_ouvrir: Naviguer
+curseur_menu_fermer: Fermer
+curseur_visuel_afficher: Afficher
+curseur_visuel_remettre_noir: Recommencer
+curseur_voir_projet: Voir le projet
+curseur_photos_precedente: Précédente
+curseur_photos_suivante: Suivante
+curseur_photos_fermer: Fermer
+curseur_champ_supprimer: Supprimer
+
+# Double diamant (tournesols) : libellés sur le visuel
+double_probleme: problème
+double_solution: solution
+double_decouvrir: découvrir
+double_definir: définir
+double_developper: développer
+double_livrer: livrer
+# Textes de chaque étape ; [mot]{brand} met un mot en couleur
+double_texte_diamants: "Le [Double Diamant]{brand} propose d’alterner entre ouverture pour explorer et convergence pour préciser et décider."
+double_texte_probleme: "Le [premier diamant]{brand} consiste à [comprendre le problème]{brand} : explorer largement les besoins puis définir précisément le problème."
+double_texte_01: "1. La phase [découvrir]{brand} permet d’[explorer le contexte]{brand} : observer et écouter  les  utilisateurs  pour  comprendre  leurs  besoins."
+double_texte_02: "2. La phase [définir]{brand} permet de [cadrer le problème]{brand} : synthétiser  et analyser les apprentissages pour formuler clairement le problème."
+double_texte_solution: "Le [deuxième diamant]{brand} consiste à [concevoir la solution]{brand} :  imaginer plusieurs réponses possibles, puis développer, valider et livrer la solution la plus adaptée."
+double_texte_03: "3. La phase [développer]{brand} permet d’[explorer les solutions]{brand} : imaginer, prototyper et tester plusieurs solutions pour trouver celle qui fonctionne le mieux."
+double_texte_04: "4. La phase [livrer]{brand} permet de [valider la solution]{brand} : finaliser, valider et lancer la solution retenue, puis préparer les futures améliorations."
+# Boutons (mobile et écran tactile)
+double_decouvrir_methode: Découvrir la méthode
+double_continuer: Continuer
+double_retour: Retour
+double_afficher_diamants: Afficher les diamants
+double_revoir_methode: Revoir la méthode
+# Copyright en bas du visuel
+double_copyright: "© 2026  Tom  Lamy  - Création  graphique  originale."
 ---

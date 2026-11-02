@@ -191,12 +191,34 @@ export function PhotosViewer({ photos, start = 0, onClose, onChange, sizes = "10
       <div aria-hidden className="pointer-events-none absolute inset-0 bg-extra-screeneffect" />
 
       <div className="relative flex w-full items-center justify-between">
-        <IconButton icon="CaretLeft" label={commun.photos_precedente} variant="tertiary" color={buttonColor} onClick={() => go(-1)} />
-        <IconButton icon="CaretRight" label={commun.photos_suivante} variant="tertiary" color={buttonColor} onClick={() => go(1)} />
+        <IconButton
+          icon="CaretLeft"
+          label={commun.photos_precedente}
+          cursorLabel={commun.curseur_photos_precedente}
+          variant="tertiary"
+          color={buttonColor}
+          onClick={() => go(-1)}
+        />
+        <IconButton
+          icon="CaretRight"
+          label={commun.photos_suivante}
+          cursorLabel={commun.curseur_photos_suivante}
+          variant="tertiary"
+          color={buttonColor}
+          onClick={() => go(1)}
+        />
       </div>
 
       {onClose && (
-        <IconButton icon="X" label={commun.photos_fermer} variant="tertiary" color={buttonColor} onClick={onClose} className="absolute! top-0 right-0" />
+        <IconButton
+          icon="X"
+          label={commun.photos_fermer}
+          cursorLabel={commun.curseur_photos_fermer}
+          variant="tertiary"
+          color={buttonColor}
+          onClick={onClose}
+          className="absolute! top-0 right-0"
+        />
       )}
     </div>
   );

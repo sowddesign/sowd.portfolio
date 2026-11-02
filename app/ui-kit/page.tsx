@@ -22,9 +22,21 @@ import { ColorBackground } from "@/components/ui/ColorBackground";
 import { PhotosContainer } from "@/components/ui/PhotosContainer";
 import { TextField } from "@/components/ui/TextField";
 import { ContacterContainer } from "@/components/ui/ContacterContainer";
+import { GridBar, type GridBarNumber, type GridBarProps } from "@/components/ui/GridBar";
+import { AnimationGrid } from "@/components/ui/AnimationGrid";
+import { MessageContainer } from "@/components/ui/MessageContainer";
+import { DoubleFlower } from "@/components/ui/DoubleFlower";
 import { getPhotos } from "@/lib/photos";
+import { ProgressBarDemo } from "./ProgressBarDemo";
+import { NavSideTilesDemo } from "./NavSideTilesDemo";
 
 export const metadata: Metadata = { title: "UI kit — sowd design" };
+
+const gridBarNumbers: GridBarNumber[] = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
+const gridBarVariants: { label: string; props: GridBarProps }[] = [
+  { label: "default · 00", props: { state: "default" } },
+  ...gridBarNumbers.map((number) => ({ label: `hovered · ${number}`, props: { state: "hovered" as const, number } })),
+];
 
 const variants: TextualButtonVariant[] = ["primary", "secondary", "tertiary"];
 const iconConfigs = [
@@ -85,12 +97,12 @@ function IconButtonGrid({ colors, disabledColor }: { colors: TextualButtonColor[
             {colors.map((color) => (
               <div key={color} className="flex flex-col gap-xs">
                 <span className="type-caption-small-regular">{color}</span>
-                <IconButton variant={variant} color={color} icon="ArrowRight" label="Suivant" />
+                <IconButton variant={variant} color={color} icon="ArrowRight" label="Suivant" cursorLabel="Suivant" />
               </div>
             ))}
             <div className="flex flex-col gap-xs">
               <span className="type-caption-small-regular">disabled ({disabledColor})</span>
-              <IconButton variant={variant} color={disabledColor} disabled icon="ArrowRight" label="Suivant" />
+              <IconButton variant={variant} color={disabledColor} disabled icon="ArrowRight" label="Suivant" cursorLabel="Suivant" />
             </div>
           </div>
         </div>
@@ -236,6 +248,47 @@ export default function UiKitPage() {
         <div className="h-[562px] w-[719.5px] max-w-full">
           <ColorBackground />
         </div>
+      </section>
+      <section className="flex flex-col gap-md bg-background-neutral-black p-xxl text-text-neutral-white">
+        <h2 className="type-h4">GridBar — style upToDown</h2>
+        <div className="flex flex-wrap gap-lg">
+          {gridBarVariants.map((variant) => (
+            <div key={variant.label} className="flex flex-col gap-xs">
+              <span className="type-caption-small-regular">{variant.label}</span>
+              {/* Taille de la variante Figma (94 × 900) ; en usage, la tuile remplit sa colonne. */}
+              <div className="h-[900px] w-[94px]">
+                <GridBar {...variant.props} />
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+      <section className="flex flex-col gap-md bg-background-neutral-black py-xxl text-text-neutral-white">
+        <h2 className="type-h4 px-(--grid-spacing)">AnimationGrid — survol ou appui sur une tuile</h2>
+        {/* Hauteur de la maquette (900) ; en usage, la grille remplit son parent. */}
+        <div className="h-[900px] w-full">
+          <AnimationGrid />
+        </div>
+      </section>
+      <section className="flex flex-col gap-md bg-background-neutral-black py-xxl text-text-neutral-white">
+        <h2 className="type-h4 px-(--grid-spacing)">MessageContainer — lien vers la démarche UX</h2>
+        <MessageContainer />
+      </section>
+      <section className="flex flex-col gap-md bg-background-neutral-black py-xxl text-text-neutral-white">
+        <h2 className="type-h4 px-(--grid-spacing)">
+          DoubleFlower — survol (desktop), parcours par boutons (mobile, tablette tactile)
+        </h2>
+        <DoubleFlower />
+        <h3 className="type-caption-accentuation px-(--grid-spacing)">diamonds (desktop, déclenché par la page)</h3>
+        <DoubleFlower diamonds />
+      </section>
+      <section className="flex flex-col gap-md bg-background-neutral-black pt-xxl text-text-neutral-white">
+        <h2 className="type-h4 px-(--grid-spacing)">ProgressBar — lecture d&apos;article, houle, sans retour arrière</h2>
+        <ProgressBarDemo />
+      </section>
+      <section className="flex flex-col gap-md bg-background-brand-bright p-xxl text-text-neutral-black">
+        <h2 className="type-h4">NavSideTiles — affichage réduit quand un Main text ne tient plus sur une ligne</h2>
+        <NavSideTilesDemo />
       </section>
       <section className="flex flex-col gap-md bg-background-neutral-white py-xxl text-text-neutral-black">
         <h2 className="type-h4 px-(--grid-spacing)">PhotosContainer</h2>

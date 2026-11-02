@@ -98,6 +98,48 @@
   --dropshadow-strong: 2px 2px 3px 0 #00000059, 6px 6px 6px 0 #00000040;
   --dropshadow-mid: 1.5px 1.5px 1.5px 0 #00000059, 4px 4px 2px 0 #0000004d;
   --dropshadow-low: 1.5px 2px 4px 0 #00000073, 2px 2px 4px 0 #00000040;
+  /* Même style dropshadow/low en filtre, pour une ombre posée sur un groupe sans fond (elle suit le texte et les icônes). */
+  --dropshadow-low-filter: drop-shadow(1.5px 2px 4px #00000073) drop-shadow(2px 2px 4px #00000040);
+  /* Même style dropshadow/mid en ombre de texte (text-shadow n'accepte pas d'étalement). */
+  --dropshadow-mid-text: 1.5px 1.5px 1.5px #00000059, 4px 4px 2px #0000004d;
+
+  /*
+   * doubleFlower — valeurs propres à ce composant (modifiables ici sans toucher au reste).
+   * Ombres : styles Figma « sunflower/complete » et « sunflower/half », en filtre pour suivre la découpe des visuels.
+   */
+  --double-flower-shadow-complete: drop-shadow(3px 3px 2px #00000080) drop-shadow(8px 6px 4px #00000066);
+  --double-flower-shadow-half: drop-shadow(-3px -3px 2px #00000080) drop-shadow(-8px -6px 4px #00000066)
+    drop-shadow(3px 3px 2px #00000080) drop-shadow(8px 6px 4px #00000066);
+  --double-flower-height: 45rem; /* 720 : hauteur fixe du composant desktop et tablette (décision, Figma 721,33) */
+  --double-flower-mobile-scene-height: 32.1875rem; /* 515 : hauteur fixe de la scène mobile dans Figma (sans variable) */
+  --double-flower-label-padding: 0.625rem; /* 10 : marge des libellés de phase dans Figma (sans variable) */
+  --double-flower-credit-height: 3.25rem; /* 52 : hauteur fixe du copyright desktop dans Figma (sans variable) */
+
+  /*
+   * progressBar — valeurs propres à ce composant (modifiables ici sans toucher au reste).
+   * Épaisseur : 4 (décision, Figma 2 sans variable) — variable à reporter dans le DS.
+   * Houle (animation W3, réglages choisis par l'utilisateur) : lue par le composant au montage.
+   */
+  --progress-bar-height: var(--p-number-4);
+  --progress-bar-catch-up: 700ms; /* délai de rattrapage du remplissage */
+  --progress-bar-wave-height: 2.5px; /* creux maximal des vagues, contenues dans la barre */
+  --progress-bar-wave-length: 21px; /* écart entre deux crêtes */
+  --progress-bar-wave-speed: 80; /* vitesse de défilement des vagues, en px/s */
+  --progress-bar-wave-reach: 60px; /* portée de la houle en arrière du front */
+  --progress-bar-wave-rest: 0; /* houle au repos, de 0 (eau plate) à 1 (houle pleine) */
+
+  /*
+   * navSideTiles — largeur maximale de la colonne du numéro (Figma sans variable, valeurs actuelles retenues
+   * comme maximum par l'utilisateur). Elle rétrécit jusqu'à la largeur de 3 chiffres.
+   */
+  --nav-side-tile-number-max-desktop: 5.8125rem; /* 93 */
+  --nav-side-tile-number-max-mobile: 4.5625rem; /* 73 */
+  /* Accomplissement (animation C2, réglages choisis par l'utilisateur) : une goutte en larme saute du bout
+     de la barre jusqu'au début du Check, puis le Check se trace. Lues par le composant. */
+  --nav-side-tile-drop-flight: 450ms; /* durée du saut */
+  --nav-side-tile-drop-trace: 250ms; /* durée du tracé du Check */
+  --nav-side-tile-drop-jump: 18px; /* hauteur du saut au-dessus de la ligne droite */
+  --nav-side-tile-drop-size: 4px; /* diamètre de la tête de la goutte */
 
   /*
    * dégradé — style Figma « shadowBehindVisual » : ombre simulée derrière le visuel (colorBackground).

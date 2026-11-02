@@ -46,7 +46,8 @@ function parseBrackets(text: string, italic: boolean, fail: (message: string) =>
   return parts;
 }
 
-function parseLine(line: string, fail: (message: string) => never): MdLine {
+/** Une seule ligne (couleurs, liens, italique), sans découpe en liste même si elle commence par « 1. ». */
+export function parseLine(line: string, fail: (message: string) => never): MdLine {
   const parts: MdLine = [];
   let last = 0;
   for (const match of line.matchAll(ITALIC)) {

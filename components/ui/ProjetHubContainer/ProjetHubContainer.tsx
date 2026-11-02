@@ -64,7 +64,14 @@ export function ProjetHubContainer({
         {/* Image Section */}
         <div className="relative flex min-h-0 w-full flex-1 flex-col items-end justify-end p-sm">
           <div data-reveal className={`absolute inset-0 ${imageReveal}`}>{image}</div>
-          <IconButton icon="ArrowRight" label={`${commun.tuile_voir_projet} ${title}`} variant="primary" color="white" href={href} />
+          <IconButton
+            icon="ArrowRight"
+            label={`${commun.tuile_voir_projet} ${title}`}
+            cursorLabel={commun.curseur_voir_projet}
+            variant="primary"
+            color="white"
+            href={href}
+          />
         </div>
 
         {/* infoContainer */}
