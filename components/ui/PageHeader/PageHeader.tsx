@@ -13,7 +13,8 @@ import { pageHrefs, useActivePage, type PageKey } from "../navigation";
  * En-tête de page — composant Figma « pageHeader » (fichier portfolio, section 5030:42743).
  * La variante Figma « device » passe par les breakpoints ; « state » (default / opened) est l'état du menu ;
  * « activePage » est déduite de l'URL (ou forcée par la prop dans le UI kit).
- * Fixé en haut de l'écran sur tous les appareils.
+ * Fixé en haut de l'écran sur tous les appareils. Sa hauteur est publiée dans --page-header-height (sur la racine)
+ * pour les éléments collés juste dessous (étapes de methodeContainer en mobile).
  *
  * Menu (mobile et tablette) : panneau plein écran sous l'en-tête, espace automatique entre les deux blocs.
  * Ouverture : rideau du haut vers le bas (--motion-duration-base), puis les lignes de texte apparaissent
@@ -36,6 +37,22 @@ export function PageHeader({ activePage, className = "" }: PageHeaderProps) {
   const [open, setOpen] = useState(false);
   const menuId = useId();
   const menuRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLElement>(null);
+
+  // Hauteur de l'en-tête (barre et trait, le menu est en dehors du flux) pour les éléments collés dessous.
+  useEffect(() => {
+    const header = headerRef.current;
+    if (!header) return;
+    const root = document.documentElement;
+    const publish = () => root.style.setProperty("--page-header-height", `${header.offsetHeight}px`);
+    publish();
+    const observer = new ResizeObserver(publish);
+    observer.observe(header);
+    return () => {
+      observer.disconnect();
+      root.style.removeProperty("--page-header-height");
+    };
+  }, []);
 
   // Rang de chaque ligne (--line-index), utilisé pour décaler son apparition.
   useEffect(() => {
@@ -64,6 +81,7 @@ export function PageHeader({ activePage, className = "" }: PageHeaderProps) {
 
   return (
     <header
+      ref={headerRef}
       className={`sticky top-0 z-10 flex w-full flex-col bg-background-neutral-white ${className}`}
     >
       <div className="grid-layout h-(--button-size-sm) desktop:h-auto">

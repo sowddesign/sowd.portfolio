@@ -1,1 +1,1 @@
-export { CursorLabel, cursorHidden, useCursorLabel, type CursorLabelProps } from "./CursorLabel";
+export { CursorLabel, cursorHidden, useCursorLabel, type CursorLabelProps, type CursorLabelPlacement } from "./CursorLabel";

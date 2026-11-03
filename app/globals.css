@@ -20,8 +20,8 @@
  * Firefox n'accepte que les couleurs : curseur noir sur piste blanche, sans largeur ni états.
  */
 ::-webkit-scrollbar {
-  width: calc(var(--icon-xs) + 2 * var(--p-number-4));
-  height: calc(var(--icon-xs) + 2 * var(--p-number-4));
+  width: calc(var(--scroll-bar-thumb) + 2 * var(--scroll-bar-gap));
+  height: calc(var(--scroll-bar-thumb) + 2 * var(--scroll-bar-gap));
 }
 ::-webkit-scrollbar-track,
 ::-webkit-scrollbar-corner {
@@ -30,16 +30,25 @@
 ::-webkit-scrollbar-thumb {
   background-color: var(--shape-neutral-black);
   background-clip: content-box;
-  border: var(--p-number-4) solid transparent;
+  border: var(--scroll-bar-gap) solid transparent;
   /* Arrondi corner/xs visible sur le curseur (demandé hors Figma, Figma : none) : la marge transparente
-     est incluse dans le rayon, d'où + spacing/xxs. */
-  border-radius: calc(var(--corner-xs) + var(--p-number-4));
+     est incluse dans le rayon. */
+  border-radius: calc(var(--corner-xs) + var(--scroll-bar-gap));
 }
 ::-webkit-scrollbar-thumb:hover {
   background-color: var(--shape-brand-bright);
 }
 ::-webkit-scrollbar-thumb:active {
   background-color: var(--shape-brand-somber);
+}
+/* Dimensions lues par les pseudo-éléments ci-dessus : scrollBar par défaut, réduites par .scroll-bar-discreet. */
+:root {
+  --scroll-bar-thumb: var(--icon-xs);
+  --scroll-bar-gap: var(--p-number-4);
+}
+.scroll-bar-discreet {
+  --scroll-bar-thumb: var(--scroll-bar-discreet-thumb);
+  --scroll-bar-gap: var(--scroll-bar-discreet-gap);
 }
 /* Réservé à Firefox : ailleurs, scrollbar-color désactiverait les styles ::-webkit-scrollbar. */
 @supports (-moz-appearance: none) {

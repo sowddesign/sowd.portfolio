@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { tokenDuration } from "../token-duration";
 
 /*
  * Consigne « Appuie  et  glisse » de footerVisual (Figma : bloc « smallAnim », tablette et mobile),
@@ -11,7 +12,7 @@ import { useEffect, useRef } from "react";
  * Appui de 1 s (il rétrécit à 91 % puis reste immobile), faux départ dans une direction au hasard,
  * puis 3 à 5 gestes courbes qui accélèrent et freinent (profil « minimum jerk »), avec pauses,
  * dépassements corrigés et légère inclinaison dans le sens du mouvement ; sortie à droite, en haut
- * ou en bas. Un nouveau trajet est tiré à chaque boucle.
+ * ou en bas. Un nouveau trajet est tiré à chaque boucle, après une pause --motion-hint-pause.
  * Mouvement réduit : texte affiché immobile.
  */
 
@@ -147,11 +148,13 @@ export function PaintHint({ animated }: { animated: boolean }) {
     const text = textRef.current;
     if (!area || !text || !animated) return;
 
+    // Pause commune aux consignes animées : texte visible et immobile avant l'appui suivant.
+    const pause = tokenDuration(text, "--motion-hint-pause");
     let animation: Animation | undefined;
     const loop = () => {
       const { keyframes, total } = buildKeyframes(Math.max(area.clientWidth - text.offsetWidth, 0));
       animation?.cancel();
-      animation = text.animate(keyframes, { duration: total });
+      animation = text.animate(keyframes, { duration: total, endDelay: pause, fill: "forwards" });
       animation.onfinish = loop;
     };
     loop();

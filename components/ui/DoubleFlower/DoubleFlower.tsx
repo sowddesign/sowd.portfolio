@@ -1,9 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { useId, useState, type CSSProperties, type PointerEvent, type ReactNode } from "react";
+import { useEffect, useId, useRef, useState, type CSSProperties, type PointerEvent, type ReactNode } from "react";
 import { commun } from "@/content/texts";
 import { parseLine, type MdLine } from "@/lib/markdown";
+import { useCursorLabel } from "../CursorLabel";
+import { Icon } from "../Icon";
+import type { IconName } from "../Icon/icon-names";
 import { RichLines } from "../RichText";
 import { TextualButton } from "../TextualButton";
 import { touchQuery, useMediaQuery } from "../use-media-query";
@@ -15,6 +18,9 @@ import { touchQuery, useMediaQuery } from "../use-media-query";
  *
  * - Desktop et tablette avec souris : le survol (ou le focus clavier) d'une zone affiche son état, la sortie revient à
  *   default (ou diamonds avec la prop diamonds). Tablette : report de la grille 10 colonnes sur 8 (choix validé).
+ *   Zones 01 à 04 : la forme du demi-tournesol seulement (transparence de son image), pas son rectangle ;
+ *   problème et solution : leurs titres. Au survol, le curseur devient une flèche (couleur adaptative du texte curseur)
+ *   qui pointe vers le texte de l'étape (demandes de l'utilisateur).
  * - Mobile : parcours pas à pas (Continuer / Retour), scène mobile.
  * - Tablette tactile : parcours mobile (texte et boutons sous la scène), avec la scène desktop.
  *
@@ -108,6 +114,56 @@ const desktopZones: Record<"01" | "02" | "03" | "04", Box> = {
   "04": [1010.8, 80, 306.8, 588],
 };
 
+/** Flèche au curseur : direction du texte de chaque étape (demande de l'utilisateur). */
+const cursorArrows: Record<Phase, IconName> = {
+  probleme: "ArrowUp",
+  "01": "ArrowUpLeft",
+  "02": "ArrowDownLeft",
+  solution: "ArrowDown",
+  "03": "ArrowUpRight",
+  "04": "ArrowDownRight",
+};
+
+type FlowerPhase = "01" | "02" | "03" | "04";
+const flowerPhases: FlowerPhase[] = ["01", "02", "03", "04"];
+/** Masque de transparence d'un demi-tournesol, à l'échelle de sa boîte (1 px = 1 px de maquette). */
+type Mask = { data: Uint8ClampedArray; width: number; height: number };
+
+/** Masques des demi-tournesols 01 à 04, chargés depuis leurs images (cadrage « cover » comme à l'affichage). */
+function useFlowerMasks(enabled: boolean) {
+  const masks = useRef<Partial<Record<FlowerPhase, Mask>>>({});
+  useEffect(() => {
+    if (!enabled) return;
+    let cancelled = false;
+    for (const phase of flowerPhases) {
+      if (masks.current[phase]) continue;
+      const { image, box } = desktopVisuals[phase];
+      const [, , boxWidth, boxHeight] = box;
+      const img = new window.Image();
+      img.src = `/_next/image?url=${encodeURIComponent(`/double-flower/${image}.png`)}&w=640&q=75`;
+      img.onload = () => {
+        if (cancelled) return;
+        const width = Math.round(boxWidth);
+        const height = Math.round(boxHeight);
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        const context = canvas.getContext("2d", { willReadFrequently: true });
+        if (!context) return;
+        const scale = Math.max(boxWidth / img.naturalWidth, boxHeight / img.naturalHeight);
+        const drawWidth = img.naturalWidth * scale;
+        const drawHeight = img.naturalHeight * scale;
+        context.drawImage(img, (boxWidth - drawWidth) / 2, (boxHeight - drawHeight) / 2, drawWidth, drawHeight);
+        masks.current[phase] = { data: context.getImageData(0, 0, width, height).data, width, height };
+      };
+    }
+    return () => {
+      cancelled = true;
+    };
+  }, [enabled]);
+  return masks;
+}
+
 const desktopBackground = (view: View): ImageName =>
   view === "default" ? "desktop-default" : view === "diamonds" ? "desktop-diamonds" : "desktop-muted";
 
@@ -186,6 +242,7 @@ function Layer({ active, className = "", children }: { active: boolean; classNam
     <div
       aria-hidden={!active}
       inert={!active}
+      data-layer
       className={`absolute inset-0 ${fade} ${active ? "opacity-100" : "opacity-0"} ${className}`}
     >
       {children}
@@ -278,15 +335,71 @@ function Title({ text, end = false, className }: { text: string; end?: boolean; 
   );
 }
 
-/** Libellé de phase desktop (« Navigation Label ») : en haut à gauche ou en bas à droite de ses deux colonnes. */
-function PhaseLabel({ text, bottom = false, className }: { text: string; bottom?: boolean; className: string }) {
+/**
+ * Libellé de phase desktop (« Navigation Label ») : ancré sur la scène des tournesols aux coordonnées du texte dans
+ * Figma (haut-gauche, ou bas-droite), pour rester à sa place sur les fleurs à toutes les largeurs
+ * (la grille ne suit pas la mise à l'échelle de la scène sous 1300 : décalage relevé par l'utilisateur).
+ * S'il chevauche le texte de l'étape (écrans plus étroits), il s'écarte sur le côté juste assez pour lui laisser
+ * la place, avec spacing/sm d'écart (demande de l'utilisateur) : voir useLabelsAvoidText.
+ */
+type LabelAnchor = { left: number; top: number } | { right: number; bottom: number };
+const phaseLabels = {
+  decouvrir: { left: 303, top: 34 },
+  developper: { left: 888, top: 34 },
+  definir: { right: 552, bottom: 687 },
+  /* État 02 : définir est décalé dans la maquette desktop. */
+  definir02: { right: 698, bottom: 687 },
+  livrer: { right: 1137, bottom: 687 },
+} satisfies Record<string, LabelAnchor>;
+
+function PhaseLabel({ text, at }: { text: string; at: LabelAnchor }) {
+  const style: CSSProperties =
+    "left" in at
+      ? { left: percent(at.left / desktopFrame.width), top: percent(at.top / desktopFrame.height) }
+      : {
+          right: percent(1 - at.right / desktopFrame.width),
+          bottom: percent(1 - at.bottom / desktopFrame.height),
+        };
   return (
-    <div
-      className={`flex p-(--double-flower-label-padding) ${bottom ? "items-end justify-end" : "items-start justify-start"} ${className}`}
-    >
-      <span className="type-caption-accentuation">{text}</span>
-    </div>
+    <DesktopStage>
+      <span data-phase-label className="absolute type-caption-accentuation whitespace-nowrap" style={style}>
+        {text}
+      </span>
+    </DesktopStage>
   );
+}
+
+/** Décale chaque libellé de phase qui chevauche le texte de son état : vers la gauche ou la droite selon le côté du texte. */
+function useLabelsAvoidText() {
+  const sceneRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const scene = sceneRef.current;
+    if (!scene) return;
+    const update = () => {
+      /* spacing/sm en px (le token est en rem). */
+      const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+      const gap = (parseFloat(getComputedStyle(scene).getPropertyValue("--spacing-sm")) || 0) * rem;
+      for (const layer of scene.querySelectorAll<HTMLElement>("[data-layer]")) {
+        const text = layer.querySelector<HTMLElement>("[data-phase-text]");
+        for (const label of layer.querySelectorAll<HTMLElement>("[data-phase-label]")) {
+          label.style.removeProperty("translate");
+          if (!text || !text.offsetParent) continue;
+          const a = label.getBoundingClientRect();
+          const b = text.getBoundingClientRect();
+          const overlaps = a.left < b.right + gap && a.right > b.left - gap && a.top < b.bottom && a.bottom > b.top;
+          if (!overlaps) continue;
+          const shift = a.left + a.width / 2 < b.left + b.width / 2 ? b.left - gap - a.right : b.right + gap - a.left;
+          label.style.setProperty("translate", `${shift}px 0`);
+        }
+      }
+    };
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(scene);
+    document.fonts.ready.then(update);
+    return () => observer.disconnect();
+  }, []);
+  return sceneRef;
 }
 
 /** Libellé de phase mobile : texte captionText/accentuation remplissant sa cellule. */
@@ -302,12 +415,6 @@ function MobileLabel({ text, bottom = false, className }: { text: string; bottom
 const place = {
   probleme: "row-start-4 col-start-1",
   solution: "row-start-4 col-start-8 desktop:col-start-10",
-  decouvrir: "row-start-1 col-start-3 col-span-2",
-  developper: "row-start-1 col-start-5 col-span-2 desktop:col-start-7",
-  definir: "row-start-7 col-start-3 col-span-2",
-  /* État 02 : définir est décalé d'une colonne dans la maquette desktop. */
-  definir02: "row-start-7 col-start-3 col-span-2 desktop:col-start-4",
-  livrer: "row-start-7 col-start-5 col-span-2 desktop:col-start-7",
   /* Textes : 3 lignes en tablette (la scène y est moins haute, choix validé), 2 en desktop comme la maquette. */
   textTopLeft: "row-start-1 col-start-1",
   textBottomLeft: "row-start-5 col-start-1 desktop:row-start-6",
@@ -324,7 +431,8 @@ const desktopTextPlace: Record<Phase, string> = {
   probleme: place.textTopLeft,
   "01": place.textTopLeft,
   "02": place.textBottomLeft,
-  solution: place.textTopRight,
+  /* Solution : en bas à droite comme livrer (demande de l'utilisateur). */
+  solution: place.textBottomRight,
   "03": place.textTopRight,
   "04": place.textBottomRight,
 };
@@ -355,6 +463,31 @@ export function DoubleFlower({ diamonds = false, className = "" }: DoubleFlowerP
     setStep(target);
   };
   const index = steps.indexOf(step);
+
+  /* Survol des tournesols : point de la scène (px de maquette) sur une partie opaque d'un demi-tournesol. */
+  const masks = useFlowerMasks(!isTouch);
+  const desktopSceneRef = useLabelsAvoidText();
+  const stageRef = useRef<HTMLDivElement>(null);
+  const flowerAt = (event: PointerEvent): FlowerPhase | null => {
+    const stage = stageRef.current;
+    if (!stage) return null;
+    const rect = stage.getBoundingClientRect();
+    const x = ((event.clientX - rect.left) / rect.width) * desktopFrame.width;
+    const y = ((event.clientY - rect.top) / rect.height) * desktopFrame.height;
+    for (const phase of flowerPhases) {
+      const mask = masks.current[phase];
+      const [left, top] = desktopVisuals[phase].box;
+      const mx = Math.floor(x - left);
+      const my = Math.floor(y - top);
+      if (!mask || mx < 0 || my < 0 || mx >= mask.width || my >= mask.height) continue;
+      if (mask.data[(my * mask.width + mx) * 4 + 3] > 128) return phase;
+    }
+    return null;
+  };
+  const cursor = useCursorLabel(
+    hovered && !isTouch ? <Icon name={cursorArrows[hovered]} size="var(--icon-lg)" /> : undefined,
+    "center",
+  );
 
   const hoverZone = (phase: Phase) => ({
     onPointerEnter: (event: PointerEvent) => event.pointerType !== "touch" && setHovered(phase),
@@ -458,6 +591,7 @@ export function DoubleFlower({ diamonds = false, className = "" }: DoubleFlowerP
       {/* ---------- Scène desktop et tablette ---------- */}
       {/* Hauteur proportionnelle à la largeur, plafonnée à 720 ; libellés et textes sur la grille (choix validé). */}
       <div
+        ref={desktopSceneRef}
         className="relative hidden max-h-(--double-flower-height) overflow-clip tablet:block"
         style={{ aspectRatio: `${desktopFrame.width} / ${desktopFrame.height}` }}
       >
@@ -486,22 +620,22 @@ export function DoubleFlower({ diamonds = false, className = "" }: DoubleFlowerP
               {(all || view === "probleme") && <Title text={commun.double_probleme} className={place.probleme} />}
               {(all || view === "solution") && <Title text={commun.double_solution} end className={place.solution} />}
               {(all || view === "probleme" || view === "01") && (
-                <PhaseLabel text={commun.double_decouvrir} className={place.decouvrir} />
+                <PhaseLabel text={commun.double_decouvrir} at={phaseLabels.decouvrir} />
               )}
               {(all || view === "solution" || view === "03") && (
-                <PhaseLabel text={commun.double_developper} className={place.developper} />
+                <PhaseLabel text={commun.double_developper} at={phaseLabels.developper} />
               )}
-              {(all || view === "probleme") && <PhaseLabel text={commun.double_definir} bottom className={place.definir} />}
-              {view === "02" && <PhaseLabel text={commun.double_definir} bottom className={place.definir02} />}
+              {(all || view === "probleme") && <PhaseLabel text={commun.double_definir} at={phaseLabels.definir} />}
+              {view === "02" && <PhaseLabel text={commun.double_definir} at={phaseLabels.definir02} />}
               {(all || view === "solution" || view === "04") && (
-                <PhaseLabel text={commun.double_livrer} bottom className={place.livrer} />
+                <PhaseLabel text={commun.double_livrer} at={phaseLabels.livrer} />
               )}
               {phase && (
                 /* Écran tactile : le texte passe sous la scène, au format mobile. */
                 <div
-                  className={`col-span-2 row-span-3 flex desktop:row-span-2 min-h-0 flex-col [@media(hover:none)]:hidden ${desktopTextPlace[phase]} ${phase === "02" || phase === "04" ? "justify-end" : "justify-start"}`}
+                  className={`col-span-2 row-span-3 flex desktop:row-span-2 min-h-0 flex-col [@media(hover:none)]:hidden ${desktopTextPlace[phase]} ${phase === "02" || phase === "04" || phase === "solution" ? "justify-end" : "justify-start"}`}
                 >
-                  <p id={textId(phase)} className="type-caption-regular">
+                  <p id={textId(phase)} data-phase-text className="type-caption-regular">
                     <RichLines lines={[stepTexts[phase]]} />
                   </p>
                 </div>
@@ -517,7 +651,26 @@ export function DoubleFlower({ diamonds = false, className = "" }: DoubleFlowerP
         })}
 
         {/* Zones de survol, dans l'ordre du parcours ; absentes sur écran tactile (parcours par boutons). */}
-        <div className={`absolute inset-0 ${desktopGrid} [@media(hover:none)]:hidden`}>
+        <div
+          className={`absolute inset-0 ${desktopGrid} [@media(hover:none)]:hidden ${cursor.className}`}
+          onPointerMove={cursor.handlers.onPointerMove}
+          onPointerLeave={cursor.handlers.onPointerLeave}
+        >
+          {/* Survol des tournesols 01 à 04 : forme des demi-tournesols (les boutons restent pour le clavier). */}
+          <div className="pointer-events-none relative col-span-full row-span-full -my-lg">
+            <DesktopStage>
+              <div
+                ref={stageRef}
+                className="pointer-events-auto absolute inset-0"
+                onPointerMove={(event) => {
+                  if (event.pointerType === "touch") return;
+                  const phase = flowerAt(event);
+                  if (phase !== hovered) setHovered(phase);
+                }}
+                onPointerLeave={(event) => event.pointerType !== "touch" && setHovered(null)}
+              />
+            </DesktopStage>
+          </div>
           {phases.map((phase) => {
             const common = {
               type: "button" as const,
@@ -526,14 +679,14 @@ export function DoubleFlower({ diamonds = false, className = "" }: DoubleFlowerP
               ...hoverZone(phase),
             };
             if (phase === "probleme" || phase === "solution") {
-              return <button key={phase} {...common} className={`cursor-default ${place[phase]}`} />;
+              return <button key={phase} {...common} className={`relative z-1 cursor-default ${place[phase]}`} />;
             }
             return (
               <div key={phase} className="pointer-events-none relative col-span-full row-span-full -my-lg">
                 <DesktopStage>
                   <button
                     {...common}
-                    className="pointer-events-auto absolute cursor-default"
+                    className="absolute cursor-default"
                     style={boxStyle(desktopZones[phase], desktopFrame)}
                   />
                 </DesktopStage>
@@ -541,6 +694,7 @@ export function DoubleFlower({ diamonds = false, className = "" }: DoubleFlowerP
             );
           })}
         </div>
+        {cursor.node}
       </div>
 
       {/* ---------- Texte et boutons : mobile, et tablette tactile ---------- */}

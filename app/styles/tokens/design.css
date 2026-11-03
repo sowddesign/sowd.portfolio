@@ -40,6 +40,7 @@
   --motion-duration-base: 200ms; /* barre animée : smart animate */
   --motion-ease-out: cubic-bezier(0, 0, 0.58, 1); /* « Ease out » Figma */
   --motion-ease-linear: linear; /* « Linear » Figma : contour animé de iconButton */
+  --motion-hint-pause: 5000ms; /* pause entre deux boucles des consignes animées (décision de l'utilisateur) */
   /* menu de navigation (pageHeader ouvert) — valeurs de test, sans variable Figma */
   --motion-menu-stagger: 20ms; /* décalage entre deux lignes de texte */
   --motion-menu-offset: var(--p-number-8); /* remontée du texte à l’apparition (= spacing/xs) */
@@ -93,6 +94,12 @@
   --typography-letter-spacing-default: -0.02em;
   --typography-letter-spacing-swiss: -0.06em;
 
+  /* extra — style Figma « extra/datavizHugeNumber » (gros chiffres de dataviz), variables Extra/* */
+  --extra-font: var(--typography-font-body); /* Extra/Font : Plus Jakarta Sans */
+  --extra-weight: 700; /* Extra/Weight : Bold */
+  --extra-size: var(--p-number-88);
+  --extra-line-height: var(--p-number-104);
+
   /* effets — styles Figma « dropshadow » */
   --dropshadow-bold: 3px 3px 2px 0 #00000080, 8px 6px 4px 0 #00000066;
   --dropshadow-strong: 2px 2px 3px 0 #00000059, 6px 6px 6px 0 #00000040;
@@ -112,7 +119,6 @@
     drop-shadow(3px 3px 2px #00000080) drop-shadow(8px 6px 4px #00000066);
   --double-flower-height: 45rem; /* 720 : hauteur fixe du composant desktop et tablette (décision, Figma 721,33) */
   --double-flower-mobile-scene-height: 32.1875rem; /* 515 : hauteur fixe de la scène mobile dans Figma (sans variable) */
-  --double-flower-label-padding: 0.625rem; /* 10 : marge des libellés de phase dans Figma (sans variable) */
   --double-flower-credit-height: 3.25rem; /* 52 : hauteur fixe du copyright desktop dans Figma (sans variable) */
 
   /*
@@ -129,6 +135,74 @@
   --progress-bar-wave-rest: 0; /* houle au repos, de 0 (eau plate) à 1 (houle pleine) */
 
   /*
+   * timeManager — barre de volume flottante, au-dessus du bouton (Figma : position et taille sans variable).
+   */
+  --time-manager-bar-length: var(--p-number-64); /* 64 : longueur de la barre (décision, Figma 24) */
+  --time-manager-bar-thickness: var(--p-number-4); /* 4 : épaisseur de la barre (décision, Figma 1) */
+  --time-manager-bar-overlap: var(--p-number-4); /* 4 : la barre descend de 4 sur le bouton (Figma y = 4) */
+  --time-manager-handle-size: var(--p-number-12); /* 12 × 12 : rond de réglage (décision de l'utilisateur) */
+  --time-manager-hover-zone: var(--spacing-sm); /* 12 : marge autour de la barre qui garde l'état hovered */
+  /* Ouverture « graine » (variante F choisie par l'utilisateur) : l'icône tourne, la goutte apparaît au pied de la
+     barre et gonfle comme une graine, puis la tige pousse et la soulève jusqu'au niveau. Valeurs de test. */
+  --time-manager-turn-duration: var(--motion-duration-base); /* quart de tour de l'icône */
+  --time-manager-seed-duration: var(--motion-duration-fast); /* 100 : gonflement de la graine (décision de l'utilisateur) */
+  --time-manager-grow-duration: var(--motion-duration-base); /* 200 : pousse de la tige et montée de la graine (décision de l'utilisateur) */
+  --time-manager-grow-ease: cubic-bezier(0.34, 1.3, 0.64, 1); /* gonflement, pousse et montée : léger dépassement avant de se poser */
+  /* Fermeture « ondes » (demande de l'utilisateur) : la barre rentre dans le haut-parleur
+     (--time-manager-shrink-duration), l'icône revient droite (durée du quart de tour), puis les ondes sortent. Valeurs de test. */
+  --time-manager-shrink-duration: var(--motion-duration-base); /* 200 : rentrée de la barre (décision de l'utilisateur) */
+  --time-manager-wave-duration: var(--motion-duration-base); /* sortie d'une onde */
+  --time-manager-wave-stagger: var(--motion-duration-fast); /* décalage entre la petite et la grande onde */
+
+  /*
+   * Écran du showreel avant la vidéo (demandes de l'utilisateur) : écran noir et « Attends un peu », allumage de
+   * l'écran sur le logo (Figma « 01 ») qui pousse lentement puis accélère, fait une phase de boucle, boucle tant que
+   * la vidéo charge, s'envole (transition C), et la vidéo voilée (faded/black/20) apparaît avec le
+   * bouton Play.
+   */
+  --showreel-power-on-delay: 2s; /* écran noir avant l'allumage (décision de l'utilisateur) */
+  --showreel-power-on-duration: 600ms; /* allumage de l'écran (valeur d'essai) */
+  --showreel-logo-ease: cubic-bezier(0.38, 0, 0.25, 1); /* courbe du prototype Figma */
+  --showreel-logo-grow-duration: 3.5s; /* pousse lente qui accélère (Figma 2,2 s, décision de l'utilisateur) */
+  --showreel-logo-loop-duration: 3.4s; /* une phase de boucle (Figma 3 s, décision de l'utilisateur) */
+  /* Pousse + première phase de boucle (keyframes showreel-logo-*-grow, calculés pour 3,5 s + 3,4 s). */
+  --showreel-logo-first-duration: calc(var(--showreel-logo-grow-duration) + var(--showreel-logo-loop-duration));
+  --showreel-logo-size: 90%; /* hauteur du logo dans l'écran (valeur d'essai, écrans Figma indicatifs) */
+  --showreel-logo-rest: 400ms; /* logo complet, immobile, avant l'envol (demande de l'utilisateur, valeur d'essai) */
+  --showreel-logo-fly-duration: 700ms; /* envol d'un pétale (valeur d'essai) */
+  --showreel-logo-fly-stagger: 30ms; /* décalage entre deux pétales (valeur d'essai) */
+  --showreel-logo-fly-distance: 160px; /* distance parcourue, en pixels du logo Figma (valeur d'essai) */
+  --showreel-logo-fly-scale: 0.4; /* taille d'un pétale à la fin de l'envol (valeur d'essai) */
+  --showreel-reveal-delay: 300ms; /* apparition de la vidéo après le début de l'envol, pause comprise en plus (valeur d'essai) */
+  --showreel-reveal-duration: 600ms; /* apparition de la vidéo voilée et du bouton Play (valeur d'essai) */
+  /* Découpe de l'écran : coins du haut corner/md ; en bas, le rond de la barre de lecture déborde de moitié. */
+  --showreel-screen-clip: inset(
+    0 0 calc((var(--video-manager-handle-size) - var(--video-manager-bar-height-hovered)) / -2) 0 round var(--corner-md)
+      var(--corner-md) 0 0
+  );
+
+  /*
+   * videoManager — contrôles de la vidéo (Figma 5725:32544).
+   * Fond en hovered : dégradé vertical sombre (piste A choisie par l'utilisateur, pour voir les icônes sur une image
+   * claire), emptySpace à 8,66 % (arrêt Figma) puis faded/black/60 en bas. Figma : faded/white/10, à reporter.
+   */
+  --video-manager-background: linear-gradient(
+    to bottom,
+    var(--extra-background-color-gradient-shadow-empty-space) 8.66%,
+    var(--faded-black-60) 100%
+  );
+  --video-manager-height: var(--p-number-64); /* 64 : zone de survol (décision de l'utilisateur, Figma button-size/sm) */
+  --video-manager-bar-height: var(--p-number-1); /* 1 : barre de lecture en default (Figma, sans variable) */
+  --video-manager-bar-height-hovered: var(--p-number-4); /* 4 : barre de lecture en hovered (Figma, sans variable) */
+  --video-manager-handle-size: var(--p-number-12); /* 12 : rond de la barre de lecture en clicked (Figma, sans variable) */
+  --video-manager-seek-zone: var(--spacing-xs); /* 8 : zone cliquable au-dessus de la barre de lecture (test) */
+  --video-manager-long-press: 500ms; /* appui long sur la vidéo, tactile (décision de l'utilisateur) */
+  --video-manager-double-tap: 300ms; /* écart maximal entre deux appuis d'un double appui, tactile (valeur courante) */
+  --video-manager-idle: 1.7s; /* inactivité avant le début du fondu de disparition (décision de l'utilisateur) */
+  --video-manager-fade-out: 300ms; /* fondu de disparition : la barre a disparu à 2 s d'inactivité (décision) */
+  --video-manager-fade-in: var(--motion-duration-fast); /* fondu d'apparition, plus rapide (100 ms) */
+
+  /*
    * navSideTiles — largeur maximale de la colonne du numéro (Figma sans variable, valeurs actuelles retenues
    * comme maximum par l'utilisateur). Elle rétrécit jusqu'à la largeur de 3 chiffres.
    */
@@ -140,6 +214,50 @@
   --nav-side-tile-drop-trace: 250ms; /* durée du tracé du Check */
   --nav-side-tile-drop-jump: 18px; /* hauteur du saut au-dessus de la ligne droite */
   --nav-side-tile-drop-size: 4px; /* diamètre de la tête de la goutte */
+
+  /* navSideMenus — hauteur du compteur « Terminés » (Figma fixe, sans variable) — variable à reporter dans le DS. */
+  --nav-side-menus-counter-height: 3.5rem; /* 56 */
+
+  /* methodeContainer — hauteur fixe en desktop et tablette (Figma 830, sans variable, voulue par l'utilisateur). */
+  --methode-container-height: 51.875rem; /* 830 */
+  /* Introduction qui passe à la page 01 dès le premier cran (desktop, demande de l'utilisateur, valeurs à l'essai) :
+     part du cran transmise à la petite remontée, durée de cette remontée lente (fausse résistance, comme s'il
+     fallait deux crans) avant la glisse vers la page 01. */
+  --methode-pull-resistance: 0.4;
+  --methode-pull-delay: 450ms;
+  /* Blocage du défilement de la page 01 juste après la glisse (demande de l'utilisateur). */
+  --methode-pull-lock: 300ms;
+
+  /*
+   * showreel (haut de l'accueil) :
+   * fondu du bas de la photo vers le noir : utilitaire showreel-fade (theme.css), appliqué sur l'élément lui-même pour
+   * que la position du noir mesurée par le showreel (--showreel-fade-end) soit prise en compte ;
+   * vitesse du bandeau des mots-clés en mobile, en px/s (valeur à l'essai, demande de l'utilisateur).
+   */
+  --showreel-marquee-speed: 40;
+  /* Défilement de la page sur lequel « Curieux|se ? » s'efface (valeur à l'essai, demande de l'utilisateur). */
+  --showreel-message-fade-distance: 480px;
+  /* Logo « sowd » en haut du showreel mobile (Figma 56.148 de haut, sans variable). */
+  --showreel-logo-height: 3.5093rem; /* 56.148 */
+  /* Bloc d'infos à droite de l'écran (desktop, Figma 215 de large, sans variable). */
+  --showreel-info-width: 13.4375rem; /* 215 */
+
+  /* methode — voile de l'image agrandie : noirs transparents, sombre au centre (choix de l'utilisateur),
+     assombri d'un cran à la demande ; léger flou de la page derrière (valeur d'essai). */
+  --methode-zoom-veil: radial-gradient(circle, var(--faded-black-80), var(--faded-black-40));
+  --methode-zoom-blur: 4px;
+  /* Grossissement maximal d'une image agrandie par rapport à sa taille dans la page (choix de l'utilisateur). */
+  --methode-zoom-max: 2;
+
+  /* headerImage — hauteur fixe dans methode (Figma 226.841, sans variable). */
+  --header-image-height: 14.1776rem;
+
+  /*
+   * Barre de défilement discrète (methode, absente de Figma) : même dessin que scrollBar, 8 de large
+   * (curseur 4, marge 2), choisie par l'utilisateur.
+   */
+  --scroll-bar-discreet-thumb: var(--p-number-4);
+  --scroll-bar-discreet-gap: var(--p-number-2);
 
   /*
    * dégradé — style Figma « shadowBehindVisual » : ombre simulée derrière le visuel (colorBackground).
@@ -209,5 +327,8 @@
     --typography-line-height-sub-heading: var(--p-number-40);
     --typography-line-height-button: var(--p-number-32);
     --typography-line-height-body: var(--p-number-32);
+
+    --extra-size: var(--p-number-128);
+    --extra-line-height: var(--p-number-140);
   }
 }

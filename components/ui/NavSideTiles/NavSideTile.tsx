@@ -212,6 +212,8 @@ export function NavSideTile({
 }
 
 /** État Figma « empty » : garde la place d'une tuile, à utiliser seulement si besoin. */
-export function NavSideTileEmpty({ layout = "desktop" }: { layout?: NavSideTileLayout }) {
-  return <div aria-hidden className={`${tileHeight} ${layout === "reduced" ? reducedTileWidth : "w-full"}`} />;
+export function NavSideTileEmpty({ layout = "desktop", className = "" }: { layout?: NavSideTileLayout; className?: string }) {
+  return (
+    <div aria-hidden className={`${tileHeight} ${layout === "reduced" ? reducedTileWidth : "w-full"} ${className}`} />
+  );
 }

@@ -111,6 +111,7 @@
   --spacing-lg: var(--p-number-24);
   --spacing-xl: var(--p-number-32);
   --spacing-xxl: var(--p-number-48);
+  --spacing-mega: var(--p-number-96);
 
   /* ---------- Rayons : rounded-md, rounded-rounded… ---------- */
   --radius-*: initial;
@@ -312,6 +313,15 @@
   letter-spacing: var(--typography-letter-spacing-default);
 }
 
+/* extra/datavizHugeNumber (gros chiffres de dataviz) */
+@utility type-extra-dataviz {
+  font-family: var(--extra-font);
+  font-weight: var(--extra-weight);
+  font-size: var(--extra-size);
+  line-height: var(--extra-line-height);
+  letter-spacing: var(--typography-letter-spacing-default);
+}
+
 /* captionSwiss (approche resserrée) */
 @utility type-swiss-accentuation {
   font-family: var(--typography-font-body);
@@ -371,4 +381,281 @@
       translate: 0 var(--motion-menu-offset);
     }
   }
+}
+
+/*
+ * Ouverture de la barre de volume (timeManager), variante « graine » : la poignée gonfle au pied de la barre,
+ * puis la tige pousse et la soulève jusqu'au niveau. Délais posés par le composant.
+ * Une seule courbe (--time-manager-grow-ease, léger dépassement) pour les trois mouvements : la poignée reste
+ * collée au haut de la tige pendant la montée. Uniquement scale et translate, pour une animation fluide.
+ * Sans état final (backwards) : la tige et la poignée rejoignent leur état réel, réglable ensuite.
+ */
+@theme {
+  --animate-time-manager-seed: time-manager-seed var(--time-manager-seed-duration) var(--time-manager-grow-ease)
+    backwards;
+  --animate-time-manager-grow: time-manager-grow var(--time-manager-grow-duration) var(--time-manager-grow-ease)
+    backwards;
+  --animate-time-manager-rise: time-manager-rise var(--time-manager-grow-duration) var(--time-manager-grow-ease)
+    backwards;
+
+  @keyframes time-manager-seed {
+    from {
+      scale: 0;
+    }
+  }
+
+  @keyframes time-manager-grow {
+    from {
+      scale: 1 0;
+    }
+  }
+
+  /* Part du pied de la barre : descend du niveau (--time-manager-level, posé par le composant) à zéro. */
+  @keyframes time-manager-rise {
+    from {
+      translate: 0 calc(var(--time-manager-level) * var(--time-manager-bar-length));
+    }
+  }
+}
+
+/*
+ * Fermeture de la barre de volume (timeManager, fermeture « ondes ») : la tige et la poignée rentrent dans le
+ * haut-parleur, puis, l'icône revenue droite, les ondes en ressortent une à une. Délais posés par le composant.
+ */
+@theme {
+  --animate-time-manager-shrink: time-manager-shrink var(--time-manager-shrink-duration) var(--motion-ease-out) forwards;
+  --animate-time-manager-sink: time-manager-sink var(--time-manager-shrink-duration) var(--motion-ease-out) forwards;
+  --animate-time-manager-vanish: time-manager-vanish var(--time-manager-shrink-duration) var(--motion-ease-out)
+    forwards;
+  --animate-time-manager-wave: time-manager-wave var(--time-manager-wave-duration) var(--motion-ease-out) both;
+
+  @keyframes time-manager-shrink {
+    to {
+      scale: 1 0;
+    }
+  }
+
+  /* Point d'accroche de la poignée : redescend du niveau au pied de la barre. */
+  @keyframes time-manager-sink {
+    to {
+      translate: 0 calc(var(--time-manager-level) * var(--time-manager-bar-length));
+    }
+  }
+
+  @keyframes time-manager-vanish {
+    to {
+      scale: 0;
+    }
+  }
+
+  @keyframes time-manager-wave {
+    from {
+      scale: 0;
+      opacity: 0;
+    }
+  }
+}
+
+/*
+ * Logo animé de l'écran du showreel — composant Figma « 01 » (fichier portfolio, node 5730:33008) : 16 pétales en
+ * répétition radiale, chaque pétale tourne et se déforme autour de son centre (valeurs et temps du prototype Figma).
+ * grow : pousse (Figma ≈ 2,2 s), lente au départ puis qui accélère (demande de l'utilisateur), enchaînée sans arrêt
+ * sur une première phase de boucle ; loop : phase de boucle (Figma 3 s), tant que la vidéo charge ; fly : envol des
+ * pétales (transition C).
+ */
+@theme {
+  --animate-showreel-logo-grow:
+    showreel-logo-rotate-grow var(--showreel-logo-first-duration) var(--showreel-logo-ease) both,
+    showreel-logo-scale-grow var(--showreel-logo-first-duration) var(--showreel-logo-ease) both,
+    showreel-logo-move-grow var(--showreel-logo-first-duration) var(--showreel-logo-ease) both;
+  --animate-showreel-logo-loop:
+    showreel-logo-rotate-loop var(--showreel-logo-loop-duration) var(--showreel-logo-ease) infinite,
+    showreel-logo-scale-loop var(--showreel-logo-loop-duration) var(--showreel-logo-ease) infinite;
+  --animate-showreel-logo-fly: showreel-logo-fly var(--showreel-logo-fly-duration) var(--showreel-logo-ease) both;
+  --animate-showreel-reveal: showreel-reveal var(--showreel-reveal-duration) var(--motion-ease-out) both;
+  --animate-showreel-power-on: showreel-power-on var(--showreel-power-on-duration) var(--motion-ease-out) both;
+
+  /*
+   * Pousse puis première phase de boucle, d'un seul tenant (sans arrêt quand le logo est entier) :
+   * pousse (étapes Figma 0 à 2,2 s, temps étirés au début, racine cubique : lente puis forte accélération, linéaire)
+   * sur --showreel-logo-grow-duration, puis phase de boucle Figma sur --showreel-logo-loop-duration, dont le premier
+   * segment part en ease-out pour garder l'élan de la pousse. Pourcentages calculés pour 3,5 s + 3,4 s.
+   */
+  @keyframes showreel-logo-rotate-grow {
+    0% {
+      rotate: -201.095deg;
+      animation-timing-function: linear;
+    }
+    34.63% {
+      rotate: -180deg;
+      animation-timing-function: linear;
+    }
+    44.14% {
+      rotate: -90deg;
+      animation-timing-function: linear;
+    }
+    50.72% {
+      rotate: 0deg;
+      animation-timing-function: var(--motion-ease-out);
+    }
+    63.04% {
+      rotate: 90deg;
+    }
+    75.36% {
+      rotate: 180deg;
+    }
+    87.68% {
+      rotate: 270deg;
+    }
+    100% {
+      rotate: 360deg;
+    }
+  }
+
+  @keyframes showreel-logo-scale-grow {
+    0% {
+      scale: 0.18 0.26;
+      animation-timing-function: linear;
+    }
+    29.89% {
+      scale: 0.415 0.272;
+      animation-timing-function: linear;
+    }
+    41.44% {
+      scale: 0.508 0.744;
+      animation-timing-function: linear;
+    }
+    47.87% {
+      scale: 1.008 0.81;
+      animation-timing-function: linear;
+    }
+    50.72% {
+      scale: 1 1;
+      animation-timing-function: var(--motion-ease-out);
+    }
+    59.75% {
+      scale: 0.72 1.28;
+    }
+    71.25% {
+      scale: 1.22 0.8;
+    }
+    83.57% {
+      scale: 0.82 1.2;
+    }
+    94.25% {
+      scale: 1.12 0.9;
+    }
+    100% {
+      scale: 1 1;
+    }
+  }
+
+  @keyframes showreel-logo-move-grow {
+    0% {
+      translate: 0.04px 78.725px;
+      animation-timing-function: linear;
+    }
+    34.63% {
+      translate: -2.7px 45.2px;
+      animation-timing-function: linear;
+    }
+    44.14% {
+      translate: -1.15px 19.37px;
+      animation-timing-function: linear;
+    }
+    50.72%,
+    100% {
+      translate: 0 0;
+    }
+  }
+
+  @keyframes showreel-logo-rotate-loop {
+    0% {
+      rotate: 0deg;
+    }
+    25% {
+      rotate: 90deg;
+    }
+    50% {
+      rotate: 180deg;
+    }
+    75% {
+      rotate: 270deg;
+    }
+    100% {
+      rotate: 360deg;
+    }
+  }
+
+  @keyframes showreel-logo-scale-loop {
+    0% {
+      scale: 1 1;
+    }
+    18.33% {
+      scale: 0.72 1.28;
+    }
+    41.67% {
+      scale: 1.22 0.8;
+    }
+    66.67% {
+      scale: 0.82 1.2;
+    }
+    88.33% {
+      scale: 1.12 0.9;
+    }
+    100% {
+      scale: 1 1;
+    }
+  }
+
+  /* Envol d'un pétale : il part vers l'extérieur en rétrécissant et s'efface. */
+  @keyframes showreel-logo-fly {
+    to {
+      translate: 0 calc(var(--showreel-logo-fly-distance) * -1);
+      scale: var(--showreel-logo-fly-scale);
+      opacity: 0;
+    }
+  }
+
+  /* Allumage de l'écran (vieux tube) : un trait lumineux s'étire au milieu, s'ouvre sur toute la hauteur et s'éteint. */
+  @keyframes showreel-power-on {
+    0% {
+      scale: 0 0.01;
+      opacity: 1;
+    }
+    35% {
+      scale: 1 0.01;
+      opacity: 1;
+    }
+    60% {
+      scale: 1 1;
+      opacity: 0.5;
+    }
+    100% {
+      scale: 1 1;
+      opacity: 0;
+    }
+  }
+
+  @keyframes showreel-reveal {
+    from {
+      opacity: 0;
+    }
+  }
+}
+
+/*
+ * Fondu du bas de la photo du showreel vers le noir — dégradé Figma « visuelBackground » (couleurs sans variable
+ * dans Figma : noir repris de background/neutral/black, opacité 55 % de Figma). Noir complet à --showreel-fade-end,
+ * que le showreel cale sur le bas du bloc du titre « Démarche UX » (demande de l'utilisateur) ; les deux premiers
+ * arrêts gardent leurs proportions Figma par rapport à ce point. Utilitaire (et non variable sur :root) : la variable
+ * --showreel-fade-end posée sur l'élément est ainsi lue à cet endroit.
+ */
+@utility showreel-fade {
+  background-image: linear-gradient(
+    to bottom,
+    transparent calc(var(--showreel-fade-end, 45.6%) * 0.012),
+    color-mix(in srgb, var(--background-neutral-black) 55%, transparent) calc(var(--showreel-fade-end, 45.6%) * 0.3026),
+    var(--background-neutral-black) var(--showreel-fade-end, 45.6%)
+  );
 }

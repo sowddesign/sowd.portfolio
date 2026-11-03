@@ -7,6 +7,8 @@ import { Icon } from "../Icon";
  * La variante Figma « device » passe par les breakpoints, pas par une prop (seul le padding horizontal change ;
  * la taille du texte H4 suit déjà les breakpoints).
  * Tout le bloc (textes et flèche) est un lien vers l'ancre Démarche UX.
+ * Textes sur une ligne tant qu'ils tiennent ; sur un écran plus étroit que la maquette (402), ils passent à la ligne
+ * au lieu de pousser la flèche hors de l'écran (défilement horizontal de la page).
  * Ombre dropshadow/low sur le groupe texte + flèche ; au survol elle disparaît en fondu
  * (--motion-duration-fast, --motion-ease-out ; choix de l'utilisateur, pas d'état dans Figma).
  */
@@ -22,7 +24,7 @@ export function MessageContainer({ className = "" }: MessageContainerProps) {
         href="/#ux-process"
         className="flex w-full items-end gap-sm [filter:var(--dropshadow-low-filter)] transition-[filter] duration-(--motion-duration-fast) ease-(--motion-ease-out) hover:[filter:none] motion-reduce:transition-none"
       >
-        <span className="type-h4 flex flex-col justify-center gap-xxs whitespace-nowrap">
+        <span className="type-h4 flex min-w-0 flex-col justify-center gap-xxs">
           <span className="text-text-neutral-white">{commun.message_curieux}</span>
           <span className="text-text-brand-brand">{commun.message_decouvre}</span>
         </span>

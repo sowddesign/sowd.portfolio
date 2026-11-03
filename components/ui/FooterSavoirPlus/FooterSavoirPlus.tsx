@@ -38,7 +38,7 @@ export function FooterSavoirPlus({ className = "" }: FooterSavoirPlusProps) {
         >
           {commun.savoir_plus_cv}
         </TextualButton>
-        <TextualButton variant="secondary" color="white" icon="ArrowRight" iconPosition="right" href="/#ux-process">
+        <TextualButton variant="secondary" color="white" icon="ArrowUp" iconPosition="right" href="/#ux-process">
           {commun.savoir_plus_demarche_ux}
         </TextualButton>
         <TextualButton variant="tertiary" color="white" icon="ArrowRight" iconPosition="right" href={pageHrefs.contact}>

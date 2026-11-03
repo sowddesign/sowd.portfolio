@@ -84,6 +84,26 @@ curseur_photos_precedente: Précédente
 curseur_photos_suivante: Suivante
 curseur_photos_fermer: Fermer
 curseur_champ_supprimer: Supprimer
+curseur_agrandir: Agrandir
+# Texte au curseur sur « Méthode : double diamant » (accueil) : invite à regarder le schéma dessous
+curseur_regarder_dessous: Regarder en dessous
+# Contrôles de la vidéo : texte au curseur
+curseur_video_lecture: Lecture
+curseur_video_pause: Pause
+curseur_couper_son: Couper le son
+curseur_remettre_son: Remettre le son
+curseur_video_fermer: Fermer
+
+# Contrôles de la vidéo : boutons et barres, lus par les lecteurs d'écran
+video_lecture: Lire la vidéo
+video_pause: Mettre la vidéo en pause
+video_couper_son: Couper le son
+video_remettre_son: Remettre le son
+video_son_coupe: son coupé
+video_volume: Volume
+video_progression: Progression de la vidéo
+video_agrandir: Afficher la vidéo en plein écran
+video_fermer: Quitter le plein écran
 
 # Double diamant (tournesols) : libellés sur le visuel
 double_probleme: problème
@@ -108,4 +128,23 @@ double_afficher_diamants: Afficher les diamants
 double_revoir_methode: Revoir la méthode
 # Copyright en bas du visuel
 double_copyright: "© 2026  Tom  Lamy  - Création  graphique  originale."
+
+# Méthode (pages de chaque étape) : titres des deux parties et boutons communs
+methode_definition_titre: "En quelques mots :"
+methode_projet_titre: "Utilisation dans un projet :"
+# Titre de la seconde partie en mobile (accordéon)
+methode_projet_titre_mobile: "Dans mes projets :"
+methode_etape_suivante: Voir la prochaine étape
+# En-tête des étapes de la méthode : boutons vers l'étape précédente et suivante
+methode_precedente: précédente
+methode_suivante: suivante
+# Boutons de l'accordéon mobile (lus par les lecteurs d'écran, suivis du titre de la partie)
+methode_ouvrir: Ouvrir
+methode_fermer: Fermer
+# Image cliquable (lue par les lecteurs d'écran, suivie de la description de l'image)
+methode_agrandir: Agrandir l’image
+# Image agrandie : bouton de fermeture (lu par les lecteurs d'écran)
+methode_image_fermer: Fermer l’image agrandie
+# Menu des étapes : compteur d'étapes terminées (en affichage réduit, lu seulement par les lecteurs d'écran)
+methode_terminees: Terminés
 ---

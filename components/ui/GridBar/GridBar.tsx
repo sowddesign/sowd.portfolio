@@ -3,8 +3,10 @@ import { gridBarMotif01Paths, gridBarMotif12Paths } from "./grid-bar-paths";
 
 /*
  * Tuile de grille — composant Figma « gridBar » (fichier portfolio, node 4214:5871), style=upToDown.
- * Remplit son parent (largeur d'une colonne, hauteur en fill). Dégradé vertical d'une couleur vers le transparent,
- * interpolé en sRGB comme dans Figma. Les variantes 01 et 12 ajoutent un motif de taille fixe, centré, rogné par la tuile.
+ * Remplit son parent (largeur d'une colonne, hauteur en fill). Dégradé vertical d'une couleur vers #000000 à 0 %,
+ * calculé comme Figma : couleur et opacité interpolées séparément (sans prémultiplication), si bien que le dégradé
+ * passe par des tons assombris. Le navigateur prémultiplie l'alpha (la couleur s'efface sans s'assombrir, tuiles claires
+ * presque invisibles sur fond clair) : arrêts intermédiaires recalculés pour reproduire le rendu Figma. Les variantes 01 et 12 ajoutent un motif de taille fixe, centré, rogné par la tuile.
  * Composant décoratif : masqué aux lecteurs d'écran.
  */
 
@@ -15,20 +17,31 @@ export type GridBarProps = { className?: string } & (
   | { state: "hovered"; number: GridBarNumber }
 );
 
+/** Couleur de départ du dégradé (variable Figma color/…, primitive : les variables --color-* du thème sont inlinées). */
 const gradientFrom: Record<GridBarNumber, string> = {
-  "01": "from-neutral-0",
-  "02": "from-brand-50",
-  "03": "from-brand-100",
-  "04": "from-brand-200",
-  "05": "from-brand-300",
-  "06": "from-brand-400",
-  "07": "from-brand-500",
-  "08": "from-brand-600",
-  "09": "from-brand-700",
-  "10": "from-brand-800",
-  "11": "from-brand-900",
-  "12": "from-neutral-1000",
+  "01": "--p-color-neutral-0",
+  "02": "--p-color-brand-50",
+  "03": "--p-color-brand-100",
+  "04": "--p-color-brand-200",
+  "05": "--p-color-brand-300",
+  "06": "--p-color-brand-400",
+  "07": "--p-color-brand-500",
+  "08": "--p-color-brand-600",
+  "09": "--p-color-brand-700",
+  "10": "--p-color-brand-800",
+  "11": "--p-color-brand-900",
+  "12": "--p-color-neutral-1000",
 };
+
+/* Arrêts du dégradé « Figma » : à t, couleur mélangée vers le noir de t et opacité 1 − t. */
+const figmaSteps = [0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1];
+const figmaGradient = (color: string) =>
+  `linear-gradient(to bottom, ${figmaSteps
+    .map((t) => {
+      const keep = Math.round((1 - t) * 1000) / 10;
+      return `rgb(from color-mix(in srgb, var(${color}) ${keep}%, black) r g b / ${keep}%) ${t * 100}%`;
+    })
+    .join(", ")})`;
 
 /* Motifs : dimensions, opacité du calque et axe du dégradé blanc → transparent, relevés dans Figma. */
 const motifs = {
@@ -86,7 +99,8 @@ export function GridBar({ className = "", state = "default", number }: GridBarPr
     <div aria-hidden className={`pointer-events-none relative size-full overflow-hidden ${className}`}>
       {number && (
         <div
-          className={`absolute inset-0 bg-linear-to-b/srgb ${gradientFrom[number]} to-transparent ${fade} ${
+          style={{ backgroundImage: figmaGradient(gradientFrom[number]) }}
+          className={`absolute inset-0 ${fade} ${
             state === "hovered" ? "opacity-100" : "opacity-0"
           }`}
         >

@@ -19,14 +19,20 @@ export const metadata: Metadata = {
   description: commun.site_description,
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  /* Raccourci vers l'UI kit : importé en développement seulement, pour qu'il ne soit pas dans le build final. */
+  const KitShortcut =
+    process.env.NODE_ENV === "development" ? (await import("./ui-kit/KitShortcut")).KitShortcut : null;
   return (
     <html
       lang="fr"
       data-scroll-behavior="smooth"
       className={`${plusJakartaSans.variable} ${merriweatherSans.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        {children}
+        {KitShortcut && <KitShortcut />}
+      </body>
     </html>
   );
 }
