@@ -39,6 +39,9 @@ export type MethodePageContent = {
 };
 
 const METHODE_DIR = path.join(process.cwd(), "content", "methode");
+// Images des pages méthode. Chemin fixe jusqu'à public/methode : un chemin dynamique depuis public/ ferait embarquer
+// tout public/ (vidéo comprise) dans la fonction serveur, au-delà de la limite de taille de Netlify.
+const METHODE_IMAGES_DIR = path.join(process.cwd(), "public", "methode");
 
 export type MethodePageEntry = {
   /** Nom du fichier (content/methode/pages/<slug>.md). */
@@ -126,7 +129,7 @@ function element(source: string, folder: string, fail: (message: string) => neve
   if (lines.length === 1 && IMAGE.test(first)) {
     const [, alt, name] = first.match(IMAGE)!;
     const src = `/${folder}/${name}`;
-    return { kind: "image", src, alt, ...imageSize(path.join(process.cwd(), "public", folder, name), fail) };
+    return { kind: "image", src, alt, ...imageSize(path.join(METHODE_IMAGES_DIR, path.relative("methode", folder), name), fail) };
   }
   if (lines.length === 1 && FIGURE.test(first)) {
     const [, value, label] = first.match(FIGURE)!;
