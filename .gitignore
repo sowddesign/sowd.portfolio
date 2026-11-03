@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Vidéo source du showreel : trop lourde pour Git (144 Mo) ; showreel.mp4 est sa version web allégée
+/public/showreel/showreel-source.mp4
+
+# Retouche temporaire du sol du showreel
+/retouche-sol/
