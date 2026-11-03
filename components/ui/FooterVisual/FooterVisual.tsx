@@ -128,6 +128,7 @@ export function FooterVisual({ className = "" }: FooterVisualProps) {
         <IconButton
           icon="Eye"
           label={commun.visuel_afficher}
+          cursorLabel={commun.curseur_visuel_afficher}
           // Tertiary tant qu'aucun logo n'est coloré (attire moins l'attention), primary ensuite (Figma).
           variant={started ? "primary" : "tertiary"}
           color="white"
@@ -140,6 +141,7 @@ export function FooterVisual({ className = "" }: FooterVisualProps) {
         <IconButton
           icon="ArrowCounterClockwise"
           label={commun.visuel_remettre_noir}
+          cursorLabel={commun.curseur_visuel_remettre_noir}
           variant="primary"
           color="black"
           className="relative"

@@ -9,14 +9,15 @@
  *   [texte](https://…)     → lien (style hyperlien)
  *   [texte]{brand}         → texte en couleur : un token text/* du projet (voir TEXT_COLORS)
  *   *texte*                → italique
+ *   **texte**              → gras (graisse accentuation)
  */
 
 /** Couleurs autorisées dans [texte]{couleur} : tokens text/brand/* et text/neutral/*. */
 export const TEXT_COLORS = ["brand", "whitish", "bright", "dark", "somber", "white", "black"] as const;
 export type TextColor = (typeof TEXT_COLORS)[number];
 
-/** Morceau de texte avec ses éventuels lien, couleur et italique. */
-export type MdInline = { text: string; href?: string; color?: TextColor; italic?: boolean };
+/** Morceau de texte avec ses éventuels lien, couleur, italique et gras. */
+export type MdInline = { text: string; href?: string; color?: TextColor; italic?: boolean; bold?: boolean };
 /** Une ligne de texte (les retours à la ligne séparent les lignes). */
 export type MdLine = MdInline[];
 export type MdParagraph =
@@ -27,6 +28,7 @@ export type MdBlock = MdParagraph[];
 /** [texte](lien) ou [texte]{couleur}. */
 const BRACKET = /\[([^\]]+)\](?:\(([^)\s]+)\)|\{([^}\s]+)\})/g;
 const ITALIC = /\*([^*]+)\*/g;
+const BOLD = /\*\*([^*]+)\*\*/g;
 const LIST_ITEM = /^(\d+)\.\s+(.*)$/;
 
 function parseBrackets(text: string, italic: boolean, fail: (message: string) => never): MdLine {
@@ -46,7 +48,7 @@ function parseBrackets(text: string, italic: boolean, fail: (message: string) =>
   return parts;
 }
 
-function parseLine(line: string, fail: (message: string) => never): MdLine {
+function parseItalics(line: string, fail: (message: string) => never): MdLine {
   const parts: MdLine = [];
   let last = 0;
   for (const match of line.matchAll(ITALIC)) {
@@ -55,6 +57,19 @@ function parseLine(line: string, fail: (message: string) => never): MdLine {
     last = match.index + match[0].length;
   }
   if (last < line.length) parts.push(...parseBrackets(line.slice(last), false, fail));
+  return parts;
+}
+
+/** Une seule ligne (couleurs, liens, italique, gras), sans découpe en liste même si elle commence par « 1. ». */
+export function parseLine(line: string, fail: (message: string) => never): MdLine {
+  const parts: MdLine = [];
+  let last = 0;
+  for (const match of line.matchAll(BOLD)) {
+    if (match.index > last) parts.push(...parseItalics(line.slice(last, match.index), fail));
+    parts.push(...parseItalics(match[1], fail).map((part) => ({ ...part, bold: true })));
+    last = match.index + match[0].length;
+  }
+  if (last < line.length) parts.push(...parseItalics(line.slice(last), fail));
   return parts;
 }
 

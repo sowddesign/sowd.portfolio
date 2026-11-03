@@ -18,3 +18,4 @@ export const touchQuery = "(hover: none)";
 export const reducedMotionQuery = "(prefers-reduced-motion: reduce)";
 /** Tablette et au-delà (breakpoint tablet: de app/styles/breakpoints.css). */
 export const tabletQuery = "(width > 740px)";
+export const desktopQuery = "(width > 1300px)";

@@ -20,11 +20,8 @@ import { IconButton } from "../IconButton";
  * S'il passe à la ligne au-dessus du champ, il pousse le champ vers le bas.
  *
  * Croix (IconAfter) : efface la saisie. Pendant la saisie, le focus reste dans le champ.
- * Infobulle native « Supprimer » après un survol prolongé.
+ * Au survol, curseur texte du bouton icône (remplace l'ancienne infobulle native, décision de l'utilisateur).
  */
-
-/* Survol prolongé avant l'infobulle de la croix — valeur en attente de validation (pas encore de token). */
-const TOOLTIP_DELAY = 3000;
 
 /* textField : champ sur plusieurs lignes au besoin (textarea), le clavier mobile suit le type de saisie. */
 const inputModes = { text: "text", email: "email", tel: "tel" } as const;
@@ -80,12 +77,10 @@ export function TextField({
   const id = useId();
   const [value, setValue] = useState(defaultValue);
   const [focused, setFocused] = useState(false);
-  const [tooltip, setTooltip] = useState(false);
   const raised = focused || value !== "";
   const error = !focused && value !== "" && isValid !== undefined && !isValid(value);
 
   const fieldRef = useRef<HTMLInputElement & HTMLTextAreaElement>(null);
-  const tooltipTimer = useRef<number | undefined>(undefined);
 
   const update = (next: string) => {
     setValue(next);
@@ -99,15 +94,6 @@ export function TextField({
 
   const focusField = (event: MouseEvent) => {
     if (!(event.target as Element).closest("button")) fieldRef.current?.focus();
-  };
-
-  const showTooltipLater = () => {
-    window.clearTimeout(tooltipTimer.current);
-    tooltipTimer.current = window.setTimeout(() => setTooltip(true), TOOLTIP_DELAY);
-  };
-  const hideTooltip = () => {
-    window.clearTimeout(tooltipTimer.current);
-    setTooltip(false);
   };
 
   const fieldProps = {
@@ -204,11 +190,9 @@ export function TextField({
                 <IconButton
                   icon="X"
                   label={commun.champ_supprimer}
-                  title={tooltip ? commun.champ_supprimer : undefined}
+                  cursorLabel={commun.curseur_champ_supprimer}
                   color="black"
                   onMouseDown={keepFocus}
-                  onMouseEnter={showTooltipLater}
-                  onMouseLeave={hideTooltip}
                   onClick={() => update("")}
                 />
               </span>
