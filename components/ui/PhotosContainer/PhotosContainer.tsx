@@ -1,13 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { ColorBackground } from "../ColorBackground";
 import { Photos, type Photo } from "../Photos";
 import { ProgressBar } from "../ProgressBar";
 import { ShowreelLogo } from "../ShowreelLogo";
-import { trackVisuals } from "../SiteIntro";
-import { tokenDuration } from "../token-duration";
+import { useVisualsLoading } from "../SiteIntro";
 import { commun, contact } from "@/content/texts";
 
 /*
@@ -64,38 +63,9 @@ const sceneWidth = `max(calc(var(--scene) * ${1 - SCENE_GROWTH} + min(100cqw * v
 /** Décalage du centre de la scène en mobile (12 px, 4,5 px sur 1465,9 × 570), en % de la scène. */
 const sceneOffset = "-translate-x-[49.18%] -translate-y-[49.21%] tablet:-translate-1/2";
 
-type SceneState = "waiting" | "loading" | "ready";
-
 export function PhotosContainer({ photos, className = "" }: { photos: Photo[]; className?: string }) {
   const root = useRef<HTMLDivElement>(null);
-  const [scene, setScene] = useState<SceneState>("waiting");
-  const [progress, setProgress] = useState(0);
-
-  // Chargement des images visibles de la scène.
-  useEffect(() => {
-    const element = root.current;
-    if (!element) return;
-    let loaded = false;
-    let timer = 0;
-    const tracker = trackVisuals(element, {
-      onProgress: setProgress,
-      onReady: () => {
-        loaded = true;
-        window.clearTimeout(timer);
-        setScene("ready");
-      },
-    });
-    timer = window.setTimeout(
-      () => {
-        if (!loaded) setScene("loading");
-      },
-      tokenDuration(element, "--site-intro-nav-threshold"),
-    );
-    return () => {
-      window.clearTimeout(timer);
-      tracker.stop();
-    };
-  }, []);
+  const { state: scene, progress } = useVisualsLoading(root);
 
   // Hauteur réelle du conteneur, pour l'échelle de la scène.
   useEffect(() => {

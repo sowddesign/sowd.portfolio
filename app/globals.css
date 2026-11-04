@@ -76,9 +76,9 @@ body {
  *   le logo de la page (cibles data-intro-target) reste masqué jusqu'à l'arrivée du logo animé, les boutons de
  *   l'en-tête (data-intro-hide) aussi ;
  * - reveal : logo arrivé, la page apparaît ;
- * - wait : chargement direct (intro déjà vue, posé par le même script) ou changement de page, visuels en chargement
- *   (contenu masqué, rien d'affiché avant le seuil) ;
- * - loading : chargement affiché (boucle du logo et barre de progression).
+ * - loading : intro en mouvement réduit (barre de progression seule, contenu masqué).
+ * Changement de page et chargement direct une fois l'intro vue : pas d'attribut, la page s'affiche tout de suite
+ * (demande de l'utilisateur) ; les blocs à chargement propre (data-intro-defer) gèrent leur aperçu.
  */
 html[data-intro] {
   overflow: hidden;
@@ -93,7 +93,6 @@ html[data-intro="play"] [data-intro-hide] {
 html[data-intro="reveal"] [data-intro-hide] {
   transition: opacity var(--site-intro-header-duration) var(--motion-ease-out) var(--site-intro-header-delay);
 }
-html[data-intro="wait"] main,
 html[data-intro="loading"] main {
   opacity: 0;
 }
