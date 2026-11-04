@@ -6,28 +6,28 @@
 # Après la dernière photo, le carrousel revient à la première (et inversement).
 # Les lignes commençant par « # » sont des commentaires.
 
-- fichier: BG Canard2.5.png
+- fichier: BG Canard2.5.webp
   description: Description à écrire
   bouton: blanc
-- fichier: "device=desktop, state=default.png"
+- fichier: "device=desktop, state=default.webp"
   description: Description à écrire
   bouton: blanc
 - fichier: WhatsApp Image 2026-08-31 at 09.20.48.jpeg
   description: Description à écrire
   bouton: blanc
-- fichier: "device=desktop, state=diamonds.png"
+- fichier: "device=desktop, state=diamonds.webp"
   description: Description à écrire
   bouton: blanc
 - fichier: dark.png
   description: Description à écrire
   bouton: blanc
-- fichier: hf_20260712_203942_903b3059-e324-4b78-9e08-edbacf0e4531.png
+- fichier: hf_20260712_203942_903b3059-e324-4b78-9e08-edbacf0e4531.webp
   description: Description à écrire
   bouton: blanc
-- fichier: photo-01.png
+- fichier: photo-01.webp
   description: Description à écrire
   bouton: blanc
-- fichier: photo-02.png
+- fichier: photo-02.webp
   description: Description à écrire
   bouton: noir
 - fichier: DSC_01554_5.jpg
@@ -36,33 +36,33 @@
 - fichier: WhatsApp Image 2026-04-22 at 10.02.36.jpeg
   description: Description à écrire
   bouton: blanc
-- fichier: photo-05.jpg
+- fichier: photo-05.webp
   description: Description à écrire
   bouton: blanc
-- fichier: logoMusico.png
+- fichier: logoMusico.webp
   description: Description à écrire
   bouton: blanc
-- fichier: photo-09.png
+- fichier: photo-09.webp
   description: Description à écrire
   bouton: blanc
-- fichier: logoMetro.png
+- fichier: logoMetro.webp
   description: Description à écrire
   bouton: blanc
-- fichier: logoMetroDodo.png
+- fichier: logoMetroDodo.webp
   description: Description à écrire
   bouton: blanc
-- fichier: logoBoulot.png
+- fichier: logoBoulot.webp
   description: Description à écrire
   bouton: blanc
 - fichier: Plan de travail 1.jpg
   description: Description à écrire
   bouton: blanc
-- fichier: photo-03.png
+- fichier: photo-03.webp
   description: Description à écrire
   bouton: blanc
-- fichier: photo-07.png
+- fichier: photo-07.webp
   description: Description à écrire
   bouton: blanc
-- fichier: hf_20260707_211051_9361c2ab-b4b1-425b-9c05-8657376c69f0.png
+- fichier: hf_20260707_211051_9361c2ab-b4b1-425b-9c05-8657376c69f0.webp
   description: Description à écrire
   bouton: blanc

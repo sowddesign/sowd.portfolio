@@ -25,9 +25,9 @@ export function LogoButton({ className = "" }: LogoButtonProps) {
         className,
       ].join(" ")}
     >
-      <Logomark className="size-(--icon-lg)" />
+      <Logomark data-intro-target="mark" className="size-(--icon-lg)" />
       {/* Hauteur fixe 24px (valeur fixe dans Figma, sans variable), largeur selon les proportions du SVG. */}
-      <Logotype className="h-6 w-auto" />
+      <Logotype data-intro-target="type" className="h-6 w-auto" />
     </Link>
   );
 }

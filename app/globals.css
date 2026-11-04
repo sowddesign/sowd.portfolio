@@ -69,3 +69,39 @@ body {
   color: var(--text-neutral-black);
   font-family: var(--typography-font-body);
 }
+
+/*
+ * Chargement du site (SiteIntro). data-intro est posé sur <html> :
+ * - play : intro d'une nouvelle visite, posé avant le premier rendu par le script en ligne du layout du site ;
+ *   le logo de la page (cibles data-intro-target) reste masqué jusqu'à l'arrivée du logo animé, les boutons de
+ *   l'en-tête (data-intro-hide) aussi ;
+ * - reveal : logo arrivé, la page apparaît ;
+ * - wait : chargement direct (intro déjà vue, posé par le même script) ou changement de page, visuels en chargement
+ *   (contenu masqué, rien d'affiché avant le seuil) ;
+ * - loading : chargement affiché (boucle du logo et barre de progression).
+ */
+html[data-intro] {
+  overflow: hidden;
+}
+html[data-intro="play"] [data-intro-target] {
+  visibility: hidden;
+}
+/* Boutons de l'en-tête : masqués pendant l'intro, apparaissent peu après l'arrivée du logo (reveal). */
+html[data-intro="play"] [data-intro-hide] {
+  opacity: 0;
+}
+html[data-intro="reveal"] [data-intro-hide] {
+  transition: opacity var(--site-intro-header-duration) var(--motion-ease-out) var(--site-intro-header-delay);
+}
+html[data-intro="wait"] main,
+html[data-intro="loading"] main {
+  opacity: 0;
+}
+.site-intro {
+  display: none;
+}
+html[data-intro="play"] .site-intro,
+html[data-intro="reveal"] .site-intro,
+html[data-intro="loading"] .site-intro {
+  display: block;
+}

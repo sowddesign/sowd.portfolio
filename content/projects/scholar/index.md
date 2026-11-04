@@ -22,7 +22,7 @@ tags:
   - Animations
 
 # Nom du fichier image de la tuile, placé dans public/projects/mon-projet/ (obligatoire)
-image: scholar.png
+image: scholar.webp
 ---
 
 Texte de la page projet (pas encore affiché).

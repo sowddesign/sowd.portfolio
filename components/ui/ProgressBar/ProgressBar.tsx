@@ -9,12 +9,13 @@ import { useEffect, useRef, useState } from "react";
  * Seules les couleurs et la forme viennent de Figma : barre pleine, sans rayon, partie vide transparente.
  * La barre prend la largeur de son parent.
  *
- * Sans retour arrière : la barre garde la plus grande valeur reçue.
+ * Sans retour arrière par défaut : la barre garde la plus grande valeur reçue ; avec backward (lecture vidéo), le liquide
+ * recule avec le même ressort. immediate : la barre suit la valeur sans ressort (glisser sur la barre de lecture).
  * Au montage, la barre s'affiche directement à la valeur reçue ; seules les avancées suivantes sont animées.
- * Animation « houle » (W3, réglages choisis par l'utilisateur, tokens --progress-bar-*) :
- * le remplissage rattrape la valeur avec un ressort amorti, et des vagues courent sur le dessus de l'eau
- * en se creusant vers le front, d'autant plus que l'eau avance vite. Les vagues restent dans la barre.
- * Mouvement réduit : remplissage direct, sans vagues.
+ * Animation « liquide contenu » (onde douce, réglages choisis par l'utilisateur, tokens --progress-bar-*) :
+ * le remplissage rattrape la valeur avec un ressort amorti, et une onde descend le long du bord droit qui progresse,
+ * d'autant plus ample que le liquide avance vite (au repos : --progress-bar-edge-rest). L'onde reste dans la barre.
+ * Mouvement réduit : remplissage direct, bord droit.
  */
 
 export type ProgressBarColor = "black" | "white" | "brand" | "whitish";
@@ -26,7 +27,13 @@ export type ProgressBarProps = {
   value: number;
   /** Appelé quand le remplissage affiché atteint 100 %. */
   onFilled?: () => void;
+  /** Le liquide peut reculer (lecture vidéo) ; sinon la barre garde la plus grande valeur reçue. */
+  backward?: boolean;
+  /** Suit la valeur sans ressort (glisser). */
+  immediate?: boolean;
   "aria-label"?: string;
+  /** Barre décorative, doublée par un autre contrôle accessible (barre de lecture vidéo). */
+  "aria-hidden"?: boolean;
   className?: string;
 };
 
@@ -37,18 +44,16 @@ const fill: Record<ProgressBarColor, string> = {
   whitish: "text-shape-brand-whitish",
 };
 
-/* Réglages de la houle lus dans les tokens. */
+/* Réglages de l'onde du bord lus dans les tokens. */
 function readWave(el: HTMLElement) {
   const style = getComputedStyle(el);
   const num = (name: string) => parseFloat(style.getPropertyValue(name));
   const catchUp = style.getPropertyValue("--progress-bar-catch-up").trim();
   return {
     catchUp: catchUp.endsWith("ms") ? parseFloat(catchUp) / 1000 : parseFloat(catchUp),
-    height: num("--progress-bar-wave-height"),
-    length: num("--progress-bar-wave-length"),
-    speed: num("--progress-bar-wave-speed"),
-    reach: num("--progress-bar-wave-reach"),
-    rest: num("--progress-bar-wave-rest"),
+    amplitude: num("--progress-bar-edge-amplitude"),
+    rest: num("--progress-bar-edge-rest"),
+    speed: num("--progress-bar-edge-speed"),
   };
 }
 
@@ -56,7 +61,10 @@ export function ProgressBar({
   color = "black",
   value,
   onFilled,
+  backward = false,
+  immediate = false,
   "aria-label": ariaLabel,
+  "aria-hidden": ariaHidden,
   className = "",
 }: ProgressBarProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -72,7 +80,11 @@ export function ProgressBar({
   const [shown, setShown] = useState(clamped);
   /* Valeur au montage : la barre y est affichée tout de suite, sans se remplir depuis 0. */
   const initialRef = useRef(clamped);
-  if (clamped > shown) setShown(clamped);
+  if (backward ? clamped !== shown : clamped > shown) setShown(clamped);
+  const immediateRef = useRef(immediate);
+  useEffect(() => {
+    immediateRef.current = immediate;
+  }, [immediate]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -97,23 +109,16 @@ export function ProgressBar({
       if (x <= 0) return;
       g.fillStyle = getComputedStyle(canvas).color;
       g.beginPath();
-      g.moveTo(0, H);
-      g.lineTo(0, 0);
-      const amp = wave.height * dpr * (wave.rest + (1 - wave.rest) * state.energy);
-      if (amp > 0.01 && !reducedMotion.matches) {
-        const length = wave.length * dpr;
-        const reach = wave.reach * dpr;
-        const phase = (state.t * wave.speed) / wave.length;
-        const start = Math.max(0, x - reach * 4);
-        g.lineTo(start, 0);
-        for (let px = start; px <= x; px += dpr) {
-          const k = Math.exp(-(x - px) / reach);
-          const w = 0.5 + 0.5 * Math.sin((px / length - phase) * Math.PI * 2);
-          g.lineTo(px, Math.min(H, amp * k * (1 - w)));
-        }
+      g.moveTo(0, 0);
+      // Bord droit : une onde descend du haut vers le bas, son amplitude suit l'élan du liquide.
+      const amp = reducedMotion.matches ? 0 : (wave.rest + wave.amplitude * state.energy) * dpr;
+      const steps = 16;
+      for (let i = 0; i <= steps; i++) {
+        const u = i / steps;
+        const offset = amp * 0.5 * Math.sin(2 * Math.PI * (u - state.t * wave.speed));
+        g.lineTo(Math.min(W, Math.max(0, x + offset)), u * H);
       }
-      g.lineTo(x, 0);
-      g.lineTo(x, H);
+      g.lineTo(0, H);
       g.closePath();
       g.fill();
     };
@@ -127,11 +132,17 @@ export function ProgressBar({
         state.d = target;
         state.v = 0;
         state.energy = 0;
+      } else if (immediateRef.current) {
+        state.d = target;
+        state.v = 0;
+        state.energy += (0 - state.energy) * Math.min(1, dt * 1.5);
       } else {
         const a = omega * omega * (target - state.d) - 2 * omega * state.v;
         state.v += a * dt;
         state.d = Math.min(1, Math.max(0, state.d + state.v * dt));
-        state.energy += (Math.min(Math.abs(state.v) * 8, 1) - state.energy) * Math.min(1, dt * 3);
+        // Élan : monte vite quand le liquide avance, retombe lentement quand il s'arrête.
+        const surge = Math.min(Math.abs(state.v) * 6, 1);
+        state.energy += (surge - state.energy) * Math.min(1, dt * (surge > state.energy ? 6 : 1.5));
       }
       draw();
       if (!state.filled && target >= 1 && state.d >= 0.995) {
@@ -186,11 +197,12 @@ export function ProgressBar({
   return (
     <canvas
       ref={canvasRef}
-      role="progressbar"
-      aria-label={ariaLabel}
-      aria-valuemin={0}
-      aria-valuemax={100}
-      aria-valuenow={Math.round(shown * 100)}
+      role={ariaHidden ? undefined : "progressbar"}
+      aria-hidden={ariaHidden || undefined}
+      aria-label={ariaHidden ? undefined : ariaLabel}
+      aria-valuemin={ariaHidden ? undefined : 0}
+      aria-valuemax={ariaHidden ? undefined : 100}
+      aria-valuenow={ariaHidden ? undefined : Math.round(shown * 100)}
       className={`block h-(--progress-bar-height) w-full ${fill[color]} ${className}`}
     />
   );

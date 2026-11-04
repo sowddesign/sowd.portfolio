@@ -1,10 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ColorBackground } from "../ColorBackground";
 import { Photos, type Photo } from "../Photos";
-import { contact } from "@/content/texts";
+import { ProgressBar } from "../ProgressBar";
+import { ShowreelLogo } from "../ShowreelLogo";
+import { trackVisuals } from "../SiteIntro";
+import { tokenDuration } from "../token-duration";
+import { commun, contact } from "@/content/texts";
 
 /*
  * Conteneur du visuel de photos — composant Figma « photosContainer » (fichier portfolio, node 4932:42591).
@@ -25,6 +29,12 @@ import { contact } from "@/content/texts";
  *
  * Écran : la mosaïque Photos (composant Figma « photos »). Texte : contact.photos_texte (content/pages/contact.md),
  * captionSwiss/regular, text/neutral/white, placé par rapport à l'écran.
+ *
+ * Chargement (demande de l'utilisateur) : ses images ne retiennent pas la page (data-intro-defer), le formulaire reste
+ * utilisable. La scène reste masquée sur colorBackground jusqu'au chargement de ses images visibles ; au-delà de
+ * --site-intro-nav-threshold, la boucle du logo « 01 » (blanc) tourne au centre, avec la barre de progression (noire)
+ * en haut du conteneur. Dès les images chargées, boucle en cours comprise, la scène apparaît d'un bloc
+ * (--site-intro-reveal-duration) (demandes de l'utilisateur). Mouvement réduit : sans boucle.
  */
 
 /**
@@ -54,8 +64,38 @@ const sceneWidth = `max(calc(var(--scene) * ${1 - SCENE_GROWTH} + min(100cqw * v
 /** Décalage du centre de la scène en mobile (12 px, 4,5 px sur 1465,9 × 570), en % de la scène. */
 const sceneOffset = "-translate-x-[49.18%] -translate-y-[49.21%] tablet:-translate-1/2";
 
+type SceneState = "waiting" | "loading" | "ready";
+
 export function PhotosContainer({ photos, className = "" }: { photos: Photo[]; className?: string }) {
   const root = useRef<HTMLDivElement>(null);
+  const [scene, setScene] = useState<SceneState>("waiting");
+  const [progress, setProgress] = useState(0);
+
+  // Chargement des images visibles de la scène.
+  useEffect(() => {
+    const element = root.current;
+    if (!element) return;
+    let loaded = false;
+    let timer = 0;
+    const tracker = trackVisuals(element, {
+      onProgress: setProgress,
+      onReady: () => {
+        loaded = true;
+        window.clearTimeout(timer);
+        setScene("ready");
+      },
+    });
+    timer = window.setTimeout(
+      () => {
+        if (!loaded) setScene("loading");
+      },
+      tokenDuration(element, "--site-intro-nav-threshold"),
+    );
+    return () => {
+      window.clearTimeout(timer);
+      tracker.stop();
+    };
+  }, []);
 
   // Hauteur réelle du conteneur, pour l'échelle de la scène.
   useEffect(() => {
@@ -71,15 +111,21 @@ export function PhotosContainer({ photos, className = "" }: { photos: Photo[]; c
   return (
     <div
       ref={root}
+      data-intro-defer
       className={`@container relative h-full min-h-[311px] w-full overflow-clip [--container-h:311px] tablet:min-h-[562px] tablet:[--container-h:562px] ${className}`}
     >
       {/* colorBackground : tout le conteneur (variante desktop : taille du cadre). */}
       <ColorBackground className="absolute! inset-0" />
 
-      <div style={{ width: sceneWidth }} className={`absolute top-1/2 left-1/2 aspect-[2168/843] ${sceneReference} ${sceneCover} ${sceneOffset}`}>
+      <div
+        style={{ width: sceneWidth }}
+        className={`absolute top-1/2 left-1/2 aspect-[2168/843] transition-opacity duration-(--site-intro-reveal-duration) ease-(--motion-ease-out) ${sceneReference} ${sceneCover} ${sceneOffset} ${
+          scene === "ready" ? "opacity-100" : "opacity-0"
+        }`}
+      >
         {/* Visuel (bureau et moniteur), recadré comme dans visuelBackground. */}
         <div className="absolute top-[-9.29%] left-[24%] h-[133.64%] w-[51.97%]">
-          <Image src="/photos-container/visuel.png" alt="" fill sizes="(width > 1300px) 80vw, (width > 740px) 95vw, 190vw" className="object-cover" />
+          <Image src="/photos-container/visuel.webp" alt="" fill sizes="(width > 1300px) 80vw, (width > 740px) 95vw, 190vw" className="object-cover" />
         </div>
 
         {/* Voile extra/backgroundColor/behindVisual/assombrissement : dans Figma, il couvre tout visuelBackground,
@@ -98,6 +144,21 @@ export function PhotosContainer({ photos, className = "" }: { photos: Photo[]; c
           </p>
         </div>
       </div>
+
+      {/* Chargement : barre de progression en haut, boucle du logo au centre. */}
+      {scene === "loading" && (
+        <>
+          <ProgressBar
+            value={progress}
+            color="black"
+            aria-label={commun.chargement_progression}
+            className="absolute! inset-x-0 top-0"
+          />
+          <div className="pointer-events-none absolute top-1/2 left-1/2 aspect-square h-(--photos-container-loader-size) -translate-1/2 motion-reduce:hidden">
+            <ShowreelLogo phase="loop" className="size-full" />
+          </div>
+        </>
+      )}
     </div>
   );
 }

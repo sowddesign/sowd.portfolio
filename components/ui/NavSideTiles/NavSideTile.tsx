@@ -16,7 +16,7 @@ import { CompletionDrop } from "./CompletionDrop";
  *   selected → selected ;
  *   finished → déduit de progress (étape terminée à 100 %) ;
  *   state    → hovered = :hover ; empty = NavSideTileEmpty.
- * Barre : ProgressBar « houle » qui suit la lecture ; elle garde sa position quand l'étape est désélectionnée.
+ * Barre : ProgressBar (liquide au bord ondulant) qui suit la lecture ; elle garde sa position quand l'étape est désélectionnée.
  * Icônes : ArrowRight (indication au survol), X (désélection), Check (terminée), Plus (ouvrir, mobile).
  * La tuile entière sélectionne ou désélectionne l'étape ; Plus et X en mobile font de même.
  *

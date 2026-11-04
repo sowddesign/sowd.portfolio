@@ -14,6 +14,7 @@ import {
 import { commun } from "@/content/texts";
 import { cursorHidden } from "../CursorLabel";
 import { PlayManager, VideoIconButton } from "../PlayManager";
+import { ProgressBar } from "../ProgressBar";
 import { TimeManager } from "../TimeManager";
 import { touchQuery, useMediaQuery } from "../use-media-query";
 
@@ -34,7 +35,7 @@ import { touchQuery, useMediaQuery } from "../use-media-query";
  * fondu (--video-manager-fade-out) ; elle revient en fondu plus rapide (--video-manager-fade-in).
  * Le composant prend toute la largeur de son parent (fill).
  * Tous les boutons font 40 × 40 (décision de l'utilisateur). Plein écran : « Agrandir » puis « Fermer » (icône X),
- * comme pour les photos (demande de l'utilisateur). Barre de lecture simple, sans animation (demande de l'utilisateur).
+ * comme pour les photos (demande de l'utilisateur). Barre de lecture : progressBar (liquide au bord ondulant), demande de l'utilisateur.
  * Passage de default à Hovered sans animation (rien dans Figma).
  */
 
@@ -360,7 +361,16 @@ export function VideoManager({ videoRef, fullscreenRef, className = "" }: VideoM
         className={`relative w-full ${fade} ${shown ? "h-(--video-manager-bar-height-hovered)" : "h-(--video-manager-bar-height)"}`}
       >
         <span aria-hidden className={`absolute inset-0 bg-faded-white-40 ${fade} ${shown ? "" : "opacity-0"}`} />
-        <span aria-hidden className="absolute inset-y-0 left-0 bg-shape-neutral-white" style={{ width: `${progress * 100}%` }} />
+        {/* Lecture : progressBar blanche (liquide), qui recule avec la vidéo et colle au rond pendant le glisser
+            (demandes de l'utilisateur). */}
+        <ProgressBar
+          value={progress}
+          color="white"
+          backward
+          immediate={clicked}
+          aria-hidden
+          className="absolute! inset-0 h-full!"
+        />
         {shown && !clicked && preview !== null && (
           <span
             aria-hidden

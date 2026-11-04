@@ -22,7 +22,7 @@ tags:
   - Présentation
 
 # Nom du fichier image de la tuile, placé dans public/projects/mon-projet/ (obligatoire)
-image: souffle.png
+image: souffle.webp
 ---
 
 Texte de la page projet (pas encore affiché).

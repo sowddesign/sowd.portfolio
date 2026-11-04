@@ -124,15 +124,13 @@
   /*
    * progressBar — valeurs propres à ce composant (modifiables ici sans toucher au reste).
    * Épaisseur : 4 (décision, Figma 2 sans variable) — variable à reporter dans le DS.
-   * Houle (animation W3, réglages choisis par l'utilisateur) : lue par le composant au montage.
+   * Liquide contenu (onde douce sur le bord droit, réglages choisis par l'utilisateur) : lu par le composant au montage.
    */
   --progress-bar-height: var(--p-number-4);
   --progress-bar-catch-up: 700ms; /* délai de rattrapage du remplissage */
-  --progress-bar-wave-height: 2.5px; /* creux maximal des vagues, contenues dans la barre */
-  --progress-bar-wave-length: 21px; /* écart entre deux crêtes */
-  --progress-bar-wave-speed: 80; /* vitesse de défilement des vagues, en px/s */
-  --progress-bar-wave-reach: 60px; /* portée de la houle en arrière du front */
-  --progress-bar-wave-rest: 0; /* houle au repos, de 0 (eau plate) à 1 (houle pleine) */
+  --progress-bar-edge-amplitude: 3px; /* ondulation du bord droit quand le liquide avance */
+  --progress-bar-edge-rest: 0px; /* ondulation du bord droit au repos (0 : bord droit immobile) */
+  --progress-bar-edge-speed: 2.25; /* ondes qui descendent le long du bord, par seconde */
 
   /*
    * timeManager — barre de volume flottante, au-dessus du bouton (Figma : position et taille sans variable).
@@ -175,6 +173,28 @@
   --showreel-logo-fly-scale: 0.4; /* taille d'un pétale à la fin de l'envol (valeur d'essai) */
   --showreel-reveal-delay: 300ms; /* apparition de la vidéo après le début de l'envol, pause comprise en plus (valeur d'essai) */
   --showreel-reveal-duration: 600ms; /* apparition de la vidéo voilée et du bouton Play (valeur d'essai) */
+  /*
+   * siteIntro — chargement du site (animation validée par l'utilisateur sur démo, 2026-11-04) : la tige pousse,
+   * le logo éclot au centre, la tige rentre, le logo joue la boucle « 01 » (--showreel-logo-*) tant que la page charge,
+   * quatre pétales partent en spirale et deviennent « sowd », les pétales repoussent en se dépliant, puis le logo
+   * rejoint l'en-tête et la page apparaît d'un bloc. Valeurs de la démo validée.
+   */
+  --site-intro-grow-duration: 1500ms; /* pousse de la tige */
+  --site-intro-bloom-delay: 1450ms; /* début de l'éclosion du logo */
+  --site-intro-bloom-duration: 1000ms; /* éclosion du logo */
+  --site-intro-retract-delay: 2700ms; /* début de la rentrée de la tige et des feuilles */
+  --site-intro-retract-duration: 700ms; /* rentrée de la tige et des feuilles */
+  --site-intro-arrival-delay: 3100ms; /* arrivée de « sowd » au plus tôt, si la page est déjà chargée */
+  --site-intro-arrival-duration: 1700ms; /* pétales en spirale qui deviennent les lettres, repousse comprise */
+  --site-intro-hold: 400ms; /* logo complet immobile avant l'envol */
+  --site-intro-flight-duration: 800ms; /* envol vers l'en-tête */
+  --site-intro-reveal-duration: 500ms; /* apparition groupée de la page */
+  --site-intro-header-delay: 200ms; /* apparition des boutons de l'en-tête après l'arrivée du logo (valeur d'essai) */
+  --site-intro-header-duration: var(--motion-duration-base); /* fondu des boutons de l'en-tête (valeur d'essai) */
+  --site-intro-loop-fade: 400ms; /* page chargée pendant la boucle « 01 » : fondus de sortie de la boucle et de retour du logo au repos (valeur d'essai) */
+  --site-intro-loop-gap: 200ms; /* temps sans logo entre les deux fondus (valeur d'essai) */
+  --site-intro-nav-threshold: 200ms; /* changement de page : attente avant d'afficher le chargement (valeur d'essai) */
+  --photos-container-loader-size: 30%; /* Contact : boucle du logo pendant le chargement du visuel, en part de la hauteur du conteneur (valeur d'essai) */
   /* Découpe de l'écran : coins du haut corner/md ; en bas, le rond de la barre de lecture déborde de moitié. */
   --showreel-screen-clip: inset(
     0 0 calc((var(--video-manager-handle-size) - var(--video-manager-bar-height-hovered)) / -2) 0 round var(--corner-md)

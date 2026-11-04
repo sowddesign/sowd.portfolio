@@ -51,7 +51,7 @@ const u = (value: number) => `calc(${value} * var(--u))`;
 const scene = (unit: string) => ({ "--u": unit }) as CSSProperties;
 
 /* Photo de l'ordinateur et écran, en pourcentage de la photo (identiques en desktop et en mobile dans Figma). */
-const photo = { src: "/showreel/ordinateur-sol-ameliore.png", width: 4096, height: 3389 };
+const photo = { src: "/showreel/ordinateur-sol-ameliore.webp", width: 4096, height: 3389 };
 const screen = {
   left: "39.58%",
   top: "15.07%",
@@ -458,7 +458,7 @@ function ShowreelMobile({ fadeUntil }: { fadeUntil?: string }) {
       {/* Logo « sowd » et trait. */}
       <div className="absolute inset-x-0 top-0 flex flex-col">
         <div className="px-md py-lg text-shape-neutral-black">
-          <Logotype className="h-(--showreel-logo-height) w-auto" />
+          <Logotype data-intro-target="type" className="h-(--showreel-logo-height) w-auto" />
         </div>
         <span aria-hidden className="block h-px w-full bg-shape-neutral-black" />
       </div>

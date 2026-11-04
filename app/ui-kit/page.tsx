@@ -491,7 +491,7 @@ export default async function UiKitPage() {
       </section>
       <section className="flex flex-col gap-md bg-background-neutral-black pt-xxl text-text-neutral-white">
         <h2 id="progress-bar" className="type-h4 px-(--grid-spacing)">
-          ProgressBar — lecture d&apos;article, houle, sans retour arrière
+          ProgressBar — lecture d&apos;article, liquide au bord ondulant, sans retour arrière
         </h2>
         <ProgressBarDemo />
       </section>
