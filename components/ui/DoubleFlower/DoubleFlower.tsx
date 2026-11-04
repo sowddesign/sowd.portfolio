@@ -140,7 +140,7 @@ function useFlowerMasks(enabled: boolean) {
       const { image, box } = desktopVisuals[phase];
       const [, , boxWidth, boxHeight] = box;
       const img = new window.Image();
-      img.src = `/_next/image?url=${encodeURIComponent(`/double-flower/${image}.png`)}&w=640&q=75`;
+      img.src = `/_next/image?url=${encodeURIComponent(`/double-flower/${image}.webp`)}&w=640&q=75`;
       img.onload = () => {
         if (cancelled) return;
         const width = Math.round(boxWidth);
@@ -259,7 +259,7 @@ function PlacedVisual({ visual, frame, sizes }: { visual: Visual; frame: Frame; 
       : shadow === "half"
         ? "[filter:var(--double-flower-shadow-half)]"
         : "";
-  const src = `/double-flower/${image}.png`;
+  const src = `/double-flower/${image}.webp`;
 
   return (
     <div className={`absolute ${filter}`} style={boxStyle(box, frame)}>
@@ -529,7 +529,7 @@ export function DoubleFlower({ diamonds = false, className = "" }: DoubleFlowerP
         {(["default", "diamonds"] as const).map((background) => (
           <Layer key={background} active={mobileView === background}>
             <Image
-              src={`/double-flower/mobile-${background}.png`}
+              src={`/double-flower/mobile-${background}.webp`}
               alt=""
               fill
               sizes={`${Math.ceil((mobileFrame.height * images["mobile-default"][0]) / images["mobile-default"][1])}px`}
@@ -598,7 +598,7 @@ export function DoubleFlower({ diamonds = false, className = "" }: DoubleFlowerP
         <DesktopStage>
           {(["desktop-default", "desktop-diamonds", "desktop-muted"] as const).map((background) => (
             <Layer key={background} active={desktopBackground(desktopView) === background}>
-              <Image src={`/double-flower/${background}.png`} alt="" fill sizes={desktopSizes(desktopFrame.width)} />
+              <Image src={`/double-flower/${background}.webp`} alt="" fill sizes={desktopSizes(desktopFrame.width)} />
             </Layer>
           ))}
           {phases.map((phase) => (

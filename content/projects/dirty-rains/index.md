@@ -21,7 +21,7 @@ tags:
   - Prototype
 
 # Nom du fichier image de la tuile, placé dans public/projects/mon-projet/ (obligatoire)
-image: dirtyRains.png
+image: dirtyRains.webp
 ---
 
 Texte de la page projet (pas encore affiché).

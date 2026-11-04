@@ -13,7 +13,7 @@ entete_details: En savoir plus sur
 entete_titre: le designer
 
 # Photo de l'en-tête : nom du fichier placé dans public/about/
-entete_image: tom-lamy.png
+entete_image: tom-lamy.webp
 
 # Tags affichés sur la photo : un tag par ligne, précédé de « - »
 entete_tags:

@@ -105,6 +105,9 @@ video_progression: Progression de la vidéo
 video_agrandir: Afficher la vidéo en plein écran
 video_fermer: Quitter le plein écran
 
+# Chargement du site : barre de progression, lue par les lecteurs d'écran
+chargement_progression: Chargement du site
+
 # Double diamant (tournesols) : libellés sur le visuel
 double_probleme: problème
 double_solution: solution

@@ -54,7 +54,7 @@ const LONG_PRESS = 500;
 const RESUME_DURATION = 1500;
 
 export type Photo = {
-  /** Chemin public de l'image, ex. /photos/photo-01.png. */
+  /** Chemin public de l'image, ex. /photos/photo-01.webp. */
   src: string;
   /** Texte affiché au survol et lu par les lecteurs d'écran. */
   description: string;

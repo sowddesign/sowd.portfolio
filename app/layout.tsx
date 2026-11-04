@@ -27,6 +27,8 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="fr"
       data-scroll-behavior="smooth"
+      // data-intro est posé par le script en ligne du layout du site avant l'hydratation.
+      suppressHydrationWarning
       className={`${plusJakartaSans.variable} ${merriweatherSans.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">

@@ -97,6 +97,7 @@ export const commun = texts("commun.md", communSource, [
   "video_progression",
   "video_agrandir",
   "video_fermer",
+  "chargement_progression",
   "double_probleme",
   "double_solution",
   "double_decouvrir",

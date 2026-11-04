@@ -22,7 +22,7 @@ tags:
   - Documentation
 
 # Nom du fichier image de la tuile, placé dans public/projects/mon-projet/ (obligatoire)
-image: pointeCourte.png
+image: pointeCourte.webp
 ---
 
 Texte de la page projet (pas encore affiché).

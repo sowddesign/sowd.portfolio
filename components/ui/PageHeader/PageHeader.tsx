@@ -20,6 +20,7 @@ import { pageHrefs, useActivePage, type PageKey } from "../navigation";
  * Ouverture : rideau du haut vers le bas (--motion-duration-base), puis les lignes de texte apparaissent
  * une à une à partir de la moitié du rideau (animate-menu-line, décalage --motion-menu-stagger).
  * Fermeture : le rideau remonte sur la même durée et masque le texte.
+ * Intro du site (SiteIntro) : les boutons (data-intro-hide) restent masqués et apparaissent peu après l'arrivée du logo.
  */
 
 export type PageHeaderProps = {
@@ -86,7 +87,7 @@ export function PageHeader({ activePage, className = "" }: PageHeaderProps) {
     >
       <div className="grid-layout h-(--button-size-sm) desktop:h-auto">
         {/* Mobile et tablette : bouton menu (List / X) et contact. */}
-        <div className="col-span-1 flex items-center desktop:hidden">
+        <div data-intro-hide className="col-span-1 flex items-center desktop:hidden">
           <IconButton
             variant="tertiary"
             color="black"
@@ -98,7 +99,7 @@ export function PageHeader({ activePage, className = "" }: PageHeaderProps) {
             onClick={() => setOpen((value) => !value)}
           />
         </div>
-        <div className="col-span-2 col-start-3 tablet:hidden">
+        <div data-intro-hide className="col-span-2 col-start-3 tablet:hidden">
           <TextualButton
             variant="tertiary"
             color={colorFor("contact")}
@@ -109,7 +110,7 @@ export function PageHeader({ activePage, className = "" }: PageHeaderProps) {
             {commun.entete_contact}
           </TextualButton>
         </div>
-        <div className="col-span-2 col-start-7 hidden tablet:block desktop:hidden">
+        <div data-intro-hide className="col-span-2 col-start-7 hidden tablet:block desktop:hidden">
           <TextualButton
             variant="secondary"
             showDivider={false}
@@ -126,7 +127,7 @@ export function PageHeader({ activePage, className = "" }: PageHeaderProps) {
         <div className="col-span-2 hidden desktop:block">
           <LogoButton />
         </div>
-        <div className="col-start-8 hidden desktop:block">
+        <div data-intro-hide className="col-start-8 hidden desktop:block">
           <TextualButton
             variant="secondary"
             showDivider={false}
@@ -136,7 +137,7 @@ export function PageHeader({ activePage, className = "" }: PageHeaderProps) {
             {commun.entete_accueil}
           </TextualButton>
         </div>
-        <div className="col-start-9 hidden desktop:block">
+        <div data-intro-hide className="col-start-9 hidden desktop:block">
           <TextualButton
             variant="secondary"
             showDivider={false}
@@ -146,7 +147,7 @@ export function PageHeader({ activePage, className = "" }: PageHeaderProps) {
             {commun.entete_projets}
           </TextualButton>
         </div>
-        <div className="col-start-10 hidden desktop:block">
+        <div data-intro-hide className="col-start-10 hidden desktop:block">
           <TextualButton
             variant="secondary"
             showDivider={false}
@@ -156,7 +157,7 @@ export function PageHeader({ activePage, className = "" }: PageHeaderProps) {
             {commun.entete_a_propos}
           </TextualButton>
         </div>
-        <div className="col-start-12 hidden desktop:block">
+        <div data-intro-hide className="col-start-12 hidden desktop:block">
           <TextualButton
             variant="secondary"
             showDivider={false}

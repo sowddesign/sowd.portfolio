@@ -22,7 +22,7 @@ tags:
   - Documentation
 
 # Nom du fichier image de la tuile, placé dans public/projects/mon-projet/ (obligatoire)
-image: grainePFE.png
+image: grainePFE.webp
 ---
 
 Texte de la page projet (pas encore affiché).
