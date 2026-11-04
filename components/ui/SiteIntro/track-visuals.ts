@@ -1,5 +1,5 @@
 /*
- * Suivi du chargement des visuels affichés à l'écran (intro du site, attente des pages, visuels à chargement propre).
+ * Suivi du chargement des visuels affichés à l'écran (intro du site, visuels à chargement propre).
  * Un bloc marqué data-intro-defer gère son propre chargement (ex. photosContainer de la page Contact) : ses images
  * ne retiennent pas la page, il les suit lui-même en se passant comme racine.
  * Développement : « chargement lent » (raccourci de KitShortcut) retient slowLoadingDuration ms chaque suivi

@@ -1,13 +1,12 @@
 "use client";
 
-import { usePathname } from "next/navigation";
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { commun } from "@/content/texts";
 import { ProgressBar } from "../ProgressBar";
 import { ShowreelLogo } from "../ShowreelLogo";
 import { tokenDuration } from "../token-duration";
 import { reducedMotionQuery } from "../use-media-query";
-import { createIntroEngine, introLogoSize } from "./intro-engine";
+import { createIntroEngine } from "./intro-engine";
 import { trackVisuals } from "./track-visuals";
 
 /*
@@ -15,9 +14,9 @@ import { trackVisuals } from "./track-visuals";
  * - nouvelle visite (une fois par onglet, sessionStorage) : intro tournesol (voir intro-engine) par-dessus la page,
  *   qui attend les visuels du premier écran (page chargée pendant la boucle « 01 » : elle s'efface, court temps, puis le logo au repos revient en fondu) ; le logo animé rejoint le logo de l'en-tête (cibles data-intro-target),
  *   puis la page apparaît d'un bloc ;
- * - changement de page, ou chargement direct d'une page une fois l'intro vue : si des visuels du premier écran manquent, le contenu reste masqué ; au-delà de
- *   --site-intro-nav-threshold, la boucle du logo « 01 » et la barre de progression s'affichent, jusqu'à la fin
- *   d'une boucle une fois la page chargée.
+ * - changement de page, ou chargement direct d'une page une fois l'intro vue : pas d'écran de transition, la page
+ *   s'affiche tout de suite (demande de l'utilisateur) ; les blocs à chargement propre (data-intro-defer) gèrent
+ *   leur aperçu de chargement.
  * Barre de progression : progressBar noir en haut de l'écran, provisoire (à revoir avec l'utilisateur).
  * Mouvement réduit : pas d'animation, la barre seule pendant le chargement.
  * L'attribut data-intro de <html> pilote l'affichage (globals.css) ; « play » est posé avant le premier rendu par
@@ -25,8 +24,8 @@ import { trackVisuals } from "./track-visuals";
  */
 
 const storageKey = "sowd-intro";
-/** Script en ligne : intro à jouer si l'onglet ne l'a pas encore vue, sinon attente des visuels de la page. */
-export const introScript = `try{document.documentElement.setAttribute("data-intro",sessionStorage.getItem("${storageKey}")?"wait":"play")}catch(e){}`;
+/** Script en ligne : intro à jouer si l'onglet ne l'a pas encore vue. */
+export const introScript = `try{if(!sessionStorage.getItem("${storageKey}"))document.documentElement.setAttribute("data-intro","play")}catch(e){}`;
 
 /** Rejoue l'intro (raccourci de développement) : l'onglet l'oublie et la page se recharge. */
 export function replayIntro() {
@@ -36,7 +35,7 @@ export function replayIntro() {
   window.location.reload();
 }
 
-type IntroState = "play" | "reveal" | "wait" | "loading";
+type IntroState = "play" | "reveal" | "loading";
 const setIntro = (state: IntroState | null) => {
   if (state) document.documentElement.setAttribute("data-intro", state);
   else document.documentElement.removeAttribute("data-intro");
@@ -58,14 +57,11 @@ function visibleTarget(name: "mark" | "type") {
 }
 
 export function SiteIntro() {
-  const pathname = usePathname();
   const svgRef = useRef<SVGSVGElement>(null);
   const loadedRef = useRef(false);
-  const resumeRef = useRef<(() => void) | null>(null);
   /** Intro en attente : reprise de la suite, dès la page chargée. */
   const introResumeRef = useRef<(() => void) | null>(null);
   const [loopFading, setLoopFading] = useState(false);
-  const lastPathRef = useRef(pathname);
   const [progress, setProgress] = useState(0);
   const [loop, setLoop] = useState<{ x: number; y: number; size: number } | null>(null);
   const [barHidden, setBarHidden] = useState(false);
@@ -153,62 +149,6 @@ export function SiteIntro() {
     };
   }, [reveal]);
 
-  /**
-   * Attente des visuels du premier écran : contenu masqué, puis au-delà de --site-intro-nav-threshold, boucle du logo
-   * « 01 » et barre de progression. Renvoie l'arrêt (la page suivante reprend alors la main).
-   */
-  const waitForPage = useCallback(() => {
-    loadedRef.current = false;
-    let shown = false;
-    let timer = 0;
-    const reduced = window.matchMedia(reducedMotionQuery).matches;
-    const tracker = trackFirstScreen(setProgress, () => {
-      loadedRef.current = true;
-      window.clearTimeout(timer);
-      if (!shown) setIntro(null);
-      else if (reduced) reveal();
-    });
-    if (!tracker.pending) {
-      tracker.stop();
-      setIntro(null);
-      return () => {};
-    }
-    setIntro("wait");
-    timer = window.setTimeout(
-      () => {
-        if (loadedRef.current) return;
-        shown = true;
-        setIntro("loading");
-        if (reduced) return;
-        resumeRef.current = () => reveal();
-        setLoop({ x: window.innerWidth / 2, y: window.innerHeight / 2, size: introLogoSize() });
-      },
-      tokenDuration(document.documentElement, "--site-intro-nav-threshold"),
-    );
-    return () => {
-      window.clearTimeout(timer);
-      tracker.stop();
-      setLoop(null);
-    };
-  }, [reveal]);
-
-  // Chargement direct d'une page une fois l'intro vue (attente posée par introScript avant le premier rendu),
-  // puis chaque changement de page, même pendant une attente en cours.
-  useLayoutEffect(() => {
-    const state = document.documentElement.getAttribute("data-intro");
-    if (state === "play" || state === "reveal") return;
-    const waiting = state === "wait" || state === "loading";
-    // Même page (premier rendu sans attente, effets rejoués en développement) : rien à attendre.
-    if (lastPathRef.current === pathname && !waiting) return;
-    lastPathRef.current = pathname;
-    return waitForPage();
-  }, [pathname, waitForPage]);
-
-  // Fin d'une boucle d'attente : la suite reprend si la page est chargée.
-  const onLoopEnd = () => {
-    if (loadedRef.current) resumeRef.current?.();
-  };
-
   return (
     <div className="site-intro" aria-hidden={!loop && !blocking}>
       {/* Fond : sous l'en-tête (z-10), au-dessus du contenu. */}
@@ -224,7 +164,7 @@ export function SiteIntro() {
           }`}
           style={{ left: loop.x - loop.size / 2, top: loop.y - loop.size / 2, width: loop.size, height: loop.size }}
         >
-          <ShowreelLogo phase="loop" onLoopEnd={onLoopEnd} className="size-full fill-shape-neutral-black!" />
+          <ShowreelLogo phase="loop" className="size-full fill-shape-neutral-black!" />
         </div>
       )}
       <svg

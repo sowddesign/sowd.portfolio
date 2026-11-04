@@ -193,8 +193,8 @@
   --site-intro-header-duration: var(--motion-duration-base); /* fondu des boutons de l'en-tête (valeur d'essai) */
   --site-intro-loop-fade: 400ms; /* page chargée pendant la boucle « 01 » : fondus de sortie de la boucle et de retour du logo au repos (valeur d'essai) */
   --site-intro-loop-gap: 200ms; /* temps sans logo entre les deux fondus (valeur d'essai) */
-  --site-intro-nav-threshold: 200ms; /* changement de page : attente avant d'afficher le chargement (valeur d'essai) */
-  --photos-container-loader-size: 30%; /* Contact : boucle du logo pendant le chargement du visuel, en part de la hauteur du conteneur (valeur d'essai) */
+  --site-intro-nav-threshold: 200ms; /* blocs à chargement propre : attente avant d'afficher le chargement (valeur d'essai) */
+  --photos-container-loader-size: 30%; /* Contact et headPage Container : boucle du logo pendant le chargement du visuel, en part de la hauteur du conteneur (valeur d'essai) */
   /* Découpe de l'écran : coins du haut corner/md ; en bas, le rond de la barre de lecture déborde de moitié. */
   --showreel-screen-clip: inset(
     0 0 calc((var(--video-manager-handle-size) - var(--video-manager-bar-height-hovered)) / -2) 0 round var(--corner-md)
