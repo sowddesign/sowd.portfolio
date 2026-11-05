@@ -39,10 +39,12 @@ import { MethodePage } from "./MethodePage";
  *   et repousse les suivantes (variante Figma 01Demo). La ligne de l'étape ouverte puis la tuile choisie restent
  *   collées sous l'en-tête du site (--page-header-height) ; choisir une tuile ramène en haut de celle-ci,
  *   sans animation (demandes de l'utilisateur).
+ * Desktop et tablette : choisir une tuile (clic ou glisse depuis l'introduction) cale le haut du conteneur
+ *   sous l'en-tête du site, défilement doux natif (demande de l'utilisateur).
  * Progression de lecture : gardée par page (la plus grande valeur atteinte), affichée dans les tuiles.
  */
 
-const divider = <span aria-hidden className="block h-px w-full shrink-0 bg-shape-neutral-black" />;
+const divider = <span aria-hidden className="block w-full shrink-0 border-t border-shape-neutral-black" />;
 
 /** Titre H3 de l'étape suivi de son numéro entre parenthèses (Figma : Hug, sur une ligne). */
 function StepTitle({ step }: { step: MethodeStep }) {
@@ -112,6 +114,17 @@ function MethodeContainerDesktop({ steps, className }: MethodeContainerProps) {
     });
     return () => column.removeEventListener("wheel", onWheel, { capture: true });
   }, []);
+  /* Tuile choisie (clic ou glisse depuis l'introduction) : le haut du conteneur se cale sous l'en-tête
+     du site, défilement doux natif (demande de l'utilisateur) ; mouvement réduit : passage direct. */
+  const rootRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const root = rootRef.current;
+    if (selected === null || !root) return;
+    const top = root.getBoundingClientRect().top + window.scrollY - cssNumber("--page-header-height");
+    if (Math.abs(window.scrollY - top) < 1) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({ top, behavior: reduce ? "instant" : "smooth" });
+  }, [selected, current]);
   const step = steps[current];
   const tablet = layout === "reduced";
   const page = selected === null ? null : step.pages[selected];
@@ -127,6 +140,7 @@ function MethodeContainerDesktop({ steps, className }: MethodeContainerProps) {
 
   return (
     <div
+      ref={rootRef}
       className={`flex h-(--methode-container-height) w-full flex-col bg-background-neutral-white text-text-neutral-black ${className}`}
     >
       <div className="flex w-full items-end">
@@ -187,7 +201,7 @@ function MethodeContainerDesktop({ steps, className }: MethodeContainerProps) {
             className="grow"
           />
         </div>
-        <span aria-hidden className="block w-px shrink-0 bg-shape-neutral-black" />
+        <span aria-hidden className="block shrink-0 border-l border-shape-neutral-black" />
         <div ref={pageRef} className="min-w-0 flex-1">
           {page
             ? page.content && (
@@ -399,7 +413,7 @@ function IntroPull({
     <div ref={frameRef} className="relative size-full overflow-hidden">
       {/* Trait du haut fixe pendant la glisse, sous les boutons « précédente » et « suivante » (demande de l'utilisateur) :
           les traits de l'introduction et de la page passent dessous. */}
-      <span aria-hidden className="absolute inset-x-0 top-0 z-1 block h-px bg-shape-neutral-black" />
+      <span aria-hidden className="absolute inset-x-0 top-0 z-1 block border-t border-shape-neutral-black" />
       <div ref={trackRef} className="flex size-full flex-col">
         <div className="size-full shrink-0">
           <MethodeIntro content={intro} />

@@ -21,7 +21,7 @@ import {
 
 export type NavSideMenusProps = Omit<NavSideTilesProps, "frame">;
 
-const separator = "block h-px shrink-0 bg-shape-neutral-black";
+const separator = "block shrink-0 border-t border-shape-neutral-black";
 
 function FinishedCounter({ finished, total, layout }: { finished: number; total: number; layout: NavSideTileLayout }) {
   const reduced = layout === "reduced";

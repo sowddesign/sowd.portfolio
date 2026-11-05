@@ -46,14 +46,14 @@ export function NavigationButton({ children, size = "lg", color = "black", class
   const content = (
     <>
       {/* Réserve de 1px en haut, symétrique du trait du bas (calque « spacing » Figma, séparateur masqué). */}
-      <span aria-hidden className="h-px w-full shrink-0" />
+      <span aria-hidden className="h-(--divider-width) w-full shrink-0" />
 
       <span className="flex w-full items-center px-none">
         <span className={`${sizes[size].label} min-w-0 flex-1 text-left`}>{children}</span>
       </span>
 
       {/* Trait du bas (dividerBar), couleur fixe. */}
-      <span aria-hidden className={`h-px w-full shrink-0 ${tone.divider}`} />
+      <span aria-hidden className={`w-full shrink-0 ${tone.divider}`} />
 
       {/* Barre animée (animationButton/textualButtonHovered) : 2px ancrés en bas, recouvre le trait.
           Largeur animée (0 → 100 %) comme dans Figma : un scale déformerait l'épaisseur pendant la transition. */}

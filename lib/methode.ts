@@ -1,6 +1,12 @@
-import { closeSync, existsSync, openSync, readFileSync, readSync } from "node:fs";
+import { closeSync, existsSync, openSync, readdirSync, readFileSync, readSync, statSync } from "node:fs";
 import path from "node:path";
 import { parse } from "yaml";
+import { headerImageBackgrounds, type HeaderImageBackground } from "@/components/ui/HeaderImage/backgrounds";
+import type {
+  HeaderImagePlacement,
+  HeaderImageText,
+  HeaderImageTextPlacement,
+} from "@/components/ui/HeaderImage/placement";
 import { parseLine, type MdLine } from "./markdown";
 
 /*
@@ -32,7 +38,14 @@ export type MethodeSection = { title?: MdLine; rows: MethodeRow[] };
 export type MethodeIntroContent = { label: string; title: string; text: string; hint: string };
 
 export type MethodePageContent = {
-  header: { title: string; keywords: string[]; image?: string };
+  header: {
+    keywords: string[];
+    image?: string;
+    background?: HeaderImageBackground;
+    /** Placement de l'image par appareil (absent : image entière, calée en bas). */
+    placement?: { desktop?: HeaderImagePlacement; mobile?: HeaderImagePlacement };
+    texts?: HeaderImageText[];
+  };
   definition: { left: MdLine[][]; right: MdLine[][] };
   sections: MethodeSection[];
   project: { label: string; href: string };
@@ -62,6 +75,18 @@ export type MethodeStep = {
   pages: MethodePageEntry[];
 };
 
+/**
+ * En dev, « use cache » n'est vidé que quand le code change : la date de modification la plus récente des textes
+ * de content/methode entre dans la clé du cache, pour qu'une modification d'un md s'affiche. En production : 0.
+ */
+function contentVersion() {
+  if (process.env.NODE_ENV !== "development") return 0;
+  return readdirSync(METHODE_DIR, { recursive: true, encoding: "utf8" }).reduce(
+    (latest, file) => Math.max(latest, statSync(path.join(METHODE_DIR, file)).mtimeMs),
+    0,
+  );
+}
+
 function read(file: string) {
   const fail = (message: string): never => {
     throw new Error(`content/methode/${file} : ${message}`);
@@ -84,7 +109,7 @@ function read(file: string) {
     if (!Array.isArray(value)) fail(`la liste « ${key} » est manquante (un élément par ligne, précédé de « - »).`);
     return (value as unknown[]).map(String);
   };
-  return { body: match![2], text, list, fail };
+  return { body: match![2], data, text, list, fail };
 }
 
 /** Paragraphes séparés par une ligne vide, lignes par retour à la ligne. */
@@ -175,12 +200,82 @@ export function getMethodeIntro(intro: string): MethodeIntroContent {
   return { label: text("libelle")!, title: text("titre")!, text: text("texte")!, hint: text("consigne")! };
 }
 
+/**
+ * Image d'en-tête : un nom seul (« photo.png ») est cherché dans public/methode/<page>/ ;
+ * un chemin (« public\pages\photo.png », « pages/photo.png », « /pages/photo.png ») part de public/.
+ */
+function headerImageSrc(value: string, folder: string) {
+  const path = value.trim().replace(/\\/g, "/").replace(/^\/+/, "").replace(/^public\//, "");
+  return path.includes("/") ? `/${path}` : `/${folder}/${path}`;
+}
+
+/** Placement de l'image (« image_desktop » / « image_mobile » : { taille, x, y, rotation }), facultatif. */
+function placementOf(
+  data: Record<string, unknown>,
+  key: string,
+  fail: (message: string) => never,
+): HeaderImagePlacement | undefined {
+  const value = data[key];
+  if (value === null || value === undefined) return undefined;
+  const entry = (typeof value === "object" ? value : {}) as Record<string, unknown>;
+  const [size, x, y] = ["taille", "x", "y"].map((name) => entry[name]);
+  const rotation = entry.rotation;
+  if (![size, x, y].every((n) => typeof n === "number") || (rotation !== undefined && typeof rotation !== "number")) {
+    fail(`« ${key} » s'écrit { taille: nombre, x: nombre, y: nombre } (+ rotation).`);
+  }
+  return { size: size as number, x: x as number, y: y as number, ...(rotation ? { rotation: rotation as number } : {}) };
+}
+
+/**
+ * Textes posés sur l'image (« image_textes »), facultatifs. Chaque texte : « texte », « desktop » et « mobile »
+ * ({ x, y } et, au besoin, « rotation » en degrés), « couleur: blanc » au besoin.
+ */
+function textsOf(data: Record<string, unknown>, fail: (message: string) => never): HeaderImageText[] {
+  const value = data.image_textes;
+  if (value === null || value === undefined) return [];
+  if (!Array.isArray(value)) fail("« image_textes » est une liste (chaque texte commence par « - texte: »).");
+  const where = (item: Record<string, unknown>, name: string): HeaderImageTextPlacement => {
+    const entry = item[name] as Record<string, unknown> | undefined;
+    const { x, y, rotation } = entry ?? {};
+    if (typeof x !== "number" || typeof y !== "number" || (rotation !== undefined && typeof rotation !== "number")) {
+      fail(`« image_textes » (${String(item.texte)}) : « ${name} » s'écrit { x: nombre, y: nombre } (+ rotation).`);
+    }
+    return {
+      x: x as number,
+      y: y as number,
+      ...(rotation ? { rotation: rotation as number } : {}),
+    };
+  };
+  return (value as unknown[]).map((raw) => {
+    const item = (raw ?? {}) as Record<string, unknown>;
+    if (typeof item.texte !== "string" || !item.texte) fail("« image_textes » : chaque texte a un « texte: ».");
+    if (item.couleur !== undefined && item.couleur !== "blanc") fail("« image_textes » : « couleur » vaut « blanc » ou rien.");
+    return {
+      text: item.texte as string,
+      ...(item.couleur === "blanc" ? { white: true } : {}),
+      desktop: where(item, "desktop"),
+      mobile: where(item, "mobile"),
+    };
+  });
+}
+
 /** Mis en cache (« use cache ») : la lecture des images n'est pas permise pendant le pré-rendu sinon. */
 export async function getMethodePage(slug: string): Promise<MethodePageContent> {
+  return loadMethodePage(slug, contentVersion());
+}
+
+async function loadMethodePage(slug: string, version: number): Promise<MethodePageContent> {
   "use cache";
-  const { body, text, list, fail } = read(`pages/${slug}.md`);
+  void version;
+  const { body, data, text, list, fail } = read(`pages/${slug}.md`);
   const folder = `methode/${slug}`;
+  const placement = { desktop: placementOf(data, "image_desktop", fail), mobile: placementOf(data, "image_mobile", fail) };
+  const texts = textsOf(data, fail);
   const image = text("image_fichier", true);
+  const background = text("image_fond", true)?.trim();
+  if (background !== undefined && !(background in headerImageBackgrounds)) {
+    fail(`« image_fond » doit être l'un de : ${Object.keys(headerImageBackgrounds).join(", ")}.`);
+  }
 
   // Commentaires : lignes commençant par « # » suivi d'un espace.
   const source = body
@@ -203,9 +298,18 @@ export async function getMethodePage(slug: string): Promise<MethodePageContent> 
 
   return {
     header: {
-      title: text("image_titre")!,
       keywords: list("image_mots_cles"),
-      ...(image ? { image: `/${folder}/${image}` } : {}),
+      ...(image ? { image: headerImageSrc(image, folder) } : {}),
+      ...(background ? { background: background as HeaderImageBackground } : {}),
+      ...(placement.desktop || placement.mobile
+        ? {
+            placement: {
+              ...(placement.desktop ? { desktop: placement.desktop } : {}),
+              ...(placement.mobile ? { mobile: placement.mobile } : {}),
+            },
+          }
+        : {}),
+      ...(texts.length > 0 ? { texts } : {}),
     },
     definition: {
       left: paragraphs(text("definition_gauche")!, fail),
@@ -225,6 +329,10 @@ const SLUG = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 
 /** Étapes et pages de ordre.yaml, dans cet ordre, avec leur contenu (null si le fichier n'existe pas encore). */
 export async function getMethode(): Promise<MethodeStep[]> {
+  return loadMethode(contentVersion());
+}
+
+async function loadMethode(version: number): Promise<MethodeStep[]> {
   "use cache";
   const order = parse(readFileSync(path.join(METHODE_DIR, "ordre.yaml"), "utf8")) ?? [];
   if (!Array.isArray(order)) failOrder("le fichier doit être une liste d'étapes (chacune commence par « - titre: »).");
@@ -257,7 +365,7 @@ export async function getMethode(): Promise<MethodeStep[]> {
           if (seen.has(slug)) failOrder(`la page « ${slug} » est listée deux fois.`);
           seen.add(slug);
           const exists = existsSync(path.join(METHODE_DIR, "pages", `${slug}.md`));
-          return { slug, number: number(j), label, content: exists ? await getMethodePage(slug) : null };
+          return { slug, number: number(j), label, content: exists ? await loadMethodePage(slug, version) : null };
         }),
       );
 

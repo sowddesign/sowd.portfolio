@@ -13,7 +13,7 @@ import { ScrollHint } from "./ScrollHint";
 export function MethodeIntro({ content }: { content: MethodeIntroContent }) {
   return (
     <div className="flex size-full flex-col bg-background-neutral-white text-text-neutral-black">
-      <span aria-hidden className="block h-px w-full shrink-0 bg-shape-neutral-black" />
+      <span aria-hidden className="block w-full shrink-0 border-t border-shape-neutral-black" />
       <div className="flex min-h-0 flex-1 flex-col p-sm">
         <div className="flex flex-1 flex-col justify-between p-sm">
           <div className="flex flex-col gap-xxl">

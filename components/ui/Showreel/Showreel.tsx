@@ -460,7 +460,7 @@ function ShowreelMobile({ fadeUntil }: { fadeUntil?: string }) {
         <div className="px-md py-lg text-shape-neutral-black">
           <Logotype data-intro-target="type" className="h-(--showreel-logo-height) w-auto" />
         </div>
-        <span aria-hidden className="block h-px w-full bg-shape-neutral-black" />
+        <span aria-hidden className="block w-full border-t border-shape-neutral-black" />
       </div>
       <FadingMessage />
       {/* Bandeau sous le message, écart de la maquette (25). */}

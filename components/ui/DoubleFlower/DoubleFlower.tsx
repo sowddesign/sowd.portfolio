@@ -329,7 +329,7 @@ function Title({ text, end = false, className }: { text: string; end?: boolean; 
     <div className={`flex flex-col justify-center ${className}`}>
       <div className={`flex flex-col gap-xxs ${end ? "items-end text-right" : "items-start text-left"}`}>
         <span className="type-swiss-accentuation">{text}</span>
-        <span aria-hidden className="h-px w-full rounded-xs bg-shape-brand-bright" />
+        <span aria-hidden className="w-full rounded-xs border-t border-shape-brand-bright" />
       </div>
     </div>
   );
@@ -468,12 +468,8 @@ export function DoubleFlower({ diamonds = false, className = "" }: DoubleFlowerP
   const masks = useFlowerMasks(!isTouch);
   const desktopSceneRef = useLabelsAvoidText();
   const stageRef = useRef<HTMLDivElement>(null);
-  const flowerAt = (event: PointerEvent): FlowerPhase | null => {
-    const stage = stageRef.current;
-    if (!stage) return null;
-    const rect = stage.getBoundingClientRect();
-    const x = ((event.clientX - rect.left) / rect.width) * desktopFrame.width;
-    const y = ((event.clientY - rect.top) / rect.height) * desktopFrame.height;
+  /** Demi-tournesol opaque au point (x, y) de la scène, en px de maquette. */
+  const opaqueAt = (x: number, y: number): FlowerPhase | null => {
     for (const phase of flowerPhases) {
       const mask = masks.current[phase];
       const [left, top] = desktopVisuals[phase].box;
@@ -483,6 +479,35 @@ export function DoubleFlower({ diamonds = false, className = "" }: DoubleFlowerP
       if (mask.data[(my * mask.width + mx) * 4 + 3] > 128) return phase;
     }
     return null;
+  };
+  /** Premier demi-tournesol rencontré sur la ligne en partant de x (direction -1 ou 1), et sa distance. */
+  const nearestOnRow = (x: number, y: number, direction: -1 | 1) => {
+    for (let d = 1; x + d * direction >= 0 && x + d * direction < desktopFrame.width; d++) {
+      const phase = opaqueAt(x + d * direction, y);
+      if (phase) return { phase, d };
+    }
+    return null;
+  };
+  /*
+   * Zone de survol = forme du demi-tournesol, élargie dans les vides d'un même tournesol seulement (demande de
+   * l'utilisateur, pour éviter le retour à default entre deux zones) : un point transparent encadré à gauche et à
+   * droite par des moitiés du même tournesol (01-02 ou 03-04) prend la plus proche. Entre les deux tournesols et sur
+   * les bords extérieurs, la zone reste à la forme.
+   */
+  const flowerAt = (event: PointerEvent): FlowerPhase | null => {
+    const stage = stageRef.current;
+    if (!stage) return null;
+    const rect = stage.getBoundingClientRect();
+    const x = ((event.clientX - rect.left) / rect.width) * desktopFrame.width;
+    const y = ((event.clientY - rect.top) / rect.height) * desktopFrame.height;
+    const hit = opaqueAt(x, y);
+    if (hit) return hit;
+    const left = nearestOnRow(x, y, -1);
+    const right = nearestOnRow(x, y, 1);
+    if (!left || !right) return null;
+    const sunflower = (phase: FlowerPhase) => (phase === "01" || phase === "02" ? 1 : 2);
+    if (sunflower(left.phase) !== sunflower(right.phase)) return null;
+    return left.d <= right.d ? left.phase : right.phase;
   };
   const cursor = useCursorLabel(
     hovered && !isTouch ? <Icon name={cursorArrows[hovered]} size="var(--icon-lg)" /> : undefined,
@@ -699,7 +724,7 @@ export function DoubleFlower({ diamonds = false, className = "" }: DoubleFlowerP
 
       {/* ---------- Texte et boutons : mobile, et tablette tactile ---------- */}
       <div className="tablet:hidden tablet:[@media(hover:none)]:block">
-        <span aria-hidden className="block h-px w-full bg-shape-neutral-white" />
+        <span aria-hidden className="block w-full border-t border-shape-neutral-white" />
         <div className="flex flex-col gap-md p-md">
           <p aria-live="polite" className="type-body-regular empty:hidden">
             {stepText && <RichLines lines={[stepText]} size="body" />}

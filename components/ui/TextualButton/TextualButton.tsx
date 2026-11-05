@@ -79,7 +79,7 @@ export function TextualButton({
   const content = (
     <>
       {/* Secondary : réserve de 1px en haut, symétrique du trait du bas (calque « spacing » Figma). */}
-      {isSecondary && <span aria-hidden className="h-px w-full shrink-0" />}
+      {isSecondary && <span aria-hidden className="h-(--divider-width) w-full shrink-0" />}
 
       <span
         className={[
@@ -96,7 +96,7 @@ export function TextualButton({
 
       {/* Trait du bas (couleur fixe) ; la barre animée est ancrée dessus pour le recouvrir quelle que soit la hauteur du contenu. */}
       {isSecondary && (
-        <span aria-hidden className="relative h-px w-full shrink-0">
+        <span aria-hidden className="relative h-(--divider-width) w-full shrink-0">
           {showDivider && <span className={`absolute inset-0 ${tone.divider}`} />}
           {tone.bar && (
             <span

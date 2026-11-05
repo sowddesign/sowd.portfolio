@@ -269,8 +269,21 @@
   /* Grossissement maximal d'une image agrandie par rapport à sa taille dans la page (choix de l'utilisateur). */
   --methode-zoom-max: 2;
 
+  /* Épaisseur réelle d'un trait (bordure de 1px arrondie au pixel d'écran), mesurée par le layout racine. */
+  --divider-width: 1px;
+
+  /* headerImage — tous ses textes (titre posé sur l'image et mots-clés) en 16 px sur tous les appareils
+     (choix de l'utilisateur ; captionSwiss vaut 14 px en mobile). */
+  --header-image-text-size: var(--p-number-16);
+
   /* headerImage — hauteur fixe dans methode (Figma 226.841, sans variable). */
   --header-image-height: 14.1776rem;
+  /* Desktop et tablette (demande de l'utilisateur) : bas de l'image et son trait alignés sur le bas de la 3e tuile
+     de la liste des pages. Hauteur d'une tuile (voir NavSideTile) × 3, moins le trait sous l'image. */
+  --header-image-height-desktop: calc(
+    (var(--spacing-sm) * 2 + var(--button-size-sm) + var(--progress-bar-height) + var(--divider-width)) * 3 -
+      var(--divider-width)
+  );
 
   /*
    * Barre de défilement discrète (methode, absente de Figma) : même dessin que scrollBar, 8 de large

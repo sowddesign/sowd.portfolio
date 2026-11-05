@@ -23,7 +23,7 @@ export function FooterSavoirPlus({ className = "" }: FooterSavoirPlusProps) {
             <p className="type-body-accentuation text-text-neutral-white">{commun.savoir_plus_titre}</p>
           </div>
         </div>
-        <span aria-hidden className="h-px w-full shrink-0 bg-shape-neutral-white" />
+        <span aria-hidden className="w-full shrink-0 border-t border-shape-neutral-white" />
       </div>
 
       {/* buttonRow : colonne en mobile, grille de 3 colonnes en tablette et desktop. */}
@@ -46,7 +46,7 @@ export function FooterSavoirPlus({ className = "" }: FooterSavoirPlusProps) {
         </TextualButton>
       </div>
 
-      <span aria-hidden className="hidden h-px w-full shrink-0 bg-shape-neutral-white tablet:block" />
+      <span aria-hidden className="hidden w-full shrink-0 border-t border-shape-neutral-white tablet:block" />
     </div>
   );
 }
