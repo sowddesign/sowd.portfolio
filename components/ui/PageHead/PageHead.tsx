@@ -34,7 +34,7 @@ export function PageHead({ type = "H1", title, details, headingLevel, divider = 
           <Heading className="type-h2">{title}</Heading>
         </div>
       )}
-      {divider && <span aria-hidden className="h-px w-full shrink-0 bg-shape-neutral-white" />}
+      {divider && <span aria-hidden className="w-full shrink-0 border-t border-shape-neutral-white" />}
     </div>
   );
 }

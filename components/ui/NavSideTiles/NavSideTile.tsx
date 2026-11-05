@@ -50,10 +50,10 @@ export type NavSideTileProps = {
 
 /* Hauteur d'une tuile : marges du conteneur, contenu (button-size/sm), barre et trait. */
 export const tileHeight =
-  "h-[calc(var(--spacing-sm)*2+var(--button-size-sm)+var(--progress-bar-height)+1px)]";
+  "h-[calc(var(--spacing-sm)*2+var(--button-size-sm)+var(--progress-bar-height)+var(--divider-width))]";
 /* Tuile réduite : carrée. */
 export const reducedTileWidth =
-  "w-[calc(var(--spacing-sm)*2+var(--button-size-sm)+var(--progress-bar-height)+1px)]";
+  "w-[calc(var(--spacing-sm)*2+var(--button-size-sm)+var(--progress-bar-height)+var(--divider-width))]";
 
 export function NavSideTile({
   number,
@@ -196,7 +196,7 @@ export function NavSideTile({
         (reduced ? (
           <CursorLabel
             label={label}
-            className="absolute inset-x-0 top-0 bottom-[calc(var(--progress-bar-height)+1px)]"
+            className="absolute inset-x-0 top-0 bottom-[calc(var(--progress-bar-height)+var(--divider-width))]"
           >
             {toggle}
           </CursorLabel>
@@ -205,7 +205,7 @@ export function NavSideTile({
         ))}
       <div className={`pointer-events-none relative flex flex-1 flex-col`}>{content}</div>
       {bar}
-      <span aria-hidden className="block h-px w-full shrink-0 bg-shape-neutral-black" />
+      <span aria-hidden className="block w-full shrink-0 border-t border-shape-neutral-black" />
       {phase === "flying" && <CompletionDrop targetRef={checkRef} onLand={() => setPhase("landed")} />}
     </div>
   );

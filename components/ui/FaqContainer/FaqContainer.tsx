@@ -18,7 +18,7 @@ export type FaqContainerProps = {
 };
 
 function Divider() {
-  return <span aria-hidden className="block h-px w-full shrink-0 bg-shape-neutral-black" />;
+  return <span aria-hidden className="block w-full shrink-0 border-t border-shape-neutral-black" />;
 }
 
 /** Réponse : blocs séparés de spacing/md, paragraphes d'un bloc séparés de spacing/xs. */

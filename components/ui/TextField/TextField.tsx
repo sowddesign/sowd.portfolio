@@ -201,7 +201,7 @@ export function TextField({
         </div>
 
         {/* dividerBar */}
-        <span aria-hidden className="h-px w-full shrink-0 bg-shape-neutral-white" />
+        <span aria-hidden className="w-full shrink-0 border-t border-shape-neutral-white" />
 
         {details && <p className="type-caption-small-italic text-left text-text-neutral-white">{details}</p>}
       </div>

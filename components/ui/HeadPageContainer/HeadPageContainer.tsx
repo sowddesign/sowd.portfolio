@@ -58,7 +58,7 @@ export function HeadPageContainer({ title, details, image, tags, headingLevel = 
         />
 
         {/* dividerBar : horizontal sous la photo en mobile, vertical entre les deux moitiés ensuite. */}
-        <span aria-hidden className="order-2 h-px w-full shrink-0 bg-shape-neutral-white tablet:h-auto tablet:w-px" />
+        <span aria-hidden className="order-2 w-full shrink-0 border-t border-shape-neutral-white tablet:h-auto tablet:border-t-0 tablet:border-l" />
 
         {/* Navigation Image — hauteur fixe de 144px en mobile (valeur Figma validée), hauteur du pageHead ensuite. */}
         <div
@@ -100,7 +100,7 @@ export function HeadPageContainer({ title, details, image, tags, headingLevel = 
           )}
         </div>
       </div>
-      <span aria-hidden className="h-px w-full shrink-0 bg-shape-neutral-white" />
+      <span aria-hidden className="w-full shrink-0 border-t border-shape-neutral-white" />
     </div>
   );
 }

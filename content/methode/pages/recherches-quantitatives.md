@@ -5,15 +5,30 @@
 # Si le texte contient « : », entoure-le de guillemets.
 # Les images vont dans public/methode/recherches-quantitatives/ (même nom que ce fichier).
 
-# Image d'en-tête : texte au centre, mots-clés (au survol ; en desktop, groupés deux par deux « a - b »)
-image_titre: recherches quantitatives
+# Image d'en-tête : mots-clés (au survol ; en desktop, groupés deux par deux « a - b »)
 image_mots_cles:
   - questionnaires
   - études
   - données
   - quantité
 # Fichier de l'image d'en-tête (facultatif : vide = fond blanc)
-image_fichier:
+# Nom seul = dans le dossier des images de la page ; sinon chemin depuis public (ex. public\pages\photo.png)
+image_fichier: public\pages\brand_01.png
+# Couleur de fond derrière l'image (facultatif : vide = blanc).
+# Au choix (tokens primitive/color/brand) : brand/50, brand/100, brand/200, brand/300, brand/400, brand/500,
+# brand/600, brand/700, brand/800, brand/900, brand/950
+image_fond: brand/400
+# Placement de l'image, repris de Figma (desktop 800 × 218, mobile 376 × 218), en % de la hauteur du cadre :
+# taille = hauteur de l'image, x = écart entre le centre de l'image et le centre du cadre, y = haut de l'image,
+# rotation = inclinaison de l'image en degrés (sens horaire)
+image_desktop: { taille: 233.5, x: -2.2, y: -30.0, rotation: -8.3 }
+image_mobile: { taille: 220.3, x: 4.6, y: -21.4, rotation: -8.3 }
+# Textes posés sur l'image, toujours visibles : centre du texte en % de l'image (x : largeur, y : hauteur),
+# rotation en degrés par rapport à l'image, « couleur: blanc » = text/neutral/white
+image_textes:
+  - texte: "recherches  quantitatives"
+    desktop: { x: 49.7, y: 33.0, rotation: 8.3 }
+    mobile: { x: 49.4, y: 32.8, rotation: 8.3 }
 
 # « En quelques mots » : colonne de gauche, puis colonne de droite (ligne vide = nouveau paragraphe)
 definition_gauche: La recherche quantitative est une technique de collecte des données permettant d’analyser des comportements, des opinions et même des attentes utilisateur ; en quantité.

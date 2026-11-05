@@ -174,7 +174,7 @@ export function PageHeader({ activePage, className = "" }: PageHeaderProps) {
       {/* dividerBar sous l'en-tête. */}
       <span
         aria-hidden
-        className="h-px w-full shrink-0 bg-shape-neutral-black"
+        className="w-full shrink-0 border-t border-shape-neutral-black"
       />
 
       {/* Menu ouvert (mobile et tablette) : toute la hauteur restante de l'écran sous l'en-tête. */}

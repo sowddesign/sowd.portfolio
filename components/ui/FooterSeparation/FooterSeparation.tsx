@@ -17,7 +17,7 @@ export function FooterSeparation({ className = "" }: FooterSeparationProps) {
     <div className={`flex w-full flex-col bg-background-neutral-black pt-lg ${className}`}>
       <FooterSavoirPlus />
       <FooterVisual />
-      <span aria-hidden className="h-px w-full shrink-0 bg-shape-neutral-black" />
+      <span aria-hidden className="w-full shrink-0 border-t border-shape-neutral-black" />
     </div>
   );
 }

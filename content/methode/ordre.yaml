@@ -19,9 +19,9 @@
   pages:
     - recherches-quantitatives: Recherches quantitatives
     - benchmarks: Benchmarks
-    - entretiens-utilisateurs: Entretiens utilisateurs
-    - observations-terrains: Observations terrains
-    - ateliers-explorations: Ateliers d'explorations
+    - interview-utilisateurs: Interview utilisateurs
+    - observations-terrain: Observations terrain
+    - ateliers-exploration: Ateliers d’exploration
 
 - titre: Définir
   description: cadrer  le  problème
@@ -29,9 +29,9 @@
   pages:
     - problematique: Problématique
     - personaes: Personaes
-    - user-journeys: User journeys
+    - user-journey: User journey
     - synthese-recherches: Synthèse des recherches
-    - priorisation-backlog: Priorisation et backlog
+    - priorisation-backlog: Priorisation & backlog
     - aligner-objectifs: Aligner les objectifs
 
 - titre: Développer
@@ -41,17 +41,16 @@
     - ateliers-co-conception: Ateliers de co-conception
     - scenarios-usage: Scénarios d'usage
     - arborescence: Arborescence
-    - wireframes-papiers: Wireframes papiers
-    - wireframes-mid-fi: Wireframes mid-fi
-    - design-interaction: Design d'intéraction
+    - wireframes-papier: Wireframes papier
+    - wireframe-mid-fi: Wireframe mid-fi
+    - tests-utilisateurs: Tests utilisateurs
 
 - titre: Livrer
   description: valider  et  industrialiser
   intro: livrer
   pages:
-    - tests-utilisateurs: Tests utilisateurs
     - design-system: Design system
-    - specifications-developpeurs: Spécifications developpeurs
-    - prototype-hi-fi: Prototype Hi-Fi
-    - ab-testing: A/B Testing
-    - developpement-ia: Developpement IA
+    - design-interaction: Design d'interaction
+    - prototype-hi-fi: Prototype hi-fi
+    - testing: AB Testing
+    - specifications-ux-ui: Spécifications UX/UI

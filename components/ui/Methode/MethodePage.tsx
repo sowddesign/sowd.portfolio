@@ -18,7 +18,8 @@ import { MethodeBody } from "./MethodeBody";
  *
  * Desktop : remplit son parent (conteneur de 830 de haut en usage) et son contenu défile à l'intérieur,
  * avec la barre de défilement discrète (8 de large, choix de l'utilisateur).
- *   Traits du haut et du bas ; image d'en-tête (hauteur --header-image-height) et trait ;
+ *   Traits du haut et du bas ; image d'en-tête (hauteur --header-image-height-desktop : bas aligné sur celui
+ *   de la 3e tuile de la liste, demande de l'utilisateur ; mobile : --header-image-height) et trait ;
  *   « En quelques mots » (subheading, deux colonnes captionText/regular) ; trait ;
  *   « Utilisation dans un projet » (MethodeBody) ; trait ; boutons secondary black (projet) et primary brand
  *   (étape suivante). Écarts spacing/xxl entre blocs, marges spacing/lg.
@@ -48,7 +49,7 @@ export type MethodePageProps = {
   className?: string;
 };
 
-const divider = <span aria-hidden className="block h-px w-full shrink-0 bg-shape-neutral-black" />;
+const divider = <span aria-hidden className="block w-full shrink-0 border-t border-shape-neutral-black" />;
 
 function Paragraphs({ paragraphs }: { paragraphs: MdLine[][] }) {
   return paragraphs.map((lines, i) => (
@@ -99,8 +100,15 @@ function definitionShare(content: MethodePageContent) {
 function readOf(el: HTMLElement) {
   const rect = el.getBoundingClientRect();
   const distance = rect.height - window.innerHeight;
-  const value = distance > 0 ? -rect.top / distance : rect.top <= 0 ? 1 : 0;
-  return Math.min(1, Math.max(0, value));
+  return distance > 0 ? progressOf(-rect.top, distance) : rect.top <= 0 ? 1 : 0;
+}
+
+/**
+ * Avancée (0 à 1) sur une distance. À moins d'un pixel de la fin, c'est terminé : avec les traits arrondis au pixel
+ * d'écran (--divider-width), le défilement peut s'arrêter à une fraction de pixel avant le bout.
+ */
+function progressOf(position: number, distance: number) {
+  return position >= distance - 1 ? 1 : Math.min(1, Math.max(0, position / distance));
 }
 
 type Part = "definition" | "projet";
@@ -177,7 +185,7 @@ export function MethodePage({
     if (mobile || !el) return;
     const measure = () => {
       const distance = el.scrollHeight - el.clientHeight;
-      report.current?.(distance > 0 ? Math.min(1, el.scrollTop / distance) : 1);
+      report.current?.(distance > 0 ? progressOf(el.scrollTop, distance) : 1);
     };
     measure();
     const observer = new ResizeObserver(measure);
@@ -216,8 +224,15 @@ export function MethodePage({
 
   const header = (
     <div className="flex w-full flex-col">
-      <div className="h-(--header-image-height) w-full">
-        <HeaderImage title={content.header.title} keywords={content.header.keywords} image={content.header.image} />
+      <div className={`w-full ${mobile ? "h-(--header-image-height)" : "h-(--header-image-height-desktop)"}`}>
+        <HeaderImage
+          keywords={content.header.keywords}
+          image={content.header.image}
+          background={content.header.background}
+          layout={mobile ? "mobile" : "desktop"}
+          placement={content.header.placement}
+          texts={content.header.texts}
+        />
       </div>
       {divider}
     </div>

@@ -32,7 +32,7 @@ export default async function Home() {
                 color="black"
                 inset="lg"
               />
-              <span aria-hidden className="block h-px w-full bg-shape-neutral-black" />
+              <span aria-hidden className="block w-full border-t border-shape-neutral-black" />
             </div>
             <MethodeContainer steps={steps} />
           </div>

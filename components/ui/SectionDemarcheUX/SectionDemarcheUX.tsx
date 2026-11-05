@@ -66,7 +66,7 @@ export function SectionDemarcheUX({ id, className = "" }: SectionDemarcheUXProps
             />
             {cursor.node}
           </div>
-          <span aria-hidden className="h-px w-full shrink-0 bg-shape-neutral-white" />
+          <span aria-hidden className="w-full shrink-0 border-t border-shape-neutral-white" />
         </div>
       </div>
 
@@ -78,14 +78,14 @@ export function SectionDemarcheUX({ id, className = "" }: SectionDemarcheUXProps
           className="absolute inset-x-lg top-0 hidden max-h-(--double-flower-height) tablet:block"
           style={{ aspectRatio: "1440 / 721.33" }}
         >
-          <span className="absolute top-0 left-1/2 h-full w-px -translate-x-1/2 bg-shape-neutral-white" />
+          <span className="absolute top-0 left-1/2 h-full -translate-x-1/2 border-l border-shape-neutral-white" />
         </div>
         <DoubleFlower diamonds={hovered} className="relative" />
       </div>
 
       {/* Copyright de la section (desktop et tablette avec souris) ; sur écran tactile, celui de doubleFlower. */}
       <div className="hidden flex-col tablet:[@media(hover:hover)]:flex">
-        <span aria-hidden className="h-px w-full shrink-0 bg-shape-neutral-white" />
+        <span aria-hidden className="w-full shrink-0 border-t border-shape-neutral-white" />
         <p className="px-lg py-lg type-swiss-small-regular text-brand-50">{accueil.demarche_copyright}</p>
       </div>
     </section>

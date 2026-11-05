@@ -72,6 +72,7 @@ export function CompletionDrop({
     const jump = px("--nav-side-tile-drop-jump");
     const radius = px("--nav-side-tile-drop-size") / 2;
     const barHeight = px("--progress-bar-height");
+    const divider = px("--divider-width");
     const from = toRgb(g, style.getPropertyValue("--shape-brand-brand"));
     const to = toRgb(g, style.getPropertyValue("--shape-brand-whitish"));
 
@@ -79,9 +80,9 @@ export function CompletionDrop({
     canvas.height = Math.round(canvas.clientHeight * dpr);
     const box = canvas.getBoundingClientRect();
     const check = target.getBoundingClientRect();
-    /* Départ : bout de la barre (au-dessus du trait de 1px). Arrivée : début du trait du Check. */
+    /* Départ : bout de la barre (au-dessus du trait, --divider-width). Arrivée : début du trait du Check. */
     const sx = canvas.width - radius;
-    const sy = canvas.height - dpr - barHeight;
+    const sy = canvas.height - divider - barHeight;
     const cx = (check.left + check.width * checkStart.x - box.left) * dpr;
     const cy = (check.top + check.height * checkStart.y - box.top) * dpr;
     const at = (q: number) => [sx + (cx - sx) * q, sy + (cy - sy) * q - Math.sin(q * Math.PI) * jump];

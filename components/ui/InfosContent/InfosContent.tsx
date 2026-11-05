@@ -48,7 +48,7 @@ const stateTransition =
 
 /** Trait de 1px (instance Figma « separator », shape/neutral/black). */
 function Divider({ className = "" }: { className?: string }) {
-  return <span aria-hidden className={`block h-px w-full shrink-0 bg-shape-neutral-black ${className}`} />;
+  return <span aria-hidden className={`block w-full shrink-0 border-t border-shape-neutral-black ${className}`} />;
 }
 
 export function InfosContent({

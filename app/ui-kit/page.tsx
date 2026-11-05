@@ -486,7 +486,7 @@ export default async function UiKitPage() {
         </h2>
         {/* Taille de la maquette (709,5 × 226,8) ; en usage, le composant remplit son parent. */}
         <div className="h-[226.8px] w-full max-w-[709.5px] px-(--grid-spacing)">
-          <HeaderImage title="benchmark" keywords={["comparaison", "concurrence", "offres", "se  différencier"]} />
+          <HeaderImage keywords={["comparaison", "concurrence", "offres", "se  différencier"]} />
         </div>
       </section>
       <section className="flex flex-col gap-md bg-background-neutral-black pt-xxl text-text-neutral-white">

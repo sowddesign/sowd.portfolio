@@ -134,11 +134,11 @@ export function ProjetHubContainer({
 
             {/* Footer */}
             <div className="flex w-full flex-col gap-lg">
-              <span aria-hidden className="h-px w-full shrink-0 bg-shape-neutral-white" />
+              <span aria-hidden className="w-full shrink-0 border-t border-shape-neutral-white" />
               <TextualButton variant="primary" color="white" icon="ArrowRight" iconPosition="right" href={href}>
                 {commun.tuile_voir_projet}
               </TextualButton>
-              <span aria-hidden className="h-px w-full shrink-0 bg-shape-neutral-white" />
+              <span aria-hidden className="w-full shrink-0 border-t border-shape-neutral-white" />
             </div>
           </div>
         </div>
