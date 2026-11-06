@@ -8,7 +8,7 @@ import { NavigationButton } from "@/components/ui/NavigationButton";
 
 /*
  * Sommaire de l'UI kit (outil interne, sans maquette Figma) : bouton navButton en haut de page.
- * Il s'ouvre comme l'agrandissement d'image de la méthode (ImageZoom) : voile --methode-zoom-veil et flou,
+ * Il s'ouvre comme l'agrandissement d'image de la méthode (ImageLightbox) : voile --methode-zoom-veil et flou,
  * panneau qui grandit depuis le bouton sous l'en-tête (spacing/sm en dessous), marges spacing/lg ;
  * --motion-duration-base, --motion-ease-out ; mouvement réduit : sans animation.
  * Fermeture : clic sur le voile ou Échap, « Fermer » au curseur. Un lien ferme le sommaire puis amène
@@ -56,7 +56,7 @@ function SummaryOverlay({
   const cursor = useCursorLabel(commun.curseur_photos_fermer);
   const [top, setTop] = useState<number | null>(null);
 
-  /* Page figée derrière, barre de défilement remplacée par une marge (comme ImageZoom). */
+  /* Page figée derrière, barre de défilement remplacée par une marge (comme ImageLightbox). */
   useLayoutEffect(() => {
     const root = document.documentElement;
     const scrollbar = window.innerWidth - root.clientWidth;

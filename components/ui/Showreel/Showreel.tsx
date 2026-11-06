@@ -7,7 +7,6 @@ import { AnimationGrid } from "../AnimationGrid";
 import { IconButton } from "../IconButton";
 import { Logotype } from "../LogoButton";
 import { MessageContainer } from "../MessageContainer";
-import { ShowreelLogo } from "../ShowreelLogo";
 import { VideoManager } from "../VideoManager";
 import { desktopQuery, reducedMotionQuery, tabletQuery, touchQuery, useMediaQuery } from "../use-media-query";
 
@@ -32,7 +31,7 @@ import { desktopQuery, reducedMotionQuery, tabletQuery, touchQuery, useMediaQuer
  *     au-delà, la scène reste centrée et on découvre plus de fond sur les côtés (comme en desktop).
  * « Curieux|se ? » s'efface peu à peu en défilant (--showreel-message-fade-distance, demande de l'utilisateur).
  * La photo déborde vers le bas derrière la suite de la page (Figma : pas de découpe), avec le fondu showreel-fade.
- * Écran de l'ordinateur : écran noir et « Attends un peu », logo animé (Figma « 01 ») qui s'envole vers la vidéo
+ * Écran de l'ordinateur : écran noir et « Attends un peu », allumage de l'écran une fois la page chargée, vidéo
  * voilée avec un bouton Play, puis la vidéo du showreel (public/showreel/showreel.mp4, provisoire car trop lourde)
  * avec ses contrôles videoManager (demandes de l'utilisateur).
  * Coins du haut 8 (Figma sans variable = corner/md).
@@ -94,27 +93,53 @@ function Photo({
   );
 }
 
-/* Étapes de l'écran (demandes de l'utilisateur) : écran noir et « Attends un peu », allumage de l'écran sur le logo
-   qui pousse lentement puis accélère, phase de boucle (puis boucle tant que la vidéo charge), envol du logo pendant que
-   la vidéo voilée apparaît, bouton Play, lecture. */
-type ScreenStage = "waiting" | "grow" | "loop" | "fly" | "ready" | "playing";
-
 /** Durée d'un token CSS (« 3s » ou « 300ms ») en millisecondes. */
 function readDuration(element: Element, name: string) {
   const value = getComputedStyle(element).getPropertyValue(name).trim();
   return value.endsWith("ms") ? parseFloat(value) : parseFloat(value) * 1000;
 }
 
-/* Écran de l'ordinateur : chargement animé puis la vidéo du showreel avec ses contrôles (videoManager). La vidéo tient
-   entière dans l'écran, avec des bandes noires si ses proportions diffèrent (demande de l'utilisateur), en plein écran
-   aussi. Découpe aux bords de l'écran, sauf en bas où le rond de lecture déborde (demande de l'utilisateur).
-   Vidéo provisoire (trop lourde, à remplacer). Mouvement réduit : ni allumage ni logo, la vidéo apparaît une
-   fois chargée. */
+/** « Attends un peu » : typo de la consigne « Appuie » des photos, sans animation, en faded/white/40 (demande de
+    l'utilisateur). */
+function WaitingText() {
+  return (
+    <p className="type-swiss-small-accentuation pointer-events-none absolute bottom-lg left-lg whitespace-pre text-faded-white-40">
+      {accueil.showreel_attends}
+    </p>
+  );
+}
+
+/** Allumage de l'écran (balayage, choix de l'utilisateur) : un trait lumineux descend du haut vers le bas et
+    découvre l'écran derrière lui ; le cache noir porte « Attends un peu », effacé au passage du trait. */
+function PowerOn() {
+  return (
+    <>
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 animate-showreel-power-on-cover bg-background-neutral-black"
+      >
+        <WaitingText />
+      </div>
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 animate-showreel-power-on-line border-t border-shape-neutral-white"
+      />
+    </>
+  );
+}
+
+/* Écran de l'ordinateur (demandes de l'utilisateur) : écran noir et « Attends un peu » ; une fois la page chargée
+   (intro du site comprise) et après --showreel-power-on-delay, l'écran s'allume ; la vidéo voilée apparaît avec le
+   bouton Play dès qu'elle est chargée (« Attends un peu » reste jusque-là), puis la vidéo du showreel avec ses
+   contrôles (videoManager). La vidéo tient entière dans l'écran, avec des bandes noires si ses proportions diffèrent
+   (demande de l'utilisateur), en plein écran aussi. Découpe aux bords de l'écran, sauf en bas où le rond de lecture
+   déborde (demande de l'utilisateur). Vidéo provisoire (trop lourde, à remplacer). Mouvement réduit : pas d'allumage,
+   la vidéo apparaît une fois chargée. */
 function ShowreelScreen({ active }: { active: boolean }) {
   const screenRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const reduced = useMediaQuery(reducedMotionQuery);
-  const [stage, setStage] = useState<ScreenStage>("waiting");
+  const [playing, setPlaying] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [poweredOn, setPoweredOn] = useState(false);
 
@@ -128,26 +153,31 @@ function ShowreelScreen({ active }: { active: boolean }) {
     return () => video.removeEventListener("canplaythrough", onReady);
   }, [active]);
 
-  // Écran noir (--showreel-power-on-delay), puis allumage de l'écran et pousse du logo.
+  // Page chargée (plus d'attribut data-intro sur <html>, intro du site comprise), écran noir
+  // (--showreel-power-on-delay), puis allumage de l'écran.
   useEffect(() => {
     const element = screenRef.current;
     if (!element || !active) return;
-    const timer = window.setTimeout(() => setPoweredOn(true), readDuration(element, "--showreel-power-on-delay"));
-    return () => window.clearTimeout(timer);
+    const root = document.documentElement;
+    let timer = 0;
+    const start = () => {
+      if (timer || root.hasAttribute("data-intro")) return;
+      observer.disconnect();
+      timer = window.setTimeout(() => setPoweredOn(true), readDuration(element, "--showreel-power-on-delay"));
+    };
+    const observer = new MutationObserver(start);
+    observer.observe(root, { attributes: true, attributeFilter: ["data-intro"] });
+    start();
+    return () => {
+      observer.disconnect();
+      window.clearTimeout(timer);
+    };
   }, [active]);
 
-  // Étape affichée : en mouvement réduit, la vidéo apparaît dès qu'elle est chargée après l'écran noir.
-  let shown = stage;
-  if (stage === "waiting" && poweredOn) {
-    if (reduced) shown = loaded ? "ready" : "waiting";
-    else shown = "grow";
-  }
-
-  const revealed = shown === "fly" || shown === "ready" || shown === "playing";
-  const logoPhase = shown === "grow" || shown === "loop" || shown === "fly" ? shown : null;
+  const revealed = playing || (poweredOn && loaded);
 
   const play = () => {
-    setStage("playing");
+    setPlaying(true);
     void videoRef.current?.play();
   };
 
@@ -157,12 +187,10 @@ function ShowreelScreen({ active }: { active: boolean }) {
       className="pointer-events-auto absolute rounded-t-md bg-background-neutral-black [clip-path:var(--showreel-screen-clip)] [&:fullscreen]:rounded-none [&:fullscreen]:[clip-path:none]"
       style={screen}
     >
-      {/* Vidéo voilée et bouton Play : apparaissent pendant l'envol du logo (--showreel-reveal-delay). */}
+      {/* Vidéo voilée et bouton Play : apparaissent en fondu une fois l'écran allumé et la vidéo chargée. */}
       <div
         className={
-          revealed
-            ? "absolute inset-0 animate-showreel-reveal [animation-delay:calc(var(--showreel-logo-rest)+var(--showreel-reveal-delay))] motion-reduce:animate-none"
-            : "absolute inset-0 opacity-0"
+          revealed ? "absolute inset-0 animate-showreel-reveal motion-reduce:animate-none" : "absolute inset-0 opacity-0"
         }
       >
         <video
@@ -174,7 +202,7 @@ function ShowreelScreen({ active }: { active: boolean }) {
           playsInline
           className="absolute inset-0 size-full object-contain select-none [-webkit-touch-callout:none]"
         />
-        {shown === "ready" || shown === "fly" ? (
+        {revealed && !playing ? (
           <div className="absolute inset-0 flex items-center justify-center bg-faded-black-20">
             <IconButton
               icon="PlayFill"
@@ -188,33 +216,14 @@ function ShowreelScreen({ active }: { active: boolean }) {
         ) : null}
       </div>
 
-      {/* Allumage de l'écran : trait lumineux qui s'ouvre sur toute la hauteur. */}
-      {poweredOn && !reduced && stage !== "playing" && (
-        <span
-          aria-hidden
-          className="pointer-events-none absolute inset-0 animate-showreel-power-on bg-shape-neutral-white"
-        />
-      )}
+      {/* « Attends un peu » : jusqu'à l'apparition de la vidéo. */}
+      {!revealed && <WaitingText />}
 
-      {logoPhase && (
-        <ShowreelLogo
-          phase={logoPhase}
-          onGrowEnd={() => setStage(loaded ? "fly" : "loop")}
-          onLoopEnd={() => loaded && setStage("fly")}
-          onFlyEnd={() => setStage("ready")}
-          className="absolute top-1/2 left-1/2 aspect-square h-(--showreel-logo-size) -translate-1/2 animate-showreel-reveal [animation-duration:var(--showreel-power-on-duration)] [animation-delay:var(--showreel-power-on-duration)]"
-        />
-      )}
+      {/* Allumage de l'écran, par-dessus son contenu : « Attends un peu » reste sur le cache noir jusqu'à ce que le
+          trait l'efface (demande de l'utilisateur). */}
+      {poweredOn && !reduced && !playing && <PowerOn />}
 
-      {/* « Attends un peu » : jusqu'à l'envol du logo. Typo de la consigne « Appuie » des photos, sans animation,
-          en faded/white/40 (demande de l'utilisateur). */}
-      {(shown === "waiting" || shown === "grow" || shown === "loop") && (
-        <p className="type-swiss-small-accentuation pointer-events-none absolute bottom-lg left-lg whitespace-pre text-faded-white-40">
-          {accueil.showreel_attends}
-        </p>
-      )}
-
-      {shown === "playing" && (
+      {playing && (
         <VideoManager videoRef={videoRef} fullscreenRef={screenRef} className="absolute! inset-x-0 bottom-0" />
       )}
     </div>

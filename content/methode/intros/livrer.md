@@ -1,6 +1,6 @@
 ---
-# MÉTHODE — PAGE D'INTRODUCTION DE L'ÉTAPE « LIVRER » (page00)
-# Cette étape pointe vers ce fichier par « intro: livrer » dans content/methode/ordre.yaml.
+# MÉTHODE — PAGE D'INTRODUCTION DE L'ÉTAPE « DÉCOUVRIR » (page00)
+# Cette étape pointe vers ce fichier par « intro: decouvrir » dans content/methode/ordre.yaml.
 # Modifie seulement le texte après « : ». Ne change pas le nom avant « : ».
 # Si le texte contient « : », entoure-le de guillemets.
 
@@ -8,10 +8,10 @@
 libelle: Section
 
 # Titre (H3)
-titre: À compléter.
+titre: Continue de faire défiler pour voir ma vision de chaque étapes et comment je l’applique dans mes projets.
 
 # Texte sous le titre
-texte: À compléter.
+texte: Tu peux aussi séléctionner une qui t’interesse particulièrement.
 
 # Consigne animée en bas
 consigne: Défiler

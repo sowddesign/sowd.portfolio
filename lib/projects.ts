@@ -9,6 +9,7 @@ import { parse } from "yaml";
  * L'ordre d'affichage est la liste de content/projects/ordre.yaml : le premier de la liste
  * est automatiquement le projet nouveau (libellé « Nouveau », tuile « new ») ; les autres ont la tuile « default ».
  * Un dossier absent de la liste est masqué (ni tuile ni page) ; ex. _modele, à dupliquer pour un nouveau projet.
+ * « - dossier: off » : projet pas encore accessible (tuile « Bientôt disponible », non cliquable, page introuvable).
  * À n'utiliser que côté serveur (lecture du disque).
  */
 
@@ -32,6 +33,8 @@ export type Project = {
   layout: "default" | "new" | "autres";
   /** Texte sous l'en-tête de index.md, pour la future page projet. */
   content: string;
+  /** Faux si le projet est marqué « off » dans ordre.yaml : tuile « Bientôt disponible », page introuvable. */
+  available: boolean;
 };
 
 function fail(slug: string, message: string): never {
@@ -42,7 +45,7 @@ function failOrder(message: string): never {
   throw new Error(`Ordre des projets (content/projects/ordre.yaml) : ${message}`);
 }
 
-function readProject(slug: string): Omit<Project, "isNew" | "layout"> {
+function readProject(slug: string): Omit<Project, "isNew" | "layout" | "available"> {
   const source = readFileSync(path.join(PROJECTS_DIR, slug, "index.md"), "utf8");
   const match = source.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/);
   if (!match) fail(slug, "l'en-tête doit être entouré de deux lignes « --- ».");
@@ -68,25 +71,39 @@ function readProject(slug: string): Omit<Project, "isNew" | "layout"> {
   };
 }
 
-/** Noms des dossiers listés dans ordre.yaml, dans l'ordre d'affichage. */
-function readOrder(): string[] {
+/** Dossiers listés dans ordre.yaml, dans l'ordre d'affichage ; « - dossier: off » = pas encore accessible. */
+function readOrder(): { slug: string; available: boolean }[] {
   if (!existsSync(ORDER_FILE)) failOrder("fichier introuvable.");
   const order = parse(readFileSync(ORDER_FILE, "utf8")) ?? [];
   if (!Array.isArray(order)) failOrder("le fichier doit être une liste (une ligne « - dossier » par projet).");
 
-  const slugs = order.map(String);
+  const entries = order.map((line: unknown) => {
+    if (line && typeof line === "object" && !Array.isArray(line)) {
+      const [[slug, flag], ...rest] = Object.entries(line as Record<string, unknown>);
+      // « off » peut être lu comme le booléen faux selon la version de YAML.
+      if (rest.length || (flag !== "off" && flag !== false)) {
+        failOrder(`« ${slug} » : seul « : off » peut suivre le nom d'un projet.`);
+      }
+      return { slug: String(slug), available: false };
+    }
+    return { slug: String(line), available: true };
+  });
+  const slugs = entries.map((entry) => entry.slug);
   slugs.forEach((slug, i) => {
     if (slugs.indexOf(slug) !== i) failOrder(`« ${slug} » est listé deux fois.`);
     if (!existsSync(path.join(PROJECTS_DIR, slug, "index.md"))) {
       failOrder(`« ${slug} » ne correspond à aucun dossier content/projects/${slug}/ avec un index.md.`);
     }
   });
-  return slugs;
+  return entries;
 }
 
 /** Projets listés dans ordre.yaml, dans cet ordre ; le premier est le projet nouveau. */
 export function getProjects(): Project[] {
-  return readOrder()
-    .map(readProject)
-    .map((project, i) => ({ ...project, isNew: i === 0, layout: i === 0 ? "new" : "default" }));
+  return readOrder().map(({ slug, available }, i) => ({
+    ...readProject(slug),
+    available,
+    isNew: i === 0,
+    layout: i === 0 ? "new" : "default",
+  }));
 }

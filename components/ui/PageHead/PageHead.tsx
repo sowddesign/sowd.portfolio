@@ -4,15 +4,17 @@
  * La variante « device » passe par les breakpoints. Un trait blanc ferme le bloc.
  *
  * H1 : titre seul. H2 : petit texte de détail au-dessus du titre.
+ * H3 : titre de section dans une page (ex. pages projet) — titre seul, sans marge latérale (celle de la section),
+ * marges verticales spacing/sm (spacing/xs en mobile).
  * Dans headPage Container, l'instance n'a pas de trait (divider={false}) et nomme la page (headingLevel="h1").
  */
 
 export type PageHeadProps = {
-  type?: "H1" | "H2";
+  type?: "H1" | "H2" | "H3";
   title: string;
   /** Texte au-dessus du titre en H2, ex. « Découvrir : ». */
   details?: string;
-  /** Balise du titre (style inchangé) : par défaut h1 en H1, h2 en H2. Ex. h2 pour un H1 de section dans une page. */
+  /** Balise du titre (style inchangé) : par défaut h1 en H1, h2 en H2 et H3. Ex. h2 pour un H1 de section dans une page. */
   headingLevel?: "h1" | "h2";
   /** Trait blanc sous le bloc (masqué dans l'instance de headPage Container). */
   divider?: boolean;
@@ -23,7 +25,11 @@ export function PageHead({ type = "H1", title, details, headingLevel, divider = 
   const Heading = headingLevel ?? (type === "H1" ? "h1" : "h2");
   return (
     <div className={`flex w-full flex-col text-text-neutral-white ${className}`}>
-      {type === "H1" ? (
+      {type === "H3" ? (
+        <div className="flex w-full items-center py-xs tablet:py-sm">
+          <Heading className="type-h3">{title}</Heading>
+        </div>
+      ) : type === "H1" ? (
         <div className="flex w-full items-center px-md py-sm tablet:p-lg desktop:py-xl">
           <Heading className="type-h1 min-w-0 flex-1">{title}</Heading>
         </div>

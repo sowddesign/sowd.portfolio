@@ -48,6 +48,9 @@ message_details: détails détaillés
 message_obligatoire: oui
 message_icone: ""
 
+# Champ « email » en erreur (adresse invalide) : remplace son petit texte sous le trait jusqu'à la correction
+email_invalide: Il faut un @ et . quelque chose pour que votre adresse mail soit valide.
+
 # Bouton du formulaire, avant et après l'envoi
 envoyer: Envoyer
 envoye: Message envoyé

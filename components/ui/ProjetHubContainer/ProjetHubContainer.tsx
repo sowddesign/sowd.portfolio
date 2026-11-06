@@ -1,7 +1,7 @@
 import { commun } from "@/content/texts";
 import type { ReactNode } from "react";
-import { IconButton } from "../IconButton";
 import { TextualButton } from "../TextualButton";
+import { ProjectLink } from "./ProjectLink";
 
 /*
  * Carte projet de la page hub — composant Figma « projetHubContainer » (fichier portfolio, node 5010:29883).
@@ -12,7 +12,11 @@ import { TextualButton } from "../TextualButton";
  *   Image au-dessus, infos en dessous ; en desktop, le type passe à côté de l'année.
  *   new ne diffère qu'en desktop : infos à gauche, image à droite (Figma n'a pas de new mobile/tablette).
  * « Nouveau » (isNew) s'affiche dans tous les layouts : propNew sert aux maquettes Figma.
- * autres : image avec bouton flèche en bas à droite, puis titre et année.
+ * autres : image puis titre et année ; toute la carte mène au projet.
+ * Photo et texte mènent aussi au projet, avec « Voir le projet » au curseur ; au toucher, un appui ouvre le projet
+ * (demande de l'utilisateur). En default et new, ces zones doublent le bouton et sortent de l'ordre de tabulation.
+ * Projet « off » dans ordre.yaml (available=false) : carte visible mais non cliquable, « Bientôt disponible » au
+ * curseur et sur le bouton, aux couleurs disabled (demande de l'utilisateur).
  *
  * Les grilles suivent la grille du site (adaptativeGrid) : gouttière --grid-spacing ;
  * rangée de tags sur 4 colonnes en mobile, 8 en tablette, 6 en desktop (moitié de 12).
@@ -42,6 +46,8 @@ export type ProjetHubContainerProps = {
   image: ReactNode;
   /** Page du projet. */
   href: string;
+  /** Faux (projet « off » dans ordre.yaml) : non cliquable, bouton « Bientôt disponible » désactivé. */
+  available?: boolean;
   className?: string;
 };
 
@@ -54,24 +60,22 @@ export function ProjetHubContainer({
   isNew = false,
   image,
   href,
+  available = true,
   className = "",
 }: ProjetHubContainerProps) {
   const newLabel = isNew && <span className="type-swiss-regular text-text-brand-whitish">{commun.tuile_nouveau}</span>;
 
   if (layout === "autres") {
+    /* Toute la carte est le lien vers le projet (bouton flèche de Figma retiré à la demande de l'utilisateur). */
     return (
-      <article className={`flex h-[230px] w-full flex-col overflow-hidden text-text-neutral-white ${className}`}>
+      <ProjectLink
+        href={href}
+        available={available}
+        className={`flex h-(--projet-hub-autres-height) flex-col overflow-hidden text-text-neutral-white ${className}`}
+      >
         {/* Image Section */}
-        <div className="relative flex min-h-0 w-full flex-1 flex-col items-end justify-end p-sm">
-          <div data-reveal className={`absolute inset-0 ${imageReveal}`}>{image}</div>
-          <IconButton
-            icon="ArrowRight"
-            label={`${commun.tuile_voir_projet} ${title}`}
-            cursorLabel={commun.curseur_voir_projet}
-            variant="primary"
-            color="white"
-            href={href}
-          />
+        <div data-reveal className={`relative min-h-0 w-full flex-1 ${imageReveal}`}>
+          {image}
         </div>
 
         {/* infoContainer */}
@@ -82,14 +86,16 @@ export function ProjetHubContainer({
           </div>
           <span className="type-swiss-regular">{year}</span>
         </div>
-      </article>
+      </ProjectLink>
     );
   }
 
   const isSplit = layout === "new";
 
   return (
-    <article className={`flex h-[550px] w-full flex-col overflow-hidden text-text-neutral-white tablet:h-[680px] ${className}`}>
+    <article
+      className={`flex h-[550px] w-full flex-col overflow-hidden text-text-neutral-white tablet:h-[680px] ${className}`}
+    >
       {/* Content : une colonne (image puis infos) ; new en desktop : deux colonnes (infos à gauche, image à droite). */}
       <div
         className={`grid min-h-0 w-full flex-1 grid-cols-1 grid-rows-[minmax(0,1fr)_auto] gap-y-lg ${
@@ -97,21 +103,31 @@ export function ProjetHubContainer({
         }`}
       >
         {/* Image Section */}
-        <div data-reveal className={`relative ${imageReveal} ${isSplit ? "desktop:col-start-2 desktop:row-start-1" : ""}`}>{image}</div>
+        <ProjectLink
+          href={href}
+          available={available}
+          focusable={false}
+          className={`relative block ${isSplit ? "desktop:col-start-2 desktop:row-start-1" : ""}`}
+        >
+          <div data-reveal className={`absolute inset-0 ${imageReveal}`}>
+            {image}
+          </div>
+        </ProjectLink>
 
         {/* infoContainer */}
         <div className={`flex flex-col justify-end gap-lg ${isSplit ? "desktop:col-start-1 desktop:row-start-1" : ""}`}>
-          {/* Topbar : en desktop, le type passe dans la rangée des tags. */}
-          <div className="flex w-full items-center justify-between">
-            <div className="flex items-start gap-xs whitespace-nowrap">
-              <h2 className="type-h3">{title}</h2>
-              {newLabel}
+          {/* Titre, type, tags et année : mènent aussi au projet (demande de l'utilisateur). */}
+          <ProjectLink href={href} available={available} focusable={false} className="flex w-full flex-col gap-lg">
+            {/* Topbar : en desktop, le type passe dans la rangée des tags. */}
+            <div className="flex w-full items-center justify-between">
+              <div className="flex items-start gap-xs whitespace-nowrap">
+                <h2 className="type-h3">{title}</h2>
+                {newLabel}
+              </div>
+              {type && <span className="type-swiss-accentuation whitespace-nowrap desktop:hidden">{type}</span>}
             </div>
-            {type && <span className="type-swiss-accentuation whitespace-nowrap desktop:hidden">{type}</span>}
-          </div>
 
-          {/* Tags Section */}
-          <div className="flex w-full flex-col gap-lg">
+            {/* Tags Section (Figma) : rangée des tags puis footer, même écart spacing/lg ; la rangée est dans le lien. */}
             {/* Tags Row */}
             <div className="grid w-full grid-cols-4 gap-x-(--grid-spacing) tablet:grid-cols-8 desktop:grid-cols-6">
               <ul className="col-span-3 flex flex-wrap items-center gap-x-md gap-y-xs type-swiss-accentuation tablet:col-span-7 tablet:gap-x-lg desktop:col-span-4">
@@ -131,15 +147,24 @@ export function ProjetHubContainer({
                 <span className="type-swiss-regular">{year}</span>
               </div>
             </div>
+          </ProjectLink>
 
-            {/* Footer */}
-            <div className="flex w-full flex-col gap-lg">
-              <span aria-hidden className="w-full shrink-0 border-t border-shape-neutral-white" />
+          {/* Footer */}
+          <div className="flex w-full flex-col gap-lg">
+            <span aria-hidden className="w-full shrink-0 border-t border-shape-neutral-white" />
+            {available ? (
               <TextualButton variant="primary" color="white" icon="ArrowRight" iconPosition="right" href={href}>
                 {commun.tuile_voir_projet}
               </TextualButton>
-              <span aria-hidden className="w-full shrink-0 border-t border-shape-neutral-white" />
-            </div>
+            ) : (
+              // Zone non cliquable autour du bouton désactivé : « Bientôt disponible » au curseur aussi sur le bouton.
+              <ProjectLink href={href} available={false} className="w-full">
+                <TextualButton variant="primary" color="white" icon="ArrowRight" iconPosition="right" disabled>
+                  {commun.tuile_bientot}
+                </TextualButton>
+              </ProjectLink>
+            )}
+            <span aria-hidden className="w-full shrink-0 border-t border-shape-neutral-white" />
           </div>
         </div>
       </div>

@@ -10,7 +10,7 @@ image_mots_cles:
   - à compléter
 # Fichier de l'image d'en-tête (facultatif : vide = fond blanc)
 # Nom seul = dans le dossier des images de la page ; sinon chemin depuis public (ex. public\pages\photo.png)
-image_fichier: public\pages\brand_03.png
+image_fichier: public\pages\brand_03.webp
 # Couleur de fond derrière l'image (facultatif : vide = blanc).
 # Au choix (tokens primitive/color/brand) : brand/50, brand/100, brand/200, brand/300, brand/400, brand/500,
 # brand/600, brand/700, brand/800, brand/900, brand/950

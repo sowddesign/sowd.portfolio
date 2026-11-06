@@ -22,6 +22,7 @@ function ProjectTile({ project, sizes }: { project: Project; sizes: string }) {
       isNew={project.isNew}
       image={<Image src={project.image} alt="" fill sizes={sizes} className="object-cover" />}
       href={project.href}
+      available={project.available}
     />
   );
 }

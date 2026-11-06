@@ -65,9 +65,12 @@ export function useCursorLabel(label: ReactNode, placement: CursorLabelPlacement
     place();
   };
 
+  /* Sortie toujours écoutée, même sans texte : un texte qui disparaît pendant le survol (bouton désactivé) puis
+     revient ne doit pas réapparaître figé à l'ancienne position une fois le curseur parti. */
+  const leave = () => setVisible(false);
   const handlers = label
-    ? { onPointerEnter: move, onPointerMove: move, onPointerLeave: () => setVisible(false) }
-    : {};
+    ? { onPointerEnter: move, onPointerMove: move, onPointerLeave: leave }
+    : { onPointerLeave: leave };
 
   const node =
     label && visible

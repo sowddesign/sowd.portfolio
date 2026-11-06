@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useLayoutEffect, useRef } from "react";
 import { useCursorLabel } from "../CursorLabel";
 
@@ -34,6 +35,8 @@ export type HyperLinkProps = {
 
 export function HyperLink({ href, children, size = "caption", cursorLabel, className = "" }: HyperLinkProps) {
   const external = /^https?:\/\//.test(href);
+  /* Lien interne : navigation du site sans rechargement (next/link). */
+  const Anchor = external ? "a" : Link;
   const cursor = useCursorLabel(cursorLabel, "above");
   const linkRef = useRef<HTMLAnchorElement>(null);
   /* Mots avec leur espace de fin (l'espace est tracé avec le mot qui le précède). */
@@ -65,7 +68,7 @@ export function HyperLink({ href, children, size = "caption", cursorLabel, class
   const multiple = words.length > 1;
 
   return (
-    <a
+    <Anchor
       ref={linkRef}
       href={href}
       {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
@@ -102,6 +105,6 @@ export function HyperLink({ href, children, size = "caption", cursorLabel, class
         </span>
       ))}
       {cursor.node}
-    </a>
+    </Anchor>
   );
 }

@@ -118,6 +118,7 @@ export function ContacterContainer({ className = "" }: ContacterContainerProps) 
             {...fieldProps(field)}
             inputType={inputTypes[field.type]}
             isValid={field.type === "email" ? (value) => EMAIL_PATTERN.test(value.trim()) : undefined}
+            errorDetails={field.type === "email" ? contact.email_invalide : undefined}
             onValueChange={(value) => setValues((current) => current.map((old, i) => (i === index ? value : old)))}
             className={index >= fullFrom ? "col-span-full" : `tablet:col-span-4 ${ONE_COLUMN} desktop:col-span-6`}
           />

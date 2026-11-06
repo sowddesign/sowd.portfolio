@@ -16,6 +16,8 @@ import { PageFooter } from "@/components/ui/PageFooter";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { ProjetHubContainer } from "@/components/ui/ProjetHubContainer";
 import { PageHead } from "@/components/ui/PageHead";
+import { OthersProjects } from "@/components/ui/OthersProjects";
+import { getProjects } from "@/lib/projects";
 import { InfosContent, InfosContentGroup } from "@/components/ui/InfosContent";
 import { Photos } from "@/components/ui/Photos";
 import { ColorBackground } from "@/components/ui/ColorBackground";
@@ -150,6 +152,7 @@ const summary: KitSummaryGroup[] = [
       { id: "projet-hub-default", label: "ProjetHubContainer — default" },
       { id: "projet-hub-new", label: "ProjetHubContainer — new" },
       { id: "projet-hub-autres", label: "ProjetHubContainer — autres" },
+      { id: "others-projects", label: "OthersProjects" },
     ],
   },
   { title: "À propos", items: [{ id: "infos-content", label: "InfosContent" }] },
@@ -279,10 +282,14 @@ export default async function UiKitPage() {
       </section>
       <section className="flex flex-col gap-md bg-background-neutral-black py-xxl text-text-neutral-white">
         <h2 id="page-head" className="type-h4 px-(--grid-spacing)">
-          PageHead — H1, H2
+          PageHead — H1, H2, H3
         </h2>
         <PageHead title="PageHead H1" />
         <PageHead type="H2" details="Détails" title="PageHead H2" />
+        {/* H3 : sans marge latérale, la section d’une page la donne. */}
+        <div className="px-(--grid-spacing)">
+          <PageHead type="H3" title="PageHead H3" />
+        </div>
       </section>
       <section className="flex flex-col gap-md bg-background-neutral-black pt-xxl text-text-neutral-white">
         <h2 id="footer-savoir-plus" className="type-h4 px-(--grid-spacing)">
@@ -346,6 +353,15 @@ export default async function UiKitPage() {
           year="2026"
           image={<Image src="/projects/placeholder.png" alt="" fill sizes="100vw" className="object-cover" />}
           href="/projects"
+        />
+      </section>
+      <section className="flex flex-col gap-md bg-background-neutral-black py-xxl text-text-neutral-white">
+        <h2 id="others-projects" className="type-h4 px-(--grid-spacing)">
+          OthersProjects — bas des pages projet (nouveau + 2 au hasard)
+        </h2>
+        <OthersProjects
+          currentSlug=""
+          projects={getProjects().map(({ slug, title, year, image, href, isNew, available }) => ({ slug, title, year, image, href, isNew, available }))}
         />
       </section>
 
