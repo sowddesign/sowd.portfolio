@@ -2,13 +2,14 @@
 # Chaque ligne est le nom du dossier du projet (content/projects/<dossier>/).
 # Le premier de la liste est le projet nouveau : libellé « Nouveau » et grande tuile « new ».
 # Pour changer l'ordre, déplace les lignes. Un projet absent de la liste est masqué (ni tuile ni page).
+# Projet pas encore accessible : ajoute « : off » après le nom, ex. « - souffle: off ». Sa tuile reste visible
+# avec le bouton « Bientôt disponible » (désactivé), elle n'est pas cliquable et sa page est introuvable.
 # Les lignes commençant par « # » sont des commentaires.
 
-- graine
 - c-media
-- portfolio
-- souffle
-- pointe-courte
-- dirty-rains
-- scholar
-- flashinvaders
+- graine: off
+- portfolio: off
+- souffle: off
+- dirty-rains: off
+- scholar: off
+- flashinvaders: off

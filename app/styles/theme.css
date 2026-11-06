@@ -473,7 +473,9 @@
     showreel-logo-scale-loop var(--showreel-logo-loop-duration) var(--showreel-logo-ease) infinite;
   --animate-showreel-logo-fly: showreel-logo-fly var(--showreel-logo-fly-duration) var(--showreel-logo-ease) both;
   --animate-showreel-reveal: showreel-reveal var(--showreel-reveal-duration) var(--motion-ease-out) both;
-  --animate-showreel-power-on: showreel-power-on var(--showreel-power-on-duration) var(--motion-ease-out) both;
+  --animate-showreel-power-on-cover: showreel-power-on-cover var(--showreel-power-on-duration) var(--motion-ease-out)
+    both;
+  --animate-showreel-power-on-line: showreel-power-on-line var(--showreel-power-on-duration) var(--motion-ease-out) both;
 
   /*
    * Pousse puis première phase de boucle, d'un seul tenant (sans arrêt quand le logo est entier) :
@@ -617,22 +619,26 @@
     }
   }
 
-  /* Allumage de l'écran (vieux tube) : un trait lumineux s'étire au milieu, s'ouvre sur toute la hauteur et s'éteint. */
-  @keyframes showreel-power-on {
+  /* Allumage de l'écran (balayage) : le cache noir se retire vers le bas, sous un trait lumineux qui descend. */
+  @keyframes showreel-power-on-cover {
+    from {
+      clip-path: inset(0 0 0 0);
+    }
+    to {
+      clip-path: inset(100% 0 0 0);
+    }
+  }
+
+  @keyframes showreel-power-on-line {
     0% {
-      scale: 0 0.01;
+      top: 0%;
       opacity: 1;
     }
-    35% {
-      scale: 1 0.01;
+    90% {
       opacity: 1;
-    }
-    60% {
-      scale: 1 1;
-      opacity: 0.5;
     }
     100% {
-      scale: 1 1;
+      top: 100%;
       opacity: 0;
     }
   }

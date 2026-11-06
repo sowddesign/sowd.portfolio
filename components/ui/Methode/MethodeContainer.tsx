@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { commun } from "@/content/texts";
 import type { MethodeIntroContent, MethodePageContent, MethodePageEntry, MethodeStep } from "@/lib/methode";
+import { useCursorLabel } from "../CursorLabel";
 import { IconButton } from "../IconButton";
 import { NavSideMenus } from "../NavSideMenus";
 import type { NavSideTileLayout } from "../NavSideTiles";
@@ -22,7 +23,10 @@ import { MethodePage } from "./MethodePage";
  * Desktop et tablette : hauteur --methode-container-height.
  *   En-tête : à gauche description (captionSwiss/regular) et titre H3 suivi du numéro (captionSwiss/small/regular),
  *   à droite boutons « précédente » et « suivante » (textualButton tertiary black, désactivés aux extrémités),
- *   qui mènent à l'introduction de l'étape voisine (décision de l'utilisateur).
+ *   qui mènent à l'introduction de l'étape voisine (décision de l'utilisateur) ; exception : « suivante » avec une page
+ *   ouverte la fait glisser vers la page 01 de l'étape suivante, même mouvement que l'introduction (PageGlide),
+ *   comme « Voir la prochaine étape » sur la dernière page d'une étape ;
+ *   la liste et l'en-tête changent à l'arrivée (demande de l'utilisateur, à l'essai).
  *   Contenu : liste des pages (navSideMenus), trait, puis introduction (aucune page choisie) ou page choisie.
  *   Desktop : deux moitiés. La colonne de la liste rétrécit avec l'écran (colonne du numéro, puis Main text)
  *   jusqu'au passage en réduit ; la mesure se fait toujours à la largeur d'une moitié pour pouvoir en revenir.
@@ -42,7 +46,40 @@ import { MethodePage } from "./MethodePage";
  * Desktop et tablette : choisir une tuile (clic ou glisse depuis l'introduction) cale le haut du conteneur
  *   sous l'en-tête du site, défilement doux natif (demande de l'utilisateur).
  * Progression de lecture : gardée par page (la plus grande valeur atteinte), affichée dans les tuiles.
+ * Lien vers une page de la méthode depuis une autre page du site : /?methode=<nom de la page>
+ *   (nom du fichier dans content/methode/pages/, ex. design-system). L'étape et la page s'ouvrent dès l'arrivée,
+ *   puis un seul défilement doux mène à la page ouverte (desktop : haut du conteneur sous l'en-tête ; mobile :
+ *   tuile choisie sous l'en-tête et la ligne de l'étape), pour un mouvement continu (demande de l'utilisateur).
  */
+
+/** Adresse d'une page de la méthode, ex. methodeHref("design-system") → "/?methode=design-system". */
+export function methodeHref(slug: string) {
+  return `/?methode=${encodeURIComponent(slug)}`;
+}
+
+/** Page visée par l'adresse (?methode=…) : ouverte (étape, page) à l'image suivante, une fois l'affichage
+    desktop ou mobile choisi (l'autre affichage, monté un instant, est annulé).
+    Renvoie un repère levé au moment de cette ouverture (à baisser par qui le lit). */
+function useLinkedPage(steps: MethodeStep[], openPage: (step: number, page: number) => void) {
+  const linked = useRef(false);
+  const openRef = useRef(openPage);
+  useLayoutEffect(() => {
+    openRef.current = openPage;
+  });
+  useEffect(() => {
+    const slug = new URLSearchParams(window.location.search).get("methode");
+    if (!slug) return;
+    const step = steps.findIndex((item) => item.pages.some((page) => page.slug === slug));
+    if (step < 0) return;
+    const page = steps[step].pages.findIndex((item) => item.slug === slug);
+    const frame = requestAnimationFrame(() => {
+      linked.current = true;
+      openRef.current(step, page);
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [steps]);
+  return linked;
+}
 
 const divider = <span aria-hidden className="block w-full shrink-0 border-t border-shape-neutral-black" />;
 
@@ -127,15 +164,37 @@ function MethodeContainerDesktop({ steps, className }: MethodeContainerProps) {
   }, [selected, current]);
   const step = steps[current];
   const tablet = layout === "reduced";
+  /* Texte au curseur des boutons « précédente » et « suivante » : « Étape : » et le nom de l'étape visée
+     (demande de l'utilisateur), sur le curseur ; rien sur un bouton désactivé. */
+  const stepCursor = (index: number) =>
+    steps[index] ? `${commun.curseur_methode_etape} ${steps[index].title}` : undefined;
+  const prevCursor = useCursorLabel(stepCursor(current - 1));
+  const nextCursor = useCursorLabel(stepCursor(current + 1));
   const page = selected === null ? null : step.pages[selected];
 
+  /* Étape visée par la glisse de la page ouverte vers la page 01 de l'étape suivante (« suivante »). */
+  const [glide, setGlide] = useState<number | null>(null);
   const goToStep = (index: number) => {
+    setGlide(null);
     setCurrent(index);
     setSelected(null);
   };
+  /* « suivante » : page ouverte → glisse vers la page 01 de l'étape suivante ;
+     introduction → introduction de l'étape suivante, sans animation (demande de l'utilisateur). */
+  const nextStep = () => {
+    if (glide !== null) return;
+    if (page && steps[current + 1].pages[0]?.content) setGlide(current + 1);
+    else goToStep(current + 1);
+  };
+  useLinkedPage(steps, (stepIndex, pageIndex) => {
+    setCurrent(stepIndex);
+    setSelected(pageIndex);
+  });
   const next = () => {
     if (selected !== null && selected < step.pages.length - 1) setSelected(selected + 1);
-    else if (current < steps.length - 1) goToStep(current + 1);
+    /* Dernière page de l'étape : même glisse que « suivante » vers la page 01 de l'étape suivante
+       (demande de l'utilisateur). */
+    else if (current < steps.length - 1) nextStep();
   };
 
   return (
@@ -159,7 +218,8 @@ function MethodeContainerDesktop({ steps, className }: MethodeContainerProps) {
         )}
         <div className={`flex min-w-0 flex-1 items-end gap-sm self-stretch py-sm ${tablet ? "" : "px-lg"}`}>
           {/* Boutons à la largeur de leur contenu (Figma : Hug). */}
-          <div className="shrink-0">
+          <div className={`shrink-0 ${prevCursor.className}`} {...prevCursor.handlers}>
+            {prevCursor.node}
             {current === 0 ? (
               <TextualButton variant="tertiary" color="black" icon="ArrowLeft" disabled>
                 {commun.methode_precedente}
@@ -170,7 +230,8 @@ function MethodeContainerDesktop({ steps, className }: MethodeContainerProps) {
               </TextualButton>
             )}
           </div>
-          <div className="shrink-0">
+          <div className={`shrink-0 ${nextCursor.className}`} {...nextCursor.handlers}>
+            {nextCursor.node}
             {current === steps.length - 1 ? (
               <TextualButton variant="tertiary" color="black" icon="ArrowRight" iconPosition="right" disabled>
                 {commun.methode_suivante}
@@ -181,7 +242,7 @@ function MethodeContainerDesktop({ steps, className }: MethodeContainerProps) {
                 color="black"
                 icon="ArrowRight"
                 iconPosition="right"
-                onClick={() => goToStep(current + 1)}
+                onClick={nextStep}
               >
                 {commun.methode_suivante}
               </TextualButton>
@@ -203,16 +264,28 @@ function MethodeContainerDesktop({ steps, className }: MethodeContainerProps) {
         </div>
         <span aria-hidden className="block shrink-0 border-l border-shape-neutral-black" />
         <div ref={pageRef} className="min-w-0 flex-1">
-          {page
-            ? page.content && (
+          {page ? (
+            <PageGlide
+              nextPage={glide === null ? null : (steps[glide].pages[0]?.content ?? null)}
+              onLand={() => {
+                if (glide === null) return;
+                lockUntil.current = performance.now() + cssDuration("--methode-pull-lock");
+                setGlide(null);
+                setCurrent(glide);
+                setSelected(0);
+              }}
+            >
+              {page.content && (
                 <MethodePage
                   key={page.slug}
                   content={page.content}
                   onProgressChange={(value) => update(page.slug, value)}
                   onNext={next}
                 />
-              )
-            : step.intro && (
+              )}
+            </PageGlide>
+          ) : (
+            step.intro && (
                 <IntroPull
                   key={step.number}
                   intro={step.intro}
@@ -222,7 +295,8 @@ function MethodeContainerDesktop({ steps, className }: MethodeContainerProps) {
                     setSelected(0);
                   }}
                 />
-              )}
+              )
+          )}
         </div>
       </div>
     </div>
@@ -246,6 +320,12 @@ function MethodeContainerMobile({ steps, className }: MethodeContainerProps) {
   }, [open]);
   const stickyTop = `calc(var(--page-header-height, 0px) + ${rowHeight}px)`;
 
+  /* Ouverture par l'adresse : défilement doux jusqu'à la tuile (au lieu du passage direct d'un choix de tuile). */
+  const smoothNextRef = useLinkedPage(steps, (stepIndex, pageIndex) => {
+    setOpen(stepIndex);
+    setSelected(pageIndex);
+  });
+
   /* Tuile choisie : ramenée en haut, sous l'en-tête et la ligne de l'étape (l'ancienne page refermée
      a pu raccourcir la page au-dessus). */
   useLayoutEffect(() => {
@@ -254,11 +334,14 @@ function MethodeContainerMobile({ steps, className }: MethodeContainerProps) {
     if (!tile) return;
     const header = cssNumber("--page-header-height");
     const row = rowRef.current?.offsetHeight ?? 0;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const smooth = smoothNextRef.current && !reduce;
+    smoothNextRef.current = false;
     window.scrollTo({
       top: tile.getBoundingClientRect().top + window.scrollY - header - row,
-      behavior: "instant",
+      behavior: smooth ? "smooth" : "instant",
     });
-  }, [selected, open]);
+  }, [selected, open, smoothNextRef]);
 
   const toggle = (index: number) => {
     setOpen((current) => (current === index ? null : index));
@@ -339,6 +422,66 @@ function cssNumber(name: string) {
 function cssDuration(name: string) {
   const value = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
   return value.endsWith("ms") ? parseFloat(value) : (parseFloat(value) || 0) * 1000;
+}
+
+/**
+ * Page ouverte (desktop) qui glisse vers la page 01 de l'étape suivante (« suivante » cliqué) :
+ * même mouvement que l'introduction vers sa page 01 (remontée lente sur --methode-pull-delay, puis glisse
+ * sur --motion-duration-base), sans attendre la molette. La page ouverte reste montée (sa position de lecture
+ * est gardée pendant la glisse) ; la page d'arrivée est ajoutée dessous le temps du mouvement.
+ */
+function PageGlide({
+  children,
+  nextPage,
+  onLand,
+}: {
+  children: ReactNode;
+  nextPage: MethodePageContent | null;
+  onLand: () => void;
+}) {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const land = useRef(onLand);
+  useEffect(() => {
+    land.current = onLand;
+  });
+
+  useLayoutEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    const move = (value: string, duration: string | null) => {
+      track.style.transition = duration ? `transform ${duration} var(--motion-ease-out)` : "none";
+      track.style.transform = value;
+    };
+    if (!nextPage) return move("", null);
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return land.current();
+    let landing = false;
+    const onEnd = (event: TransitionEvent) => {
+      if (event.target !== track) return;
+      if (landing) return land.current();
+      landing = true;
+      move("translateY(-100%)", "var(--motion-duration-base)");
+    };
+    /* Remontée lente : un cran de molette (100, plafond de l'introduction) réduit par la résistance.
+       Lecture de la mise en page d'abord, pour que la transition parte bien de la position de départ. */
+    void track.offsetHeight;
+    move(`translateY(${-100 * cssNumber("--methode-pull-resistance")}px)`, "var(--methode-pull-delay)");
+    track.addEventListener("transitionend", onEnd);
+    return () => track.removeEventListener("transitionend", onEnd);
+  }, [nextPage]);
+
+  return (
+    <div className="relative size-full overflow-hidden">
+      <span aria-hidden className="absolute inset-x-0 top-0 z-1 block border-t border-shape-neutral-black" />
+      <div ref={trackRef} className="flex size-full flex-col">
+        <div className="size-full shrink-0">{children}</div>
+        {nextPage && (
+          <div aria-hidden inert className="pointer-events-none size-full shrink-0">
+            <MethodePage content={nextPage} />
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
 
 /**

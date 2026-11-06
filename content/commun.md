@@ -58,6 +58,11 @@ pied_design_par: design  par
 # Tuiles projet
 tuile_nouveau: Nouveau
 tuile_voir_projet: Voir le projet
+# Projet marqué « off » dans content/projects/ordre.yaml : bouton désactivé de la tuile
+tuile_bientot: Bientôt disponible
+
+# Section en bas des pages projet
+autres_projets_titre: D’autres projets
 
 # Tableau questions / réponses : ligne de titre (« Réponse : » n'apparaît qu'à partir de la tablette)
 infos_numero: N°
@@ -80,6 +85,7 @@ curseur_menu_fermer: Fermer
 curseur_visuel_afficher: Afficher
 curseur_visuel_remettre_noir: Recommencer
 curseur_voir_projet: Voir le projet
+curseur_bientot: Bientôt disponible
 curseur_photos_precedente: Précédente
 curseur_photos_suivante: Suivante
 curseur_photos_fermer: Fermer
@@ -93,6 +99,8 @@ curseur_video_pause: Pause
 curseur_couper_son: Couper le son
 curseur_remettre_son: Remettre le son
 curseur_video_fermer: Fermer
+# Méthode, boutons « précédente » et « suivante » : suivi du nom de l'étape visée
+curseur_methode_etape: "Étape :"
 
 # Contrôles de la vidéo : boutons et barres, lus par les lecteurs d'écran
 video_lecture: Lire la vidéo

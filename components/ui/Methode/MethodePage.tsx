@@ -8,7 +8,7 @@ import { HeaderImage } from "../HeaderImage";
 import { IconButton } from "../IconButton";
 import { RichLines } from "../RichText";
 import { TextualButton } from "../TextualButton";
-import { ImageZoom, type ZoomedImage } from "./ImageZoom";
+import { ImageLightboxGroup } from "../ImageLightbox";
 import { MethodeBody } from "./MethodeBody";
 
 /*
@@ -30,7 +30,7 @@ import { MethodeBody } from "./MethodeBody";
  *   bouton de l'étape suivante sous l'accordéon.
  *
  * Agrandissement (desktop et mobile, demande de l'utilisateur) : un clic sur une image l'affiche en grand
- * par-dessus la page (ImageZoom), « Agrandir » au curseur.
+ * par-dessus la page (ImageLightbox, carrousel des images de la page), « Agrandir » au curseur.
  *
  * Progression de lecture (onProgressChange, de 0 à 1, pour la ProgressBar de navSideTiles) :
  *   desktop : défilement du contenu ;
@@ -164,15 +164,6 @@ export function MethodePage({
   const [open, setOpen] = useState<Part | null>("definition");
   const parts = useRef<Record<Part, HTMLDivElement | null>>({ definition: null, projet: null });
   const read = useRef<Record<Part, number>>({ definition: 0, projet: 0 });
-  const [zoom, setZoom] = useState<ZoomedImage | null>(null);
-  const openZoom = (src: string, origin: HTMLElement) => {
-    for (const section of content.sections)
-      for (const row of section.rows)
-        for (const column of row.columns)
-          for (const item of column)
-            if (item.kind === "image" && item.src === src)
-              return setZoom({ src, alt: item.alt, width: item.width, height: item.height, origin });
-  };
   const share = definitionShare(content);
   const report = useRef(onProgressChange);
   useEffect(() => {
@@ -219,8 +210,6 @@ export function MethodePage({
       cancelAnimationFrame(frame);
     };
   }, [mobile, open, share]);
-
-  const zoomView = zoom && <ImageZoom image={zoom} onClosed={() => setZoom(null)} />;
 
   const header = (
     <div className="flex w-full flex-col">
@@ -284,7 +273,9 @@ export function MethodePage({
                 }}
               >
                 <div className="flex flex-col gap-xxl">
-                  <MethodeBody sections={content.sections} mobile onImageClick={openZoom} />
+                  <ImageLightboxGroup>
+                    <MethodeBody sections={content.sections} mobile zoomable />
+                  </ImageLightboxGroup>
                   {projectButton}
                 </div>
               </AccordionPart>
@@ -294,7 +285,6 @@ export function MethodePage({
           </div>
         </div>
         {divider}
-        {zoomView}
       </div>
     );
   }
@@ -321,7 +311,9 @@ export function MethodePage({
           {divider}
           <div className="flex flex-col gap-xxl px-lg">
             <h3 className="type-subheading text-pretty">{commun.methode_projet_titre}</h3>
-            <MethodeBody sections={content.sections} onImageClick={openZoom} />
+            <ImageLightboxGroup>
+              <MethodeBody sections={content.sections} zoomable />
+            </ImageLightboxGroup>
           </div>
           {divider}
           <div className="grid grid-cols-2 gap-x-lg px-lg">
@@ -331,7 +323,6 @@ export function MethodePage({
         </div>
       </div>
       {divider}
-      {zoomView}
     </div>
   );
 }

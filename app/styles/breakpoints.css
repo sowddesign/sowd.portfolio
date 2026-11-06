@@ -11,3 +11,7 @@
 @custom-variant tablet (@media (width > 740px));
 @custom-variant tablet-lg (@media (width > 1080px));
 @custom-variant desktop (@media (width > 1300px));
+
+/* Seuils propres à un composant (décisions de l'utilisateur) :
+ *   schéma d'équipe UX : format mobile jusqu'à 900px inclus → schema-equipe: au-delà. */
+@custom-variant schema-equipe (@media (width > 900px));

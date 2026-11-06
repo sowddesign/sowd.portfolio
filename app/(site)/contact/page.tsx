@@ -24,7 +24,7 @@ export default function Contact() {
         <div className="flex w-full tablet:w-auto tablet:flex-1">
           <PhotosContainer photos={getPhotos()} />
         </div>
-        <span aria-hidden className="w-full shrink-0 border-t border-shape-neutral-white tablet:h-auto tablet:border-t-0 tablet:border-l" />
+        <span aria-hidden className="w-full shrink-0 border-t border-shape-neutral-white tablet:h-auto tablet:w-auto tablet:border-t-0 tablet:border-l" />
         <ContacterContainer className="tablet:min-w-0 tablet:flex-1 tablet:py-lg" />
       </div>
 

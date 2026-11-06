@@ -153,25 +153,23 @@
   --time-manager-wave-stagger: var(--motion-duration-fast); /* décalage entre la petite et la grande onde */
 
   /*
-   * Écran du showreel avant la vidéo (demandes de l'utilisateur) : écran noir et « Attends un peu », allumage de
-   * l'écran sur le logo (Figma « 01 ») qui pousse lentement puis accélère, fait une phase de boucle, boucle tant que
-   * la vidéo charge, s'envole (transition C), et la vidéo voilée (faded/black/20) apparaît avec le
-   * bouton Play.
+   * Écran du showreel avant la vidéo (demandes de l'utilisateur) : écran noir et « Attends un peu » ; une fois la page
+   * chargée (intro du site comprise) et après --showreel-power-on-delay, l'écran s'allume (balayage :
+   * un trait lumineux descend et découvre l'écran) ; la vidéo voilée (faded/black/20) apparaît avec le bouton Play dès qu'elle est chargée.
+   * Les jetons --showreel-logo-* servent au logo animé « 01 » (ShowreelLogo), utilisé par les autres chargements.
    */
-  --showreel-power-on-delay: 2s; /* écran noir avant l'allumage (décision de l'utilisateur) */
-  --showreel-power-on-duration: 600ms; /* allumage de l'écran (valeur d'essai) */
+  --showreel-power-on-delay: 2s; /* écran noir après le chargement de la page, avant l'allumage (décision de l'utilisateur) */
+  --showreel-power-on-duration: 600ms; /* allumage de l'écran, balayage (valeur d'essai) */
   --showreel-logo-ease: cubic-bezier(0.38, 0, 0.25, 1); /* courbe du prototype Figma */
   --showreel-logo-grow-duration: 3.5s; /* pousse lente qui accélère (Figma 2,2 s, décision de l'utilisateur) */
   --showreel-logo-loop-duration: 3.4s; /* une phase de boucle (Figma 3 s, décision de l'utilisateur) */
   /* Pousse + première phase de boucle (keyframes showreel-logo-*-grow, calculés pour 3,5 s + 3,4 s). */
   --showreel-logo-first-duration: calc(var(--showreel-logo-grow-duration) + var(--showreel-logo-loop-duration));
-  --showreel-logo-size: 90%; /* hauteur du logo dans l'écran (valeur d'essai, écrans Figma indicatifs) */
   --showreel-logo-rest: 400ms; /* logo complet, immobile, avant l'envol (demande de l'utilisateur, valeur d'essai) */
   --showreel-logo-fly-duration: 700ms; /* envol d'un pétale (valeur d'essai) */
   --showreel-logo-fly-stagger: 30ms; /* décalage entre deux pétales (valeur d'essai) */
   --showreel-logo-fly-distance: 160px; /* distance parcourue, en pixels du logo Figma (valeur d'essai) */
   --showreel-logo-fly-scale: 0.4; /* taille d'un pétale à la fin de l'envol (valeur d'essai) */
-  --showreel-reveal-delay: 300ms; /* apparition de la vidéo après le début de l'envol, pause comprise en plus (valeur d'essai) */
   --showreel-reveal-duration: 600ms; /* apparition de la vidéo voilée et du bouton Play (valeur d'essai) */
   /*
    * siteIntro — chargement du site (animation validée par l'utilisateur sur démo, 2026-11-04) : la tige pousse,
@@ -268,6 +266,31 @@
   --methode-zoom-blur: 4px;
   /* Grossissement maximal d'une image agrandie par rapport à sa taille dans la page (choix de l'utilisateur). */
   --methode-zoom-max: 2;
+
+  /*
+   * schémaUXEquipe (Figma 5763:29549) — valeurs sans variable dans Figma, variables à reporter dans le DS.
+   * Desktop et tablette : rangées de 80, avatars 80 ; mobile : avatars 40, rangée du milieu 52 (icône 32 + marges).
+   */
+  --schema-equipe-row-height: var(--p-number-80);
+  --schema-equipe-avatar-desktop: var(--p-number-80);
+  --schema-equipe-avatar-mobile: var(--p-number-40);
+  --schema-equipe-annotation-space: 0.625rem; /* 10 : marge intérieure et écart des liens entre personnes */
+  --schema-equipe-annotation-row-mobile: calc(var(--icon-lg) + var(--schema-equipe-annotation-space) * 2); /* 52 */
+  --schema-equipe-logo-size: var(--p-number-22); /* 22 : logo devant « Moi » */
+
+  /* Pages projet — flèche entre ce que j'ai appris et ce que j'aimerais faire (Figma 10, sans variable). */
+  --project-arrow-space: 0.625rem; /* 10 */
+  /* Pages projet — logo C-Média (Figma 347 de large, sans variable). */
+  --project-c-media-logo-width: 21.6875rem; /* 347 */
+
+  /* projetHubContainer « autres » — hauteur de la carte (Figma 230, sans variable). */
+  --projet-hub-autres-height: 14.375rem; /* 230 */
+
+  /* othersProject (Figma 5763:30632) — carrousel mobile, infini, au doigt (décisions de l'utilisateur). */
+  --others-projects-card-mobile: 75vw; /* largeur d'une carte : 75 % de l'écran (Figma 306 sur 402, sans variable) */
+  --others-projects-card-height-mobile: 15rem; /* 240 : hauteur d'une carte (Figma Variant2, sans variable) */
+  --others-projects-swipe-threshold: 0.2; /* part de la largeur d'une carte à glisser pour changer de carte (valeur d'essai) */
+  --others-projects-drag-slop: var(--spacing-xs); /* 8 : glissé minimal avant de suivre le doigt (valeur d'essai) */
 
   /* Épaisseur réelle d'un trait (bordure de 1px arrondie au pixel d'écran), mesurée par le layout racine. */
   --divider-width: 1px;

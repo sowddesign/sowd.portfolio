@@ -51,8 +51,11 @@ export type TextFieldProps = {
    *  Le texte saisi passe à la ligne au bord droit, comme le titre. */
   inputType?: "text" | "email" | "tel";
   /** Vérification de la saisie. Un champ rempli et invalide, une fois quitté, passe en erreur (état provisoire,
-   *  absent de Figma) : texte saisi en text/brand/dark (même couleur que les tokens « darkest »), icône « ! » en shape/brand/darkest. */
+   *  absent de Figma) : texte saisi en text/brand/dark (même couleur que les tokens « darkest »), icône « ! » en shape/brand/darkest ;
+   *  l'erreur reste affichée, même en revenant dans le champ, jusqu'à la correction (demande de l'utilisateur). */
   isValid?: (value: string) => boolean;
+  /** En erreur : texte qui remplace details sous le trait, en text/brand/dark. */
+  errorDetails?: string;
   name?: string;
   defaultValue?: string;
   onValueChange?: (value: string) => void;
@@ -69,6 +72,7 @@ export function TextField({
   iconAfter = true,
   inputType = "text",
   isValid,
+  errorDetails,
   name,
   defaultValue = "",
   onValueChange,
@@ -78,7 +82,12 @@ export function TextField({
   const [value, setValue] = useState(defaultValue);
   const [focused, setFocused] = useState(false);
   const raised = focused || value !== "";
-  const error = !focused && value !== "" && isValid !== undefined && !isValid(value);
+  const invalid = value !== "" && isValid !== undefined && !isValid(value);
+  /* L'erreur apparaît quand on quitte un champ invalide, puis reste affichée, même en revenant dans le champ,
+     jusqu'à ce que la saisie soit corrigée (demande de l'utilisateur). */
+  const [flagged, setFlagged] = useState(false);
+  const error = invalid && (flagged || !focused);
+  if (flagged && !invalid) setFlagged(false);
 
   const fieldRef = useRef<HTMLInputElement & HTMLTextAreaElement>(null);
 
@@ -107,7 +116,10 @@ export function TextField({
     onChange: (event: { target: { value: string } }) => update(event.target.value),
     onFocus: () => setFocused(true),
     rows: 1,
-    onBlur: () => setFocused(false),
+    onBlur: () => {
+      setFocused(false);
+      if (invalid) setFlagged(true);
+    },
     className: [
       "type-body-regular caret-text-neutral-white bg-transparent outline-none",
       error ? "text-text-brand-dark" : "text-text-neutral-white",
@@ -203,7 +215,11 @@ export function TextField({
         {/* dividerBar */}
         <span aria-hidden className="w-full shrink-0 border-t border-shape-neutral-white" />
 
-        {details && <p className="type-caption-small-italic text-left text-text-neutral-white">{details}</p>}
+        {error && errorDetails ? (
+          <p className="type-caption-small-italic text-left text-text-brand-dark">{errorDetails}</p>
+        ) : (
+          details && <p className="type-caption-small-italic text-left text-text-neutral-white">{details}</p>
+        )}
       </div>
     </div>
   );

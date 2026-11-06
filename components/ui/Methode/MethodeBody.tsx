@@ -1,8 +1,7 @@
 import Image from "next/image";
-import type { ReactNode } from "react";
 import { commun } from "@/content/texts";
 import type { MethodeElement, MethodeRow, MethodeSection } from "@/lib/methode";
-import { useCursorLabel } from "../CursorLabel";
+import { ZoomTrigger } from "../ImageLightbox";
 import { RichLines } from "../RichText";
 
 /*
@@ -16,37 +15,10 @@ import { RichLines } from "../RichText";
  * sur 20 px, valeur Figma sans variable voulue), liste à puces (retrait spacing/lg), image bordée border/neutral/black
  * à ses propres proportions, légende captionText/small/italic, gros chiffre extra/datavizHugeNumber et son libellé
  * captionText/small/regular. Liens vers un projet : « Voir le projet » au curseur.
- * Images cliquables : onImageClick ouvre l'agrandissement (MethodePage), « Agrandir » au curseur.
+ * Images agrandissables (zoomable) : ZoomTrigger, agrandissement dans l'ImageLightboxGroup de MethodePage.
  */
 
-type ImageClick = (src: string, origin: HTMLElement) => void;
-
-/** Image qui s'agrandit au clic, avec « Agrandir » au curseur. */
-function ZoomableImage({
-  label,
-  onClick,
-  children,
-}: {
-  label: string;
-  onClick: (origin: HTMLElement) => void;
-  children: ReactNode;
-}) {
-  const cursor = useCursorLabel(commun.curseur_agrandir);
-  return (
-    <button
-      type="button"
-      aria-label={label}
-      onClick={(event) => onClick(event.currentTarget)}
-      {...cursor.handlers}
-      className={`block w-full cursor-pointer ${cursor.className}`}
-    >
-      {children}
-      {cursor.node}
-    </button>
-  );
-}
-
-function Element({ item, onImageClick }: { item: MethodeElement; onImageClick?: ImageClick }) {
+function Element({ item, zoomable }: { item: MethodeElement; zoomable: boolean }) {
   switch (item.kind) {
     case "subtitle":
       return (
@@ -97,15 +69,14 @@ function Element({ item, onImageClick }: { item: MethodeElement; onImageClick?: 
           width={item.width}
           height={item.height}
           sizes="(width > 1300px) 25vw, (width > 740px) 50vw, 100vw"
+          data-lightbox-visual
           className="h-auto w-full border border-border-neutral-black"
         />
       );
-      return onImageClick ? (
-        <ZoomableImage
-          label={`${commun.methode_agrandir} : ${item.alt}`}
-          onClick={(origin) => onImageClick(item.src, origin)}>
+      return zoomable ? (
+        <ZoomTrigger src={item.src} alt={item.alt} width={item.width} height={item.height} className="block w-full">
           {image}
-        </ZoomableImage>
+        </ZoomTrigger>
       ) : (
         image
       );
@@ -124,38 +95,38 @@ function Element({ item, onImageClick }: { item: MethodeElement; onImageClick?: 
 
 function Column({
   items,
-  onImageClick,
+  zoomable = false,
   className = "",
 }: {
   items: MethodeElement[];
-  onImageClick?: ImageClick;
+  zoomable?: boolean;
   className?: string;
 }) {
   return (
     <div className={`flex min-w-0 flex-col gap-sm ${className}`}>
       {items.map((item, i) => (
-        <Element key={i} item={item} onImageClick={onImageClick} />
+        <Element key={i} item={item} zoomable={zoomable} />
       ))}
     </div>
   );
 }
 
-function Row({ row, mobile, onImageClick }: { row: MethodeRow; mobile: boolean; onImageClick?: ImageClick }) {
-  if (row.columns.length === 1) return <Column items={row.columns[0]} onImageClick={onImageClick} />;
+function Row({ row, mobile, zoomable }: { row: MethodeRow; mobile: boolean; zoomable: boolean }) {
+  if (row.columns.length === 1) return <Column items={row.columns[0]} zoomable={zoomable} />;
   const [left, right] = row.columns;
   const figures = row.columns.every((column) => column.length > 0 && column.every((item) => item.kind === "figure"));
   if (mobile && !figures) {
     return (
       <div className="flex flex-col gap-lg">
-        {left.length > 0 && <Column items={left} onImageClick={onImageClick} />}
-        {right.length > 0 && <Column items={right} onImageClick={onImageClick} />}
+        {left.length > 0 && <Column items={left} zoomable={zoomable} />}
+        {right.length > 0 && <Column items={right} zoomable={zoomable} />}
       </div>
     );
   }
   return (
     <div className={`grid grid-cols-2 ${mobile ? "gap-x-md" : "gap-x-lg"}`}>
-      <Column items={left} onImageClick={onImageClick} />
-      <Column items={right} onImageClick={onImageClick} className={row.alignEnd ? "self-end" : ""} />
+      <Column items={left} zoomable={zoomable} />
+      <Column items={right} zoomable={zoomable} className={row.alignEnd ? "self-end" : ""} />
     </div>
   );
 }
@@ -163,11 +134,11 @@ function Row({ row, mobile, onImageClick }: { row: MethodeRow; mobile: boolean; 
 export function MethodeBody({
   sections,
   mobile = false,
-  onImageClick,
+  zoomable = false,
 }: {
   sections: MethodeSection[];
   mobile?: boolean;
-  onImageClick?: ImageClick;
+  zoomable?: boolean;
 }) {
   return sections.map((section, i) => (
     <div key={i} className="flex flex-col gap-lg">
@@ -177,7 +148,7 @@ export function MethodeBody({
         </h4>
       )}
       {section.rows.map((row, j) => (
-        <Row key={j} row={row} mobile={mobile} onImageClick={onImageClick} />
+        <Row key={j} row={row} mobile={mobile} zoomable={zoomable} />
       ))}
     </div>
   ));
