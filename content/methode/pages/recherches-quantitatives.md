@@ -7,10 +7,10 @@
 
 # Image d'en-tête : mots-clés (au survol ; en desktop, groupés deux par deux « a - b »)
 image_mots_cles:
-  - questionnaires
-  - études
-  - données
-  - quantité
+  - questionner
+  - comparer
+  - tendances
+  - hypothèses
 # Fichier de l'image d'en-tête (facultatif : vide = fond blanc)
 # Nom seul = dans le dossier des images de la page ; sinon chemin depuis public (ex. public\pages\photo.png)
 image_fichier: public\pages\brand_01.webp
@@ -26,31 +26,39 @@ image_mobile: { taille: 220.3, x: 4.6, y: -21.4, rotation: -8.3 }
 # Textes posés sur l'image, toujours visibles : centre du texte en % de l'image (x : largeur, y : hauteur),
 # rotation en degrés par rapport à l'image, « couleur: blanc » = text/neutral/white
 image_textes:
-  - texte: "recherches  quantitatives"
+  - texte: "recherche  quantitative"
     desktop: { x: 49.7, y: 33.0, rotation: 8.3 }
     mobile: { x: 49.4, y: 32.8, rotation: 8.3 }
 
-# « En quelques mots » : colonne de gauche, puis colonne de droite (ligne vide = nouveau paragraphe)
-definition_gauche: La recherche quantitative est une technique de collecte des données permettant d’analyser des comportements, des opinions et même des attentes utilisateur ; en quantité.
-definition_droite: |
-  Les données sont souvent récoltées à distance (et donc plus rapidement) grâce à des sondages, des questionnaires mais aussi à travers des études sélectionnées en amont.
+# « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace).
+# *texte* = italique.
+definition: |
+  La recherche quantitative mesure des comportements, des usages et des opinions à grande échelle, à partir de données chiffrées. Elle répond à « combien ? » et « à quelle fréquence ? ».
+  *On l’oppose à la recherche qualitative, qui explique le « pourquoi ». En réalité, les deux se complètent : les combiner est un vrai atout en recherche UX.*
 
-  Elles permettent de prouver ou démontrer des faits en quantifiant un phénomène.
+  Elle s’appuie sur des questionnaires, des sondages ou l’analyse d’études existantes. Ses résultats permettent de valider ou d’invalider des hypothèses et de prioriser les décisions de conception.
 
-# Bouton vers le projet cité (texte et adresse)
-projet_bouton: Voir le projet graine
-projet_lien: /projects/graine
+# Projet cité : nom du fichier dans content/methode/projets/ (introduction au projet et bouton vers le projet)
+projet: graine
 ---
 
-# « UTILISATION DANS UN PROJET » — texte sous l'en-tête de commentaires
+# « UTILISATION DANS UN PROJET » — texte sous l'en-tête de commentaires (l'introduction au projet vient du projet cité)
 #
-#   ## Titre                 → nouvelle partie (titre en body/accentuation)
-#   ---                      → nouvelle rangée
-#   ||                       → passe à la colonne de droite (sans « || » : pleine largeur)
+#   ## Titre                 → nouvelle partie (titre subheading), séparée de la précédente par un trait
+#   ### Sous-titre           → nouvelle sous-partie avec sous-titre (body/accentuation)
+#   ###                      → nouvelle sous-partie sans sous-titre
+#   ---                      → nouveau bloc dans la sous-partie
+#   ligne vide               → nouvel élément dans le bloc (ou dans la colonne)
+#   <<                       → début de deux colonnes : ce qui suit va à gauche
+#   ||                       → passe à la colonne de droite
 #   || bas                   → idem, colonne de droite calée en bas
-#   ligne vide               → nouvel élément dans la colonne
-#   ### Texte                → sous-titre (caption/accentuation)
-#   1. texte                 → liste numérotée (une ligne par élément)
+#   >>                       → fin des colonnes : la suite reprend en pleine largeur
+#                              (sans « << », « || » met à gauche tout ce qui le précède dans le bloc ;
+#                               sans « >> », les colonnes vont jusqu'à la fin du bloc)
+#   #### Texte               → titre dans un bloc (body/accentuation)
+#   1. texte                 → élément numéroté ; les lignes suivantes sans numéro sont ses paragraphes suivants
+#   1. ![description](fichier.png) → élément numéroté avec une image (sans bordure, fichier à 2× la taille affichée),
+#                              les lignes suivantes vont dessous
 #   - texte                  → liste à puces (une ligne par élément)
 #   ![description](fichier.png) → image (dans le dossier des images de la page)
 #   > texte                  → légende (petite, en italique)
@@ -60,104 +68,151 @@ projet_lien: /projects/graine
 #
 # Les lignes commençant par « # » suivi d'un espace sont des commentaires.
 
-Lors du projet [graine](/projects/graine) j’ai souhaité comprendre les habitudes des Français concernant les plantes et les expériences gamifiées.
+## Objectifs de la recherche
 
-Mais aussi de mieux comprendre comment la gamification va changer l’expérience vécue, afin d’éviter au maximum les dérives liées à cette pratique.
+Cette phase de recherche a été articulée autour de deux questions :
+
+<<
+
+1. Quelles sont les habitudes des Français avec leurs plantes ?
 
 ||
 
-### Deux méthodes ont été mobilisées :
+2. Comment la gamification peut-elle motiver sans tomber dans ses dérives (manipulation, pression, etc.) ?
 
-1. Analyse d’études existantes
-2. Elaboration et envoi d’un questionnaire
+---
+
+Deux méthodes ont été mobilisées pour y répondre :
+
+<<
+
+- La récolte et l’analyse d’études existantes
+
+||
+
+- L’élaboration et l’envoi d’un questionnaire
 
 ## Analyse d’études
 
-Des études comme :
+### Quatre études :
 
----
+Deux sur les habitudes des Français :
 
-[« Work gamification: Effects on enjoyment, productivity and the role of leadership »](https://www.sciencedirect.com/science/article/abs/pii/S1567422320300715?via%3Dihub)
+<<
 
-[« les Français et leur jardin »](https://documents.lesentreprisesdupaysage.fr/pub/documents/DP-Unep-x-Ifop-2025.pdf)
+- [« les Français et leur jardin »](https://documents.lesentreprisesdupaysage.fr/pub/documents/DP-Unep-x-Ifop-2025.pdf)
 
 ||
 
-[« EFL learners’ motivation in a gamified formative assessment: The case of Quizizz »](https://link.springer.com/article/10.1007/s10639-023-12034-7#Sec1)
-
-ou encore [« Les Français et le Jeu vidéo »](https://www.sell.fr/sites/default/files/essentiel-jeu-video/ejv_octobre_2024_0.pdf)
+- [« Les Français et le jeu vidéo »](https://www.sell.fr/sites/default/files/essentiel-jeu-video/ejv_octobre_2024_0.pdf)
 
 ---
 
-![Extrait du document de recherche du projet graine : études](etudes.png)
+Et deux sur la gamification :
+
+<<
+
+- [« Work gamification: Effects on enjoyment, productivity and the role of leadership »](https://www.sciencedirect.com/science/article/abs/pii/S1567422320300715?via%3Dihub)
+
+||
+
+- [« EFL learners’ motivation in a gamified formative assessment: The case of Quizizz »](https://link.springer.com/article/10.1007/s10639-023-12034-7#Sec1)
+
+---
+
+![Graphique adapté de l’étude SELL 2024 : part de joueurs par tranche d’âge](etudes.png)
 
 || bas
 
-> Extrait  du  document  de  recherche  du  projet  graine
+> Adaptation d’un graphique de l’étude SELL 2024 : part de joueurs par tranche d’âge (documentation graine)
+
+### Ce que les études ont révélé :
+
+1. L’entretien des plantes est perçu comme une contrainte pour les 18 à 34 ans. L’application doit donc le rendre plus simple et plus engageant.
+
+||
+
+2. Près de 9 Français de 18 à 34 ans sur 10 jouent aux jeux vidéo (SELL, 2024). La gamification parle donc naturellement à cette cible.
 
 ---
 
-Ces recherches m’ont amené à deux études permettant de créer un lien sur une tranche d’âge, **les 18-34 ans**.
+3. Les classements et les badges motivent, mais peuvent aussi créer de la pression. Pour durer, la motivation doit s’appuyer sur des retours immédiats valorisant les progrès personnels, avec une compétition optionnelle.
+*L’étude Quizizz porte sur des enfants de 8 à 10 ans ; on en retient le mécanisme (compétition contre progression), à vérifier auprès de notre cible.*
 
-||
+###
 
-### Deux insight ont étés trouvés :
-
-1. Ils estiment l’entretien des plantes comme une contrainte.
-2. Presque 90% des 18-34 ans qui jouent au jeu vidéo
-
----
-
-### Ce que cela a apporté :
-
-Les études préalables ont orientés les choix sur le questionnaire : notamment pour déterminer à qui l’envoyer, mais aussi sur les questions posées et le ton à employer.
-
-||
+Ces données ont fixé notre cible principale, les 18 à 34 ans, et orienté le questionnaire : à qui l’envoyer, quelles questions poser et sur quel ton.
 
 ## Questionnaire
 
+###
+
+*18 questions (dont 3 facultatives), mêlant échelles de notation et questions ouvertes.*
+
+---
+
 Ce questionnaire a été distribué de deux façons :
 
-||
+<<
 
----
-
-- Envoi à des connaissances, dans la tranche d’âge préalablement visée
+- Sur Reddit et Instagram
 
 ||
 
-- Posté sur les réseaux sociaux comme Reddit et Instagram
+- Auprès de notre entourage, dans la tranche d’âge visée (18 à 34 ans)
 
 ---
 
-![Extrait du document de recherche du projet graine : réponses au questionnaire](questionnaire-reponses.png)
+<<
+
+![Extrait du questionnaire du projet graine : réponses](questionnaire-reponses.png)
 
 ||
 
-![Extrait du document de recherche du projet graine : infographie](questionnaire-infographie-1.png)
+![Extrait du questionnaire du projet graine : infographie](questionnaire-infographie-1.png)
 
-![Extrait du document de recherche du projet graine : infographie](questionnaire-infographie-2.png)
+![Extrait du questionnaire du projet graine : infographie](questionnaire-infographie-2.png)
 
-> Extrait  du  document  de  recherche  du  projet  graine
+>>
 
----
+> Extraits du questionnaire (documentation graine)
 
 ### Résultats :
 
----
-
-= 47 | Réponses aux questions
+= 47 | répondants
 
 ||
 
-= 30 | Réponses développées
+= 30 | réponses aux questions ouvertes
 
 ---
 
-= 8 | Infographies réalisées
+= 8 | infographies de synthèse
 
 || bas
 
-Dans le but de protéger les données nous avons supprimé les réponses.
+Pour protéger les répondants, les réponses brutes ne sont pas publiées.
 
-> Seules les infographies ont étés conservée pour appuyer l’argumentaire.
+> Seules les infographies de synthèse ont été conservées.
+
+### Ce que le questionnaire a révélé :
+
+1. ![Extrait du projet graine](page-maker-1.png)
+83 % des répondants sont prêts à s’occuper de leurs plantes dès la plantation d’une graine.
+
+||
+
+2. ![Extrait du projet graine](page-maker-2.png)
+70,2 % estiment que des missions quotidiennes pourraient les aider à mieux entretenir leurs plantes.
+
+---
+
+Ces données ont validé plusieurs choix de conception :
+
+<<
+
+- des parcours d’entretien dès la plantation d’une graine
+
+||
+
+- des missions quotidiennes

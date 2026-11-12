@@ -22,7 +22,7 @@ export default async function Home() {
       <Showreel id="showreel" fadeUntil="#ux-process h2" />
       <div className="relative flex flex-col">
         <SectionDemarcheUX id="ux-process" />
-        <section className="flex flex-col bg-background-neutral-white py-xxl tablet:pt-mega tablet:pb-none">
+        <section className="flex flex-col bg-background-neutral-white py-xxl tablet:pb-none">
           <div className="flex flex-col tablet:gap-xxl">
             <div className="flex flex-col gap-lg">
               <HeaderText

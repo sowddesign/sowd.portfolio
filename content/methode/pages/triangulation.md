@@ -1,46 +1,37 @@
 ---
-# MÉTHODE — PAGE « ATELIERS DE CO-CONCEPTION »
+# MÉTHODE — PAGE « TRIANGULATION »
 # Son étape, sa place et son nom dans le menu se règlent dans content/methode/ordre.yaml.
 # Modifie seulement le texte après « : ». Ne change pas le nom avant « : ».
 # Si le texte contient « : », entoure-le de guillemets.
-# Les images vont dans public/methode/ateliers-co-conception/ (même nom que ce fichier).
+# Les images vont dans public/methode/triangulation/ (même nom que ce fichier).
 
 # Image d'en-tête : mots-clés (au survol ; en desktop, groupés deux par deux « a - b »)
 image_mots_cles:
-  - à compléter
+  - croiser
+  - recouper
+  - méthodes
+  - synthèse
 # Fichier de l'image d'en-tête (facultatif : vide = fond blanc)
 # Nom seul = dans le dossier des images de la page ; sinon chemin depuis public (ex. public\pages\photo.png)
-image_fichier: public\pages\darker_01.webp
+image_fichier: public\pages\brand_05.webp
 # Couleur de fond derrière l'image (facultatif : vide = blanc).
 # Au choix (tokens primitive/color/brand) : brand/50, brand/100, brand/200, brand/300, brand/400, brand/500,
 # brand/600, brand/700, brand/800, brand/900, brand/950
-image_fond: brand/500
+image_fond: brand/400
 # Placement de l'image, repris de Figma (desktop 800 × 218, mobile 376 × 218), en % de la hauteur du cadre :
 # taille = hauteur de l'image, x = écart entre le centre de l'image et le centre du cadre, y = haut de l'image,
 # rotation = inclinaison de l'image en degrés (sens horaire)
-image_desktop: { taille: 128.0, x: 0.0, y: 3.8 }
+image_desktop: { taille: 113.7, x: 0.0, y: -8.2 }
 image_mobile: { taille: 100.0, x: 0.0, y: 0.0 }
 # Textes posés sur l'image, toujours visibles : centre du texte en % de l'image (x : largeur, y : hauteur),
 # rotation en degrés par rapport à l'image, « couleur: blanc » = text/neutral/white
 image_textes:
-  - texte: ateliers
-    desktop: { x: 38.0, y: 32.5 }
-    mobile: { x: 37.8, y: 33.5 }
-  - texte: conception
-    desktop: { x: 60.2, y: 53.1 }
-    mobile: { x: 59.8, y: 75.4 }
-  - texte: de
-    couleur: blanc
-    desktop: { x: 59.8, y: 34.6 }
-    mobile: { x: 59.8, y: 33.5 }
-  - texte: co
-    couleur: blanc
-    desktop: { x: 38.0, y: 53.1 }
-    mobile: { x: 37.8, y: 75.4 }
+  - texte: "triangulation"
+    desktop: { x: 68.6, y: 84.6, rotation: -22.6 }
+    mobile: { x: 68.6, y: 84.6, rotation: -22.6 }
 
-# « En quelques mots » : colonne de gauche, puis colonne de droite (ligne vide = nouveau paragraphe)
-definition_gauche: À compléter.
-definition_droite: À compléter.
+# « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace)
+definition: À compléter.
 
 # Bouton vers le projet cité (texte et adresse)
 projet_bouton: À compléter

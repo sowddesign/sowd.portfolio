@@ -18,7 +18,8 @@ import { CompletionDrop } from "./CompletionDrop";
  *   state    → hovered = :hover ; empty = NavSideTileEmpty.
  * Barre : ProgressBar (liquide au bord ondulant) qui suit la lecture ; elle garde sa position quand l'étape est désélectionnée.
  * Icônes : ArrowRight (indication au survol), X (désélection), Check (terminée), Plus (ouvrir, mobile).
- * La tuile entière sélectionne ou désélectionne l'étape ; Plus et X en mobile font de même.
+ * La tuile entière sélectionne ou désélectionne l'étape ; Plus et X en mobile font de même
+ * (le Plus tourne en X, IconButton « turned », demande de l'utilisateur ; la croix remplace le Plus, à droite).
  *
  * Accomplissement (animation C2) : quand l'étape sélectionnée atteint 100 %, la tuile garde son aspect
  * « en cours » jusqu'à ce que la barre soit pleine, puis une goutte saute jusqu'au Check (CompletionDrop).
@@ -140,8 +141,8 @@ export function NavSideTile({
           wrap ? "min-h-(--button-size-sm) min-w-0 shrink" : "h-(--button-size-sm) shrink-0"
         }`}
       >
-        {/* En mobile, la flèche et la croix de gauche n'apparaissent que sur une étape terminée. */}
-        {(!mobile || done) && hoverIcon}
+        {/* En mobile, pas de flèche ni de croix avant le texte : la croix remplace le Plus à droite (demande de l'utilisateur). */}
+        {!mobile && hoverIcon}
         <p className={`${colorTransition} ${text} grow ${wrap ? "min-w-0" : "whitespace-nowrap"}`}>{label}</p>
         {/* Mesure desktop : place du Check réservée sur toutes les tuiles (une étape peut se terminer).
             Pendant l'accomplissement, le Check est en place mais caché jusqu'à l'arrivée de la goutte. */}
@@ -149,9 +150,11 @@ export function NavSideTile({
           <CheckTrace ref={checkRef} drawn={done || measure} className={`${colorTransition} ${icon}`} />
         )}
         {mobile && !finished && (
-          <span className={`pointer-events-auto ${selected ? onHover : "flex"}`}>
+          /* Croix de la tuile ouverte toujours visible (pas de survol au toucher). */
+          <span className="pointer-events-auto flex">
             <IconButton
-              icon={selected ? "X" : "Plus"}
+              icon="Plus"
+              turned={selected}
               label={selected ? `Fermer ${label}` : `Ouvrir ${label}`}
               cursorLabel={null}
               variant="tertiary"

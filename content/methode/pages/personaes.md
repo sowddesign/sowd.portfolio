@@ -23,13 +23,12 @@ image_mobile: { taille: 100.0, x: 0.0, y: 0.0 }
 # Textes posés sur l'image, toujours visibles : centre du texte en % de l'image (x : largeur, y : hauteur),
 # rotation en degrés par rapport à l'image, « couleur: blanc » = text/neutral/white
 image_textes:
-  - texte: personaes
+  - texte: persona
     desktop: { x: 39.0, y: 76.8 }
     mobile: { x: 40.4, y: 82.3, rotation: -2.9 }
 
-# « En quelques mots » : colonne de gauche, puis colonne de droite (ligne vide = nouveau paragraphe)
-definition_gauche: À compléter.
-definition_droite: À compléter.
+# « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace)
+definition: À compléter.
 
 # Bouton vers le projet cité (texte et adresse)
 projet_bouton: À compléter

@@ -98,6 +98,14 @@ function readOrder(): { slug: string; available: boolean }[] {
   return entries;
 }
 
+/** Page du projet accessible : listé dans ordre.yaml sans « off ». */
+export function isProjectAvailable(slug: string) {
+  return readOrder().some((entry) => entry.slug === slug && entry.available);
+}
+
+/** Fichier de l'ordre des projets (sa date de modification sert à vider les caches en dev). */
+export const PROJECTS_ORDER_FILE = ORDER_FILE;
+
 /** Projets listés dans ordre.yaml, dans cet ordre ; le premier est le projet nouveau. */
 export function getProjects(): Project[] {
   return readOrder().map(({ slug, available }, i) => ({

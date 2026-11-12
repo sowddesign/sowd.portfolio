@@ -17,6 +17,7 @@ import { PlayManager, VideoIconButton } from "../PlayManager";
 import { ProgressBar } from "../ProgressBar";
 import { TimeManager } from "../TimeManager";
 import { touchQuery, useMediaQuery } from "../use-media-query";
+import { playEvents, readMuted, readPlaying, readProgress, readVolume, timeEvents, useMediaValue, volumeEvents } from "../use-media-value";
 
 /*
  * Contrôles de la vidéo — composant Figma « videoManager » (fichier portfolio, node 5725:32544).
@@ -61,60 +62,6 @@ function readDuration(element: Element, name: string) {
   return value.endsWith("ms") ? parseFloat(value) : parseFloat(value) * 1000;
 }
 
-const playEvents = ["play", "pause", "ended"];
-const volumeEvents = ["volumechange"];
-const timeEvents = ["timeupdate", "seeking", "seeked", "loadedmetadata", "durationchange"];
-
-/** Valeur lue sur la vidéo, mise à jour à chaque évènement (et à chaque image pendant la lecture si frame). */
-function useVideoValue<T>(
-  videoRef: RefObject<HTMLVideoElement | null>,
-  events: string[],
-  read: (video: HTMLVideoElement) => T,
-  fallback: T,
-  frame = false,
-) {
-  const subscribe = useCallback(
-    (notify: () => void) => {
-      const video = videoRef.current;
-      if (!video) return () => {};
-      events.forEach((name) => video.addEventListener(name, notify));
-      // Pendant la lecture : une mise à jour par image, pour une barre fluide.
-      let raf = 0;
-      const tick = () => {
-        notify();
-        raf = requestAnimationFrame(tick);
-      };
-      const start = () => {
-        if (frame && !raf) raf = requestAnimationFrame(tick);
-      };
-      const stop = () => {
-        cancelAnimationFrame(raf);
-        raf = 0;
-      };
-      video.addEventListener("play", start);
-      video.addEventListener("pause", stop);
-      if (!video.paused) start();
-      return () => {
-        events.forEach((name) => video.removeEventListener(name, notify));
-        video.removeEventListener("play", start);
-        video.removeEventListener("pause", stop);
-        stop();
-      };
-    },
-    [videoRef, events, frame],
-  );
-  return useSyncExternalStore(
-    subscribe,
-    () => (videoRef.current ? read(videoRef.current) : fallback),
-    () => fallback,
-  );
-}
-
-const readPlaying = (video: HTMLVideoElement) => !video.paused && !video.ended;
-const readVolume = (video: HTMLVideoElement) => video.volume;
-const readMuted = (video: HTMLVideoElement) => video.muted;
-const readProgress = (video: HTMLVideoElement) => (video.duration > 0 ? video.currentTime / video.duration : 0);
-
 export function VideoManager({ videoRef, fullscreenRef, className = "" }: VideoManagerProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const seekRef = useRef<HTMLSpanElement>(null);
@@ -125,10 +72,10 @@ export function VideoManager({ videoRef, fullscreenRef, className = "" }: VideoM
   /* Position survolée sur la barre de lecture (souris), de 0 à 1. */
   const [preview, setPreview] = useState<number | null>(null);
 
-  const playing = useVideoValue(videoRef, playEvents, readPlaying, false);
-  const volume = useVideoValue(videoRef, volumeEvents, readVolume, 1);
-  const muted = useVideoValue(videoRef, volumeEvents, readMuted, false);
-  const progress = useVideoValue(videoRef, timeEvents, readProgress, 0, true);
+  const playing = useMediaValue(videoRef, playEvents, readPlaying, false);
+  const volume = useMediaValue(videoRef, volumeEvents, readVolume, 1);
+  const muted = useMediaValue(videoRef, volumeEvents, readMuted, false);
+  const progress = useMediaValue(videoRef, timeEvents, readProgress, 0, true);
   const fullscreen = useSyncExternalStore(
     useCallback((notify: () => void) => {
       document.addEventListener("fullscreenchange", notify);

@@ -19,9 +19,9 @@
   pages:
     - recherches-quantitatives: Recherches quantitatives
     - benchmarks: Benchmarks
-    - interview-utilisateurs: Interview utilisateurs
+    - entretien-utilisateur: Entretien utilisateur
     - observations-terrain: Observations terrain
-    - ateliers-exploration: Ateliers d’exploration
+    - triangulation: Triangulation
 
 - titre: Définir
   description: cadrer  le  problème
@@ -38,7 +38,6 @@
   description: explorer  des  solutions
   intro: developper
   pages:
-    - ateliers-co-conception: Ateliers de co-conception
     - scenarios-usage: Scénarios d'usage
     - arborescence: Arborescence
     - wireframes-papier: Wireframes papier
@@ -54,3 +53,4 @@
     - prototype-hi-fi: Prototype hi-fi
     - testing: AB Testing
     - specifications-ux-ui: Spécifications UX/UI
+    - developpement-ia: Développement IA

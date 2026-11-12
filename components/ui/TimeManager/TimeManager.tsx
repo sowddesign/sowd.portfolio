@@ -14,6 +14,7 @@ import { useCursorLabel } from "../CursorLabel";
 import { Icon } from "../Icon";
 import { buttonTones, colorTransition } from "../button-tones";
 import { commun } from "@/content/texts";
+import type { MediaTone } from "../PlayManager";
 
 /*
  * Volume de la vidéo — composant Figma « timeManager » (fichier portfolio, node 5718:32045).
@@ -37,6 +38,8 @@ import { commun } from "@/content/texts";
  * (demande de l'utilisateur, à reporter dans Figma) : la barre rentre dans le haut-parleur, l'icône revient droite,
  * puis les ondes du niveau en ressortent une à une. Mouvement réduit : ouverture et fermeture sans animation.
  * Curseur texte (décision de l'utilisateur) : « Couper le son » / « Remettre le son » (content/commun.md).
+ * tone black (audioManager sur fond blanc, décision de l'utilisateur, absent de Figma) : miroir en noir, icône et poignée
+ * iconButton black / tertiary, fond de barre faded/black/40 %, remplissage shape/neutral/black.
  */
 
 export type TimeManagerLevel = "shut" | "low" | "high";
@@ -50,6 +53,8 @@ export type TimeManagerProps = {
   onMutedChange: (muted: boolean) => void;
   /** Masque le texte du curseur (contrôles vidéo inactifs). */
   hideCursorLabel?: boolean;
+  /** Couleur : white (vidéo), black (audio). */
+  tone?: MediaTone;
   className?: string;
 };
 
@@ -75,8 +80,11 @@ const icons = {
   high: "SpeakerHighFill",
 } as const;
 
-/* Couleurs de la poignée : celles de l'icône de iconButton white / tertiary. */
-const handleTone = buttonTones.tertiary.white;
+/* Couleurs de la barre selon tone ; poignée : celles de l'icône de iconButton white (ou black) / tertiary. */
+const barTones: Record<MediaTone, { track: string; fill: string }> = {
+  white: { track: "bg-faded-white-40", fill: "bg-shape-neutral-white" },
+  black: { track: "bg-faded-black-40", fill: "bg-shape-neutral-black" },
+};
 
 /* Pas des flèches du clavier sur la barre. */
 const keyboardStep = 0.1;
@@ -89,6 +97,7 @@ export function TimeManager({
   onVolumeChange,
   onMutedChange,
   hideCursorLabel = false,
+  tone = "white",
   className = "",
 }: TimeManagerProps) {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -121,7 +130,7 @@ export function TimeManager({
   const icon = muted ? "SpeakerSlashFill" : speakerOnly ? "SpeakerNoneFill" : icons[level];
   const waveIcons = phase === "waves" ? waves[level] : [];
   // Couleurs d'iconButton tertiary (repos, survol, appui) : white, ou active (shape/brand/darkest) son coupé.
-  const iconColor = `${colorTransition} ${(muted ? buttonTones.tertiary.active : buttonTones.tertiary.white).icon}`;
+  const iconColor = `${colorTransition} ${(muted ? buttonTones.tertiary.active : buttonTones.tertiary[tone]).icon}`;
 
   // Icône revenue droite : les ondes sortent (son coupé ou volume nul : fermeture terminée).
   const onTurnEnd = (event: TransitionEvent<HTMLSpanElement>) => {
@@ -253,14 +262,14 @@ export function TimeManager({
             <span
               onAnimationEnd={(event) => event.animationName === "time-manager-shrink" && setPhase("turning")}
               className={[
-                "absolute inset-0 origin-bottom overflow-clip rounded-xs bg-faded-white-40",
+                `absolute inset-0 origin-bottom overflow-clip rounded-xs ${barTones[tone].track}`,
                 open
                   ? "animate-time-manager-grow [animation-delay:calc(var(--time-manager-turn-duration)+var(--time-manager-seed-duration))] motion-reduce:animate-none"
                   : "animate-time-manager-shrink",
               ].join(" ")}
             >
               <span
-                className={`absolute inset-x-0 bottom-0 rounded-xs ${muted ? "bg-shape-brand-darkest" : "bg-shape-neutral-white"}`}
+                className={`absolute inset-x-0 bottom-0 rounded-xs ${muted ? "bg-shape-brand-darkest" : barTones[tone].fill}`}
                 style={{ height: `${value * 100}%` }}
               />
             </span>
@@ -282,7 +291,7 @@ export function TimeManager({
                 className={[
                   "absolute bottom-0 left-0 size-(--time-manager-handle-size) -translate-x-1/2 translate-y-1/2 rounded-rounded bg-current",
                   colorTransition,
-                  handleTone.icon,
+                  buttonTones.tertiary[tone].icon,
                   open
                     ? "animate-time-manager-seed [animation-delay:var(--time-manager-turn-duration)] motion-reduce:animate-none"
                     : "animate-time-manager-vanish",

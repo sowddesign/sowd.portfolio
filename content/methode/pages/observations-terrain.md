@@ -7,7 +7,10 @@
 
 # Image d'en-tête : mots-clés (au survol ; en desktop, groupés deux par deux « a - b »)
 image_mots_cles:
-  - à compléter
+  - observer
+  - s’immerger
+  - usages
+  - contexte
 # Fichier de l'image d'en-tête (facultatif : vide = fond blanc)
 # Nom seul = dans le dossier des images de la page ; sinon chemin depuis public (ex. public\pages\photo.png)
 image_fichier: public\pages\brand_04.webp
@@ -19,7 +22,7 @@ image_fond: brand/400
 # taille = hauteur de l'image, x = écart entre le centre de l'image et le centre du cadre, y = haut de l'image,
 # rotation = inclinaison de l'image en degrés (sens horaire)
 image_desktop: { taille: 135.9, x: -6.5, y: -32.1 }
-image_mobile: { taille: 100.0, x: 0.0, y: 0.0 }
+image_mobile: { taille: 90.0, x: 0.0, y: 0.0 }
 # Textes posés sur l'image, toujours visibles : centre du texte en % de l'image (x : largeur, y : hauteur),
 # rotation en degrés par rapport à l'image, « couleur: blanc » = text/neutral/white
 image_textes:
@@ -30,9 +33,8 @@ image_textes:
     desktop: { x: 72.9, y: 33.3 }
     mobile: { x: 60.2, y: 20.0 }
 
-# « En quelques mots » : colonne de gauche, puis colonne de droite (ligne vide = nouveau paragraphe)
-definition_gauche: À compléter.
-definition_droite: À compléter.
+# « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace)
+definition: À compléter.
 
 # Bouton vers le projet cité (texte et adresse)
 projet_bouton: À compléter

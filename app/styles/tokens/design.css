@@ -40,6 +40,7 @@
   --motion-duration-base: 200ms; /* barre animée : smart animate */
   --motion-ease-out: cubic-bezier(0, 0, 0.58, 1); /* « Ease out » Figma */
   --motion-ease-linear: linear; /* « Linear » Figma : contour animé de iconButton */
+  --motion-icon-turn: 45deg; /* + qui tourne en X : iconButton « turned » (décision de l'utilisateur) */
   --motion-hint-pause: 5000ms; /* pause entre deux boucles des consignes animées (décision de l'utilisateur) */
   /* menu de navigation (pageHeader ouvert) — valeurs de test, sans variable Figma */
   --motion-menu-stagger: 20ms; /* décalage entre deux lignes de texte */
@@ -75,8 +76,8 @@
   --typography-size-sub-heading: var(--p-number-20);
   --typography-size-button: var(--p-number-18);
   --typography-size-body: var(--p-number-18);
-  --typography-size-caption: var(--p-number-14);
-  --typography-size-small-caption: var(--p-number-11);
+  --typography-size-caption: var(--p-number-16);
+  --typography-size-small-caption: var(--p-number-14);
 
   /* typography/line-height */
   --typography-line-height-hero: var(--p-number-54);
@@ -124,13 +125,17 @@
   /*
    * progressBar — valeurs propres à ce composant (modifiables ici sans toucher au reste).
    * Épaisseur : 4 (décision, Figma 2 sans variable) — variable à reporter dans le DS.
-   * Liquide contenu (onde douce sur le bord droit, réglages choisis par l'utilisateur) : lu par le composant au montage.
+   * Liquide contenu (ballottement du bord droit, variante A choisie par l'utilisateur) : lu par le composant au montage.
    */
   --progress-bar-height: var(--p-number-4);
   --progress-bar-catch-up: 700ms; /* délai de rattrapage du remplissage */
-  --progress-bar-edge-amplitude: 3px; /* ondulation du bord droit quand le liquide avance */
-  --progress-bar-edge-rest: 0px; /* ondulation du bord droit au repos (0 : bord droit immobile) */
-  --progress-bar-edge-speed: 2.25; /* ondes qui descendent le long du bord, par seconde */
+  --progress-bar-edge-amplitude: 9px; /* ballottement du bord droit quand le liquide avance */
+  --progress-bar-edge-rest: 0px; /* ballottement du bord droit au repos (0 : bord droit immobile) */
+  --progress-bar-edge-speed: 1.5; /* ondes du ballottement qui parcourent le bord, par seconde */
+  --progress-bar-edge-waves: 0.55; /* ondes du ballottement sur la hauteur du bord */
+  --progress-bar-edge-ripple-amplitude: 3px; /* seconde onde, plus fine, quand le liquide avance */
+  --progress-bar-edge-ripple-speed: 2.8; /* ondes de la seconde onde, par seconde */
+  --progress-bar-edge-ripple-waves: 1.4; /* ondes de la seconde onde sur la hauteur du bord */
 
   /*
    * timeManager — barre de volume flottante, au-dessus du bouton (Figma : position et taille sans variable).
@@ -219,6 +224,12 @@
   --video-manager-idle: 1.7s; /* inactivité avant le début du fondu de disparition (décision de l'utilisateur) */
   --video-manager-fade-out: 300ms; /* fondu de disparition : la barre a disparu à 2 s d'inactivité (décision) */
   --video-manager-fade-in: var(--motion-duration-fast); /* fondu d'apparition, plus rapide (100 ms) */
+
+  /* audioManager — lecteur des extraits audio (Figma fichier content, 6297:14986), logique du videoManager. */
+  --audio-manager-height: var(--button-size-sm); /* 44 : rangée lecture, barre et volume (Figma button-size/sm) */
+  --audio-manager-bar-height: var(--p-number-4); /* 4 : barre de lecture (Figma, sans variable) */
+  --audio-manager-handle-size: var(--p-number-12); /* 12 : rond de lecture (Figma, sans variable) */
+  --audio-manager-seek-zone: var(--video-manager-seek-zone); /* zone cliquable au-dessus et au-dessous de la barre, comme la vidéo */
 
   /*
    * navSideTiles — largeur maximale de la colonne du numéro (Figma sans variable, valeurs actuelles retenues
@@ -372,8 +383,6 @@
     --typography-size-sub-heading: var(--p-number-32);
     --typography-size-button: var(--p-number-20);
     --typography-size-body: var(--p-number-20);
-    --typography-size-caption: var(--p-number-16);
-    --typography-size-small-caption: var(--p-number-14);
 
     --typography-line-height-hero: var(--p-number-120);
     --typography-line-height-h1: var(--p-number-200);

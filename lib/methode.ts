@@ -8,36 +8,64 @@ import type {
   HeaderImageTextPlacement,
 } from "@/components/ui/HeaderImage/placement";
 import { parseLine, type MdLine } from "./markdown";
+import { isProjectAvailable, PROJECTS_ORDER_FILE } from "./projects";
 
 /*
  * Méthode (composants Figma « methodeContainer » et « methode »).
  * Étapes et pages, dans l'ordre, dans content/methode/ordre.yaml : l'utilisateur y déplace une page
  * d'une étape à l'autre ou change l'ordre ; les numéros (01, 02…) suivent la position.
  *   intros/<intro>.md : introduction d'une étape (page00, en-tête seul) ;
- *   pages/<fichier>.md : modèle de page (en-tête : image d'en-tête, « En quelques mots », bouton du projet ;
- *            texte : « Utilisation dans un projet », découpé en parties, rangées et colonnes,
- *            voir pages/recherches-quantitatives.md), images dans public/methode/<fichier>/.
+ *   pages/<fichier>.md : modèle de page (en-tête : image d'en-tête, « En quelques mots », projet cité ;
+ *            texte : « Utilisation dans un projet », découpé en parties, sous-parties, blocs et colonnes,
+ *            voir pages/recherches-quantitatives.md), images dans public/methode/<fichier>/ ;
+ *   projets/<projet>.md : introduction au projet cité et bouton vers le projet, communs aux pages qui le citent.
  * Un fichier pas encore écrit donne un contenu null (la page reste listée dans le menu).
  * À n'utiliser que côté serveur (lecture du disque).
  */
 
+export type MethodeImage = { src: string; alt: string; width: number; height: number };
+
+/** Élément numéroté : numéro, image facultative à côté du numéro, paragraphes (à côté du numéro, ou sous l'image). */
+export type MethodeNumberedItem = { number: string; image?: MethodeImage; paragraphs: MdLine[] };
+
 export type MethodeElement =
   | { kind: "subtitle"; line: MdLine }
   | { kind: "text"; lines: MdLine[] }
-  | { kind: "numbered"; items: { number: string; line: MdLine }[] }
+  | { kind: "numbered"; items: MethodeNumberedItem[] }
   | { kind: "bullets"; items: MdLine[] }
-  | { kind: "image"; src: string; alt: string; width: number; height: number }
+  | ({ kind: "image" } & MethodeImage)
   | { kind: "caption"; lines: MdLine[] }
-  | { kind: "figure"; value: string; label: MdLine };
+  | { kind: "figure"; value: string; label: MdLine }
+  /** Extrait audio (« ~ fichier.mp3 | légende ») : fichier dans le dossier des images de la page. */
+  | { kind: "audio"; src: string; caption: string }
+  /** Titre captionText/accentuation et son texte (« ##### Titre » puis le texte en dessous). */
+  | { kind: "titled"; title: MdLine; lines: MdLine[] };
 
-/** Rangée : une colonne (pleine largeur) ou deux ; alignEnd cale la colonne de droite en bas. */
+/** Rangée d'un bloc : une colonne (pleine largeur) ou deux ; alignEnd cale la colonne de droite en bas. */
 export type MethodeRow = { columns: MethodeElement[][]; alignEnd: boolean };
-/** Partie : titre facultatif (la première partie n'en a pas) et ses rangées. */
-export type MethodeSection = { title?: MdLine; rows: MethodeRow[] };
+/** Bloc : rangées l'une sous l'autre. */
+export type MethodeBlock = MethodeRow[];
+/** Sous-partie : sous-titre facultatif et ses blocs. */
+export type MethodeSubpart = { title?: MdLine; blocks: MethodeBlock[] };
+/** Partie : titre facultatif et ses sous-parties ; les parties sont séparées par un trait. */
+export type MethodePart = { title?: MdLine; subparts: MethodeSubpart[] };
 
-export type MethodeIntroContent = { label: string; title: string; text: string; hint: string };
+/** Introduction au projet cité (content/methode/projets/<slug>.md), commune à toutes les pages qui le citent. */
+export type MethodeProjectIntro = { slug: string; title: string; blocks: MethodeBlock[] };
+
+/**
+ * Groupe de « En quelques mots » : paragraphes, ou liste numérotée avec un titre facultatif
+ * (« #### Titre » puis une ligne « 1. texte » par élément).
+ */
+export type MethodeDefinitionGroup =
+  | { kind: "text"; lines: MdLine[] }
+  | { kind: "numbered"; title?: MdLine; items: { number: string; line: MdLine }[] };
+
+export type MethodeIntroContent ={ label: string; title: string; text: string; hint: string };
 
 export type MethodePageContent = {
+  /** Nom du fichier (content/methode/pages/<slug>.md). */
+  slug: string;
   header: {
     keywords: string[];
     image?: string;
@@ -46,9 +74,13 @@ export type MethodePageContent = {
     placement?: { desktop?: HeaderImagePlacement; mobile?: HeaderImagePlacement };
     texts?: HeaderImageText[];
   };
-  definition: { left: MdLine[][]; right: MdLine[][] };
-  sections: MethodeSection[];
-  project: { label: string; href: string };
+  /** « En quelques mots » : groupes de paragraphes (un paragraphe par ligne) ou listes numérotées. */
+  definition: MethodeDefinitionGroup[];
+  intro?: MethodeProjectIntro;
+  parts: MethodePart[];
+  /** Bouton du projet ; labelMobile : texte en mobile ; available faux : page du projet pas encore accessible
+      (projet « off » dans content/projects/ordre.yaml), bouton grisé. */
+  project: { label: string; labelMobile: string; href: string; available: boolean };
 };
 
 const METHODE_DIR = path.join(process.cwd(), "content", "methode");
@@ -81,9 +113,10 @@ export type MethodeStep = {
  */
 function contentVersion() {
   if (process.env.NODE_ENV !== "development") return 0;
+  // Avec l'ordre des projets : un projet passé « off » ou rendu accessible change le bouton du projet.
   return readdirSync(METHODE_DIR, { recursive: true, encoding: "utf8" }).reduce(
     (latest, file) => Math.max(latest, statSync(path.join(METHODE_DIR, file)).mtimeMs),
-    0,
+    statSync(PROJECTS_ORDER_FILE).mtimeMs,
   );
 }
 
@@ -112,13 +145,43 @@ function read(file: string) {
   return { body: match![2], data, text, list, fail };
 }
 
-/** Paragraphes séparés par une ligne vide, lignes par retour à la ligne. */
-function paragraphs(source: string, fail: (message: string) => never): MdLine[][] {
+/**
+ * Une ligne de texte (lib/markdown) ; un lien vers un projet pas encore accessible (« off » dans
+ * content/projects/ordre.yaml) devient du texte regular, sans lien ni italique (demande de l'utilisateur).
+ */
+function parseMethodeLine(line: string, fail: (message: string) => never): MdLine {
+  return parseLine(line, fail).map((part) =>
+    part.href && !linkAvailable(part.href) ? { text: part.text, ...(part.bold ? { bold: true } : {}) } : part,
+  );
+}
+
+/** Groupes séparés par une ligne vide ; dans un groupe, une ligne par paragraphe. */
+/**
+ * « En quelques mots » : groupes séparés par une ligne vide. Un groupe dont les lignes sont « 1. texte »
+ * (précédées au besoin d'un « #### Titre ») est une liste numérotée ; sinon, un paragraphe par ligne.
+ */
+function definitionGroups(source: string, fail: (message: string) => never): MethodeDefinitionGroup[] {
   return source
     .split(/\n\s*\n/)
-    .map((paragraph) => paragraph.trim())
+    .map((group) => group.trim())
     .filter(Boolean)
-    .map((paragraph) => paragraph.split("\n").map((line) => parseLine(line.trim(), fail)));
+    .map((group): MethodeDefinitionGroup => {
+      const lines = group.split("\n").map((line) => line.trim());
+      const titled = lines[0].startsWith("#### ");
+      const rest = titled ? lines.slice(1) : lines;
+      if (rest.length > 0 && rest.every((line) => NUMBERED.test(line))) {
+        return {
+          kind: "numbered",
+          ...(titled ? { title: parseMethodeLine(lines[0].slice(5), fail) } : {}),
+          items: rest.map((line) => {
+            const [, number, text] = line.match(NUMBERED)!;
+            return { number: `${number}.`, line: parseMethodeLine(text, fail) };
+          }),
+        };
+      }
+      if (titled) fail("« En quelques mots » : « #### Titre » se place juste avant une liste « 1. texte ».");
+      return { kind: "text", lines: lines.map((line) => parseMethodeLine(line, fail)) };
+    });
 }
 
 /** Largeur et hauteur d'une image PNG ou JPEG (pour réserver sa place avant le chargement). */
@@ -146,53 +209,180 @@ function imageSize(file: string, fail: (message: string) => never) {
 const NUMBERED = /^(\d+)\.\s+(.*)$/;
 const IMAGE = /^!\[([^\]]*)\]\(([^)\s]+)\)$/;
 const FIGURE = /^=\s*(\S+)\s*\|\s*(.+)$/;
+const AUDIO = /^~\s*(\S+)\s*\|\s*(.+)$/;
+
+/** Extrait audio : le fichier doit exister dans le dossier des images de la page. */
+function audio(source: string, folder: string, fail: (message: string) => never): MethodeElement {
+  const [, name, caption] = source.match(AUDIO)!;
+  const file = path.join(METHODE_IMAGES_DIR, path.relative("methode", folder), name);
+  if (!existsSync(file)) fail(`fichier audio introuvable : ${path.relative(process.cwd(), file)}.`);
+  return { kind: "audio", src: `/${folder}/${name}`, caption: caption.trim() };
+}
+
+function image(source: string, folder: string, fail: (message: string) => never): MethodeImage {
+  const [, alt, name] = source.match(IMAGE)!;
+  const src = `/${folder}/${name}`;
+  return { src, alt, ...imageSize(path.join(METHODE_IMAGES_DIR, path.relative("methode", folder), name), fail) };
+}
 
 function element(source: string, folder: string, fail: (message: string) => never): MethodeElement {
   const lines = source.split("\n").map((line) => line.trim());
   const [first] = lines;
-  if (lines.length === 1 && first.startsWith("### ")) return { kind: "subtitle", line: parseLine(first.slice(4), fail) };
-  if (lines.length === 1 && IMAGE.test(first)) {
-    const [, alt, name] = first.match(IMAGE)!;
-    const src = `/${folder}/${name}`;
-    return { kind: "image", src, alt, ...imageSize(path.join(METHODE_IMAGES_DIR, path.relative("methode", folder), name), fail) };
-  }
-  if (lines.length === 1 && FIGURE.test(first)) {
-    const [, value, label] = first.match(FIGURE)!;
-    return { kind: "figure", value, label: parseLine(label, fail) };
-  }
-  if (lines.every((line) => NUMBERED.test(line))) {
+  if (lines.length === 1 && first.startsWith("#### ")) return { kind: "subtitle", line: parseMethodeLine(first.slice(5), fail) };
+  if (lines.length > 1 && first.startsWith("##### ")) {
     return {
-      kind: "numbered",
-      items: lines.map((line) => {
-        const [, number, text] = line.match(NUMBERED)!;
-        return { number: `${number}.`, line: parseLine(text, fail) };
-      }),
+      kind: "titled",
+      title: parseMethodeLine(first.slice(6), fail),
+      lines: lines.slice(1).map((line) => parseMethodeLine(line, fail)),
     };
   }
+  if (lines.length === 1 && AUDIO.test(first)) return audio(first, folder, fail);
+  if (lines.length === 1 && IMAGE.test(first)) return { kind: "image", ...image(first, folder, fail) };
+  if (lines.length === 1 && FIGURE.test(first)) {
+    const [, value, label] = first.match(FIGURE)!;
+    return { kind: "figure", value, label: parseMethodeLine(label, fail) };
+  }
+  if (NUMBERED.test(first)) {
+    // Chaque « 1. » commence un élément ; les lignes suivantes sans numéro sont ses paragraphes suivants.
+    const items: MethodeNumberedItem[] = [];
+    for (const line of lines) {
+      const numbered = line.match(NUMBERED);
+      if (numbered) {
+        const [, number, text] = numbered;
+        items.push(
+          IMAGE.test(text)
+            ? { number: `${number}.`, image: image(text, folder, fail), paragraphs: [] }
+            : { number: `${number}.`, paragraphs: [parseMethodeLine(text, fail)] },
+        );
+      } else {
+        items[items.length - 1].paragraphs.push(parseMethodeLine(line, fail));
+      }
+    }
+    return { kind: "numbered", items };
+  }
   if (lines.every((line) => line.startsWith("- "))) {
-    return { kind: "bullets", items: lines.map((line) => parseLine(line.slice(2), fail)) };
+    return { kind: "bullets", items: lines.map((line) => parseMethodeLine(line.slice(2), fail)) };
   }
   if (lines.every((line) => line.startsWith("> "))) {
-    return { kind: "caption", lines: lines.map((line) => parseLine(line.slice(2), fail)) };
+    return { kind: "caption", lines: lines.map((line) => parseMethodeLine(line.slice(2), fail)) };
   }
-  return { kind: "text", lines: lines.map((line) => parseLine(line, fail)) };
+  return { kind: "text", lines: lines.map((line) => parseMethodeLine(line, fail)) };
 }
 
-function row(source: string, folder: string, fail: (message: string) => never): MethodeRow | null {
-  const parts = source.split(/^\|\|[ \t]*(bas)?[ \t]*$/m);
-  if (parts.length > 3) fail("une rangée a au plus deux colonnes (un seul « || » par rangée).");
-  const alignEnd = parts[1] === "bas";
-  const columns = [parts[0], parts[2]]
-    .filter((column) => column !== undefined)
-    .map((column) =>
-      column
-        .split(/\n\s*\n/)
-        .map((item) => item.trim())
-        .filter(Boolean)
-        .map((item) => element(item, folder, fail)),
-    );
-  if (columns.every((column) => column.length === 0)) return null;
-  return { columns, alignEnd };
+/** Éléments d'un morceau de texte, séparés par une ligne vide. */
+function elements(source: string, folder: string, fail: (message: string) => never): MethodeElement[] {
+  return source
+    .split(/\n\s*\n/)
+    .map((item) => item.trim())
+    .filter(Boolean)
+    .map((item) => element(item, folder, fail));
+}
+
+/**
+ * Bloc : éléments en pleine largeur, et deux colonnes entre « << » et « >> » (« || » ou « || bas » passe
+ * à droite). Sans « << », « || » met à gauche tout ce qui le précède dans le bloc ; sans « >> », les colonnes
+ * vont jusqu'au bout du bloc.
+ */
+function block(source: string, folder: string, fail: (message: string) => never): MethodeBlock {
+  const pieces = source.split(/^(<<|>>|\|\|(?:[ \t]+bas)?)[ \t]*$/m);
+  const rows: MethodeBlock = [];
+  let full: MethodeElement[] = [];
+  let pair: { left: MethodeElement[]; right: MethodeElement[] | null; alignEnd: boolean } | null = null;
+  const flushFull = () => {
+    if (full.length > 0) rows.push({ columns: [full], alignEnd: false });
+    full = [];
+  };
+  const flushPair = () => {
+    if (pair) rows.push({ columns: pair.right ? [pair.left, pair.right] : [pair.left], alignEnd: pair.alignEnd });
+    pair = null;
+  };
+  pieces.forEach((piece, i) => {
+    if (i % 2 === 0) {
+      const items = elements(piece, folder, fail);
+      if (!pair) full.push(...items);
+      else (pair.right ?? pair.left).push(...items);
+      return;
+    }
+    const marker = piece.trim();
+    if (marker === "<<") {
+      if (pair) fail("« << » : les colonnes précédentes ne sont pas fermées par « >> ».");
+      flushFull();
+      pair = { left: [], right: null, alignEnd: false };
+    } else if (marker === ">>") {
+      if (!pair) fail("« >> » sans « << » avant.");
+      flushPair();
+    } else {
+      if (pair?.right) fail("deux colonnes au plus (un seul « || » entre « << » et « >> »).");
+      if (!pair) {
+        pair = { left: full, right: null, alignEnd: false };
+        full = [];
+      }
+      pair!.right = [];
+      pair!.alignEnd = marker.endsWith("bas");
+    }
+  });
+  flushPair();
+  flushFull();
+  return rows;
+}
+
+/** Blocs séparés par « --- ». */
+function blocks(source: string, folder: string, fail: (message: string) => never): MethodeBlock[] {
+  return source
+    .split(/^---[ \t]*$/m)
+    .map((chunk) => block(chunk, folder, fail))
+    .filter((rows) => rows.length > 0);
+}
+
+/** Retire les commentaires : lignes commençant par « # » suivi d'un espace. */
+const withoutComments = (body: string) =>
+  body
+    .split("\n")
+    .filter((line) => !/^#\s/.test(line) && line.trim() !== "#")
+    .join("\n");
+
+/** « ## Titre » : partie ; « ### Sous-titre » ou « ### » seul : sous-partie ; puis blocs. */
+function parts(source: string, folder: string, fail: (message: string) => never): MethodePart[] {
+  return source
+    .split(/^(?=##[ \t])/m)
+    .map((chunk) => {
+      const titled = chunk.startsWith("## ");
+      const [heading, ...rest] = titled ? chunk.split("\n") : ["", chunk];
+      const subparts = rest
+        .join("\n")
+        .split(/^(?=###(?:[ \t]|$))/m)
+        .map((sub) => {
+          const subTitled = /^###(?:[ \t]|$)/m.test(sub.split("\n")[0]);
+          const [subHeading, ...subRest] = subTitled ? sub.split("\n") : ["", sub];
+          const title = subHeading.replace(/^###/, "").trim();
+          return {
+            ...(title ? { title: parseMethodeLine(title, fail) } : {}),
+            blocks: blocks(subRest.join("\n"), folder, fail),
+          };
+        })
+        .filter((sub) => sub.title || sub.blocks.length > 0);
+      return { ...(titled ? { title: parseMethodeLine(heading.slice(3).trim(), fail) } : {}), subparts };
+    })
+    .filter((part) => part.title || part.subparts.length > 0);
+}
+
+/** Lien vers une page projet (/projects/<dossier>) : accessible seulement si le projet n'est pas « off ». */
+function linkAvailable(href: string) {
+  const match = href.match(/^\/projects\/([^/?#]+)/);
+  return match ? isProjectAvailable(match[1]) : true;
+}
+
+/** Introduction au projet cité : content/methode/projets/<slug>.md (lue une fois par page qui le cite). */
+function projectIntro(slug: string) {
+  const { body, text } = read(`projets/${slug}.md`);
+  const intro: MethodeProjectIntro = {
+    slug,
+    title: text("titre")!,
+    blocks: blocks(withoutComments(body), `methode/projets/${slug}`, (message) => {
+      throw new Error(`content/methode/projets/${slug}.md : ${message}`);
+    }),
+  };
+  return { intro, label: text("bouton")!, labelMobile: text("bouton_mobile")!, href: text("lien")! };
 }
 
 export function getMethodeIntro(intro: string): MethodeIntroContent {
@@ -277,26 +467,17 @@ async function loadMethodePage(slug: string, version: number): Promise<MethodePa
     fail(`« image_fond » doit être l'un de : ${Object.keys(headerImageBackgrounds).join(", ")}.`);
   }
 
-  // Commentaires : lignes commençant par « # » suivi d'un espace.
-  const source = body
-    .split("\n")
-    .filter((line) => !/^#\s/.test(line) && line.trim() !== "#")
-    .join("\n");
-  const sections = source
-    .split(/^(?=## )/m)
-    .map((part) => {
-      const titled = part.startsWith("## ");
-      const [heading, ...rest] = titled ? part.split("\n") : ["", part];
-      const rows = rest
-        .join("\n")
-        .split(/^---[ \t]*$/m)
-        .map((chunk) => row(chunk, folder, fail))
-        .filter((value): value is MethodeRow => value !== null);
-      return { ...(titled ? { title: parseLine(heading.slice(3).trim(), fail) } : {}), rows };
-    })
-    .filter((section) => section.title || section.rows.length > 0);
+  // Projet cité : son introduction et son bouton viennent de content/methode/projets/<projet>.md.
+  // Sans « projet » (pages pas encore rédigées) : bouton « projet_bouton » / « projet_lien », sans introduction.
+  const projectSlug = text("projet", true)?.trim();
+  if (projectSlug && !existsSync(path.join(METHODE_DIR, "projets", `${projectSlug}.md`))) {
+    fail(`le projet « ${projectSlug} » n'existe pas (content/methode/projets/${projectSlug}.md).`);
+  }
+  const project = projectSlug ? projectIntro(projectSlug) : null;
+  const legacyLabel = project ? "" : text("projet_bouton")!;
 
   return {
+    slug,
     header: {
       keywords: list("image_mots_cles"),
       ...(image ? { image: headerImageSrc(image, folder) } : {}),
@@ -311,12 +492,12 @@ async function loadMethodePage(slug: string, version: number): Promise<MethodePa
         : {}),
       ...(texts.length > 0 ? { texts } : {}),
     },
-    definition: {
-      left: paragraphs(text("definition_gauche")!, fail),
-      right: paragraphs(text("definition_droite")!, fail),
-    },
-    sections,
-    project: { label: text("projet_bouton")!, href: text("projet_lien")! },
+    definition: definitionGroups(text("definition")!, fail),
+    ...(project ? { intro: project.intro } : {}),
+    parts: parts(withoutComments(body), folder, fail),
+    project: project
+      ? { label: project.label, labelMobile: project.labelMobile, href: project.href, available: linkAvailable(project.href) }
+      : { label: legacyLabel, labelMobile: legacyLabel, href: text("projet_lien")!, available: linkAvailable(text("projet_lien")!) },
   };
 }
 

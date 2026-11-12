@@ -448,7 +448,7 @@ export default async function UiKitPage() {
       </section>
       <section className="flex flex-col gap-md bg-background-neutral-black py-xxl text-text-neutral-white">
         <h2 id="double-flower" className="type-h4 px-(--grid-spacing)">
-          DoubleFlower — survol (desktop), parcours par boutons (mobile, tablette tactile)
+          DoubleFlower — survol (desktop), toucher et indicateur d’étapes (mobile, tablette tactile)
         </h2>
         <DoubleFlower />
         <h3 className="type-caption-accentuation px-(--grid-spacing)">diamonds (desktop, déclenché par la page)</h3>

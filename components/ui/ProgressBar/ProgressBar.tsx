@@ -12,9 +12,9 @@ import { useEffect, useRef, useState } from "react";
  * Sans retour arrière par défaut : la barre garde la plus grande valeur reçue ; avec backward (lecture vidéo), le liquide
  * recule avec le même ressort. immediate : la barre suit la valeur sans ressort (glisser sur la barre de lecture).
  * Au montage, la barre s'affiche directement à la valeur reçue ; seules les avancées suivantes sont animées.
- * Animation « liquide contenu » (onde douce, réglages choisis par l'utilisateur, tokens --progress-bar-*) :
- * le remplissage rattrape la valeur avec un ressort amorti, et une onde descend le long du bord droit qui progresse,
- * d'autant plus ample que le liquide avance vite (au repos : --progress-bar-edge-rest). L'onde reste dans la barre.
+ * Animation « liquide contenu » (ballottement, variante A choisie par l'utilisateur, tokens --progress-bar-*) :
+ * le remplissage rattrape la valeur avec un ressort amorti, et le bord droit qui progresse penche d'avant en arrière
+ * (deux ondes superposées), d'autant plus que le liquide avance vite (au repos : --progress-bar-edge-rest). L'onde reste dans la barre.
  * Mouvement réduit : remplissage direct, bord droit.
  */
 
@@ -54,6 +54,10 @@ function readWave(el: HTMLElement) {
     amplitude: num("--progress-bar-edge-amplitude"),
     rest: num("--progress-bar-edge-rest"),
     speed: num("--progress-bar-edge-speed"),
+    waves: num("--progress-bar-edge-waves"),
+    rippleAmplitude: num("--progress-bar-edge-ripple-amplitude"),
+    rippleSpeed: num("--progress-bar-edge-ripple-speed"),
+    rippleWaves: num("--progress-bar-edge-ripple-waves"),
   };
 }
 
@@ -110,12 +114,15 @@ export function ProgressBar({
       g.fillStyle = getComputedStyle(canvas).color;
       g.beginPath();
       g.moveTo(0, 0);
-      // Bord droit : une onde descend du haut vers le bas, son amplitude suit l'élan du liquide.
+      // Bord droit : deux ondes superposées le font ballotter, leur amplitude suit l'élan du liquide.
       const amp = reducedMotion.matches ? 0 : (wave.rest + wave.amplitude * state.energy) * dpr;
-      const steps = 16;
+      const ripple = reducedMotion.matches ? 0 : wave.rippleAmplitude * state.energy * dpr;
+      const steps = 24;
       for (let i = 0; i <= steps; i++) {
         const u = i / steps;
-        const offset = amp * 0.5 * Math.sin(2 * Math.PI * (u - state.t * wave.speed));
+        const offset =
+          amp * Math.sin(2 * Math.PI * (wave.waves * u - state.t * wave.speed)) +
+          ripple * Math.sin(2 * Math.PI * (wave.rippleWaves * u - state.t * wave.rippleSpeed));
         g.lineTo(Math.min(W, Math.max(0, x + offset)), u * H);
       }
       g.lineTo(0, H);
