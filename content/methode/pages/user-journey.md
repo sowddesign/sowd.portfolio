@@ -26,13 +26,12 @@ image_textes:
   - texte: user
     desktop: { x: 36.9, y: 32.2 }
     mobile: { x: 30.3, y: 32.2 }
-  - texte: journeys
+  - texte: journey
     desktop: { x: 67.6, y: 32.2 }
     mobile: { x: 66.1, y: 32.2 }
 
-# « En quelques mots » : colonne de gauche, puis colonne de droite (ligne vide = nouveau paragraphe)
-definition_gauche: À compléter.
-definition_droite: À compléter.
+# « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace)
+definition: À compléter.
 
 # Bouton vers le projet cité (texte et adresse)
 projet_bouton: À compléter

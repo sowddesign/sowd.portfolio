@@ -38,10 +38,11 @@ import { MethodePage } from "./MethodePage";
  *   (demande de l'utilisateur ; --methode-pull-resistance et --methode-pull-delay à l'essai,
  *   --motion-duration-base, --motion-ease-out). Remonter pendant l'attente annule. Mouvement réduit : passage direct.
  * Mobile : étapes en accordéon (une seule ouverte, décision de l'utilisateur), iconButton tertiary black Plus / X
- *   (Figma : brand, black demandé par l'utilisateur),
+ *   (Figma : brand, black demandé par l'utilisateur ; le Plus tourne en X, IconButton « turned »),
  *   sans texte au curseur (tactile). Étape ouverte : liste des pages ; la page choisie s'ouvre sous sa tuile
- *   et repousse les suivantes (variante Figma 01Demo). La ligne de l'étape ouverte puis la tuile choisie restent
- *   collées sous l'en-tête du site (--page-header-height) ; choisir une tuile ramène en haut de celle-ci,
+ *   et repousse les suivantes (variante Figma 01Demo). La tuile choisie reste collée sous l'en-tête du site
+ *   (--page-header-height) ; la ligne de l'étape ouverte aussi selon STICKY_STEP_ROW (A/B test) ; choisir une tuile ramène en haut de celle-ci,
+ *   défilement doux et court (--motion-duration-base, --motion-ease-out) ; refermer la tuile ouverte ou ouvrir une autre étape ramène au choix de la page,
  *   sans animation (demandes de l'utilisateur).
  * Desktop et tablette : choisir une tuile (clic ou glisse depuis l'introduction) cale le haut du conteneur
  *   sous l'en-tête du site, défilement doux natif (demande de l'utilisateur).
@@ -82,6 +83,13 @@ function useLinkedPage(steps: MethodeStep[], openPage: (step: number, page: numb
 }
 
 const divider = <span aria-hidden className="block w-full shrink-0 border-t border-shape-neutral-black" />;
+
+/**
+ * Mobile, à l'essai (A/B test, demande de l'utilisateur) : la ligne de l'étape ouverte (ex. « Découvrir ») reste-t-elle
+ * collée sous l'en-tête du site ? false : elle défile avec la page, et la tuile choisie se colle seule sous l'en-tête.
+ * Repasser à true pour revenir au comportement précédent.
+ */
+const STICKY_STEP_ROW = false;
 
 /** Titre H3 de l'étape suivi de son numéro entre parenthèses (Figma : Hug, sur une ligne). */
 function StepTitle({ step }: { step: MethodeStep }) {
@@ -318,7 +326,7 @@ function MethodeContainerMobile({ steps, className }: MethodeContainerProps) {
     observer.observe(row);
     return () => observer.disconnect();
   }, [open]);
-  const stickyTop = `calc(var(--page-header-height, 0px) + ${rowHeight}px)`;
+  const stickyTop = `calc(var(--page-header-height, 0px) + ${STICKY_STEP_ROW ? rowHeight : 0}px)`;
 
   /* Ouverture par l'adresse : défilement doux jusqu'à la tuile (au lieu du passage direct d'un choix de tuile). */
   const smoothNextRef = useLinkedPage(steps, (stepIndex, pageIndex) => {
@@ -326,24 +334,67 @@ function MethodeContainerMobile({ steps, className }: MethodeContainerProps) {
     setSelected(pageIndex);
   });
 
+  /* Levé quand l'utilisateur referme la tuile ouverte ou passe d'une étape ouverte à une autre :
+     le contenu refermé raccourcit la page, qui se retrouverait plus bas (jusqu'au pied de page). */
+  const backToRowRef = useRef(false);
+  const selectTile = (index: number | null) => {
+    backToRowRef.current = index === null;
+    setSelected(index);
+  };
+  /* Levé par « Prochaine étape » : la page suivante s'affiche directement en place, sans défilement visible
+     ni clignement (demande de l'utilisateur). */
+  const instantNextRef = useRef(false);
+
   /* Tuile choisie : ramenée en haut, sous l'en-tête et la ligne de l'étape (l'ancienne page refermée
      a pu raccourcir la page au-dessus). */
   useLayoutEffect(() => {
-    if (selected === null) return;
+    if (selected === null) {
+      /* Tuile refermée ou autre étape ouverte : retour au choix de la page, la ligne de l'étape sous l'en-tête du site
+         (demande de l'utilisateur). */
+      const block = backToRowRef.current ? rowRef.current?.parentElement : null;
+      backToRowRef.current = false;
+      instantNextRef.current = false;
+      const root = rootRef.current;
+      if (root?.hasAttribute("data-instant")) requestAnimationFrame(() => root.removeAttribute("data-instant"));
+      if (block) {
+        window.scrollTo({
+          top: block.getBoundingClientRect().top + window.scrollY - cssNumber("--page-header-height"),
+          behavior: "instant",
+        });
+      }
+      return;
+    }
     const tile = rootRef.current?.querySelector<HTMLElement>("[data-selected-tile]");
     if (!tile) return;
     const header = cssNumber("--page-header-height");
-    const row = rowRef.current?.offsetHeight ?? 0;
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const smooth = smoothNextRef.current && !reduce;
+    const row = STICKY_STEP_ROW ? (rowRef.current?.offsetHeight ?? 0) : 0;
+    const top = tile.getBoundingClientRect().top + window.scrollY - header - row;
+    const linked = smoothNextRef.current;
+    const instant = instantNextRef.current;
     smoothNextRef.current = false;
-    window.scrollTo({
-      top: tile.getBoundingClientRect().top + window.scrollY - header - row,
-      behavior: smooth ? "smooth" : "instant",
-    });
+    instantNextRef.current = false;
+    // Avant l'affichage (effet de mise en page) : aucun état intermédiaire visible.
+    if (instant) {
+      window.scrollTo({ top, behavior: "instant" });
+      // Transitions de couleur coupées le temps du changement (sinon la tuile choisie passe du clair au noir).
+      const root = rootRef.current;
+      let frame = requestAnimationFrame(() => {
+        frame = requestAnimationFrame(() => root?.removeAttribute("data-instant"));
+      });
+      return () => cancelAnimationFrame(frame);
+    }
+    /* Ouverture par l'adresse : défilement doux natif. Tuile choisie : défilement doux et court
+       (--motion-duration-base, --motion-ease-out, demande de l'utilisateur). */
+    if (linked) {
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      window.scrollTo({ top, behavior: reduce ? "instant" : "smooth" });
+    } else {
+      return quickScrollTo(top);
+    }
   }, [selected, open, smoothNextRef]);
 
   const toggle = (index: number) => {
+    backToRowRef.current = open !== null && open !== index;
     setOpen((current) => (current === index ? null : index));
     setSelected(null);
   };
@@ -351,12 +402,14 @@ function MethodeContainerMobile({ steps, className }: MethodeContainerProps) {
   return (
     <div
       ref={rootRef}
-      className={`flex w-full flex-col bg-background-neutral-white text-text-neutral-black ${className}`}
+      className={`flex w-full flex-col bg-background-neutral-white text-text-neutral-black data-instant:**:transition-none ${className}`}
     >
       {steps.map((step, i) => {
         const isOpen = open === i;
         const page = isOpen && selected !== null ? step.pages[selected] : null;
         const next = () => {
+          instantNextRef.current = true;
+          rootRef.current?.setAttribute("data-instant", "");
           if (selected !== null && selected < step.pages.length - 1) setSelected(selected + 1);
           else if (i < steps.length - 1) toggle(i + 1);
         };
@@ -364,7 +417,9 @@ function MethodeContainerMobile({ steps, className }: MethodeContainerProps) {
           <div key={step.number} className="flex flex-col">
             <div
               ref={isOpen ? rowRef : undefined}
-              className={isOpen ? "sticky top-(--page-header-height,0px) z-2 bg-background-neutral-white" : ""}
+              className={
+                isOpen && STICKY_STEP_ROW ? "sticky top-(--page-header-height,0px) z-2 bg-background-neutral-white" : ""
+              }
             >
               <div className="flex cursor-pointer items-center gap-md px-md" onClick={() => toggle(i)}>
                 <div className="flex min-w-0 flex-1 flex-col gap-xs py-sm">
@@ -372,7 +427,8 @@ function MethodeContainerMobile({ steps, className }: MethodeContainerProps) {
                   <p className="type-swiss-regular">{step.description}</p>
                 </div>
                 <IconButton
-                  icon={isOpen ? "X" : "Plus"}
+                  icon="Plus"
+                  turned={isOpen}
                   label={`${isOpen ? commun.methode_fermer : commun.methode_ouvrir} ${step.title}`}
                   cursorLabel={null}
                   variant="tertiary"
@@ -390,7 +446,7 @@ function MethodeContainerMobile({ steps, className }: MethodeContainerProps) {
               <NavSideMenus
                 steps={stepsOf(step.pages)}
                 selected={selected}
-                onSelectedChange={setSelected}
+                onSelectedChange={selectTile}
                 mobile
                 stickyTop={stickyTop}
                 panel={
@@ -416,6 +472,56 @@ function MethodeContainerMobile({ steps, className }: MethodeContainerProps) {
 /** Réglage numérique lu dans un token CSS (ex. « 120px », « 0.4 », « 200ms »). */
 function cssNumber(name: string) {
   return parseFloat(getComputedStyle(document.documentElement).getPropertyValue(name)) || 0;
+}
+
+/** Courbe cubic-bezier(x1, y1, x2, y2) lue dans un token CSS : progression (0 à 1) selon le temps (0 à 1). */
+function cssEasing(name: string) {
+  const value = getComputedStyle(document.documentElement).getPropertyValue(name);
+  const match = value.match(/cubic-bezier\(([^)]+)\)/);
+  if (!match) return (t: number) => t;
+  const [x1, y1, x2, y2] = match[1].split(",").map(Number);
+  const at = (a: number, b: number, t: number) => 3 * a * t * (1 - t) ** 2 + 3 * b * t * t * (1 - t) + t ** 3;
+  return (time: number) => {
+    // Paramètre de la courbe dont l'abscisse vaut time (dichotomie : la courbe est croissante en x).
+    let low = 0;
+    let high = 1;
+    for (let i = 0; i < 20; i++) {
+      const mid = (low + high) / 2;
+      if (at(x1, x2, mid) < time) low = mid;
+      else high = mid;
+    }
+    return at(y1, y2, (low + high) / 2);
+  };
+}
+
+/**
+ * Défilement de la page jusqu'à top, doux et court : --motion-duration-base, --motion-ease-out
+ * (le défilement doux natif est trop long). Interrompu si l'utilisateur fait défiler ; mouvement réduit : direct.
+ * Renvoie l'annulation.
+ */
+function quickScrollTo(top: number) {
+  const from = window.scrollY;
+  const duration = cssDuration("--motion-duration-base");
+  if (Math.abs(top - from) < 1 || duration <= 0 || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    window.scrollTo({ top, behavior: "instant" });
+    return () => {};
+  }
+  const ease = cssEasing("--motion-ease-out");
+  const start = performance.now();
+  let frame = requestAnimationFrame(function step(now) {
+    const t = Math.min(1, (now - start) / duration);
+    window.scrollTo({ top: from + (top - from) * ease(t), behavior: "instant" });
+    if (t < 1) frame = requestAnimationFrame(step);
+    else stop();
+  });
+  const stop = () => {
+    cancelAnimationFrame(frame);
+    window.removeEventListener("wheel", stop);
+    window.removeEventListener("touchstart", stop);
+  };
+  window.addEventListener("wheel", stop, { passive: true });
+  window.addEventListener("touchstart", stop, { passive: true });
+  return stop;
 }
 
 /** Durée lue dans un token CSS, en ms (le CSS compilé peut l'écrire en secondes, ex. « .3s »). */

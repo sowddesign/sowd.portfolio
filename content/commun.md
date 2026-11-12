@@ -75,6 +75,8 @@ photos_suivante: Photo suivante
 photos_fermer: Revenir à la mosaïque
 # Consigne animée sur écran tactile, en bas à gauche de la mosaïque
 photos_appuie: Appuie
+# Consigne animée en mobile, en bas à gauche de l'image d'en-tête des pages de la méthode
+header_image_reste_appuye: Reste appuyé
 
 # Champ de formulaire : bouton qui efface la saisie (infobulle au survol prolongé, lecteurs d'écran)
 champ_supprimer: Supprimer
@@ -101,6 +103,9 @@ curseur_remettre_son: Remettre le son
 curseur_video_fermer: Fermer
 # Méthode, boutons « précédente » et « suivante » : suivi du nom de l'étape visée
 curseur_methode_etape: "Étape :"
+# Introduction au projet (pages de la méthode) : bouton pour l'ouvrir et pour la fermer
+curseur_methode_intro_ouvrir: Ouvrir
+curseur_methode_intro_fermer: Fermer
 
 # Contrôles de la vidéo : boutons et barres, lus par les lecteurs d'écran
 video_lecture: Lire la vidéo
@@ -112,6 +117,12 @@ video_volume: Volume
 video_progression: Progression de la vidéo
 video_agrandir: Afficher la vidéo en plein écran
 video_fermer: Quitter le plein écran
+
+# Extraits audio (pages de la méthode) : boutons et barre, lus par les lecteurs d'écran
+# (texte au curseur et volume : ceux de la vidéo)
+audio_lecture: Écouter l’extrait
+audio_pause: Mettre l’extrait en pause
+audio_progression: Progression de l’extrait
 
 # Chargement du site : barre de progression, lue par les lecteurs d'écran
 chargement_progression: Chargement du site
@@ -131,21 +142,22 @@ double_texte_02: "2. La phase [définir]{brand} permet de [cadrer le problème]{
 double_texte_solution: "Le [deuxième diamant]{brand} consiste à [concevoir la solution]{brand} :  imaginer plusieurs réponses possibles, puis développer, valider et livrer la solution la plus adaptée."
 double_texte_03: "3. La phase [développer]{brand} permet d’[explorer les solutions]{brand} : imaginer, prototyper et tester plusieurs solutions pour trouver celle qui fonctionne le mieux."
 double_texte_04: "4. La phase [livrer]{brand} permet de [valider la solution]{brand} : finaliser, valider et lancer la solution retenue, puis préparer les futures améliorations."
-# Boutons (mobile et écran tactile)
-double_decouvrir_methode: Découvrir la méthode
-double_continuer: Continuer
-double_retour: Retour
-double_afficher_diamants: Afficher les diamants
-double_revoir_methode: Revoir la méthode
+# Mobile et écran tactile : consigne, boutons et indicateur d’étapes
+double_consigne: appuie sur un tournesol
+double_commencer: Découvrir
+double_redecouvrir: Re-découvrir
+double_revenir_debut: Revenir au début
+double_etape_precedente: Étape précédente
+double_etape_suivante: Étape suivante
 # Copyright en bas du visuel
 double_copyright: "© 2026  Tom  Lamy  - Création  graphique  originale."
 
 # Méthode (pages de chaque étape) : titres des deux parties et boutons communs
-methode_definition_titre: "En quelques mots :"
-methode_projet_titre: "Utilisation dans un projet :"
-# Titre de la seconde partie en mobile (accordéon)
-methode_projet_titre_mobile: "Dans mes projets :"
+methode_definition_titre: En quelques mots
+methode_projet_titre: Utilisation dans un projet
 methode_etape_suivante: Voir la prochaine étape
+# Même bouton en mobile
+methode_etape_suivante_mobile: Prochaine étape
 # En-tête des étapes de la méthode : boutons vers l'étape précédente et suivante
 methode_precedente: précédente
 methode_suivante: suivante

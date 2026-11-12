@@ -30,9 +30,8 @@ image_textes:
     desktop: { x: 59.5, y: 22.5 }
     mobile: { x: 65.0, y: 21.0 }
 
-# « En quelques mots » : colonne de gauche, puis colonne de droite (ligne vide = nouveau paragraphe)
-definition_gauche: À compléter.
-definition_droite: À compléter.
+# « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace)
+definition: À compléter.
 
 # Bouton vers le projet cité (texte et adresse)
 projet_bouton: À compléter

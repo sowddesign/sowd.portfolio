@@ -35,6 +35,9 @@ type BaseProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "color" | "disabl
   variant?: IconButtonVariant;
   /** Destination : rend un lien (next/link) au lieu d'un bouton. */
   href?: string;
+  /** Icône tournée de --motion-icon-turn (ex. Plus qui devient X), en --motion-duration-fast, --motion-ease-out
+   *  (décision de l'utilisateur) ; mouvement réduit : sans animation. */
+  turned?: boolean;
 };
 
 export type IconButtonProps = BaseProps &
@@ -72,6 +75,7 @@ export function IconButton({
   className = "",
   type = "button",
   href,
+  turned,
   ...rest
 }: IconButtonProps) {
   const tone = disabled
@@ -90,7 +94,17 @@ export function IconButton({
 
   const content = (
     <>
-      <Icon name={icon} size="var(--icon-md)" className={`${colorTransition} ${tone.icon}`} />
+      {turned === undefined ? (
+        <Icon name={icon} size="var(--icon-md)" className={`${colorTransition} ${tone.icon}`} />
+      ) : (
+        <span
+          className={`flex transition-transform duration-(--motion-duration-fast) ease-(--motion-ease-out) motion-reduce:transition-none ${
+            turned ? "rotate-(--motion-icon-turn)" : ""
+          }`}
+        >
+          <Icon name={icon} size="var(--icon-md)" className={`${colorTransition} ${tone.icon}`} />
+        </span>
+      )}
 
       {/* Contour 1px intérieur (secondary), même cadre que le tracé animé pour qu'il le recouvre exactement. */}
       {tone.border && <span aria-hidden className={`pointer-events-none absolute inset-0 border ${tone.border}`} />}

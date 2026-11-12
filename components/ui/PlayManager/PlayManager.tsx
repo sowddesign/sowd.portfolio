@@ -12,7 +12,11 @@ import { buttonTones, colorTransition } from "../button-tones";
  * Bouton icône réduit, propre à la vidéo : iconButton (new) white / tertiary, padding spacing/xs,
  * icône icon/md (décision de l'utilisateur, Figma icon/xs) : 40 × 40 comme tous les boutons du videoManager.
  * Curseur texte (décision de l'utilisateur) : « Pause » sur l'icône pause, « Lecture » sur l'icône play.
+ * tone : white (vidéo) ou black (audioManager sur fond blanc : miroir en noir, iconButton black / tertiary, décision de
+ * l'utilisateur, absent de Figma).
  */
+
+export type MediaTone = "white" | "black";
 
 export type PlayManagerState = "pause" | "play";
 
@@ -21,6 +25,10 @@ export type PlayManagerProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "ch
   state: PlayManagerState;
   /** Masque le texte du curseur (contrôles vidéo inactifs). */
   hideCursorLabel?: boolean;
+  /** Couleur des contrôles : white (vidéo), black (audio). */
+  tone?: MediaTone;
+  /** Texte accessible (par défaut : celui de la vidéo). */
+  label?: string;
 };
 
 const content: Record<PlayManagerState, { icon: "PauseFill" | "PlayFill"; label: string; cursor: string }> = {
@@ -28,12 +36,17 @@ const content: Record<PlayManagerState, { icon: "PauseFill" | "PlayFill"; label:
   play: { icon: "PlayFill", label: commun.video_lecture, cursor: commun.curseur_video_lecture },
 };
 
-export function PlayManager({ state, hideCursorLabel = false, ...rest }: PlayManagerProps) {
-  const { icon, label, cursor } = content[state];
-  return <VideoIconButton icon={icon} label={label} cursorLabel={hideCursorLabel ? undefined : cursor} {...rest} />;
+export function PlayManager({ state, hideCursorLabel = false, label, ...rest }: PlayManagerProps) {
+  const { icon, label: videoLabel, cursor } = content[state];
+  return (
+    <VideoIconButton
+      icon={icon}
+      label={label ?? videoLabel}
+      cursorLabel={hideCursorLabel ? undefined : cursor}
+      {...rest}
+    />
+  );
 }
-
-const tone = buttonTones.tertiary.white;
 
 export type VideoIconButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "children"> & {
   icon: "PauseFill" | "PlayFill" | "CornersOut" | "X";
@@ -41,13 +54,16 @@ export type VideoIconButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>,
   label: string;
   /** Texte qui remplace le curseur au survol ; undefined : aucun texte (contrôles inactifs). */
   cursorLabel: string | undefined;
+  /** Couleur : white (vidéo), black (audio). */
+  tone?: MediaTone;
 };
 
-/** Bouton icône des contrôles vidéo : iconButton (new) white / tertiary en 40 × 40 (padding spacing/xs, icon/md). */
+/** Bouton icône des contrôles vidéo et audio : iconButton (new) white (ou black) / tertiary en 40 × 40 (padding spacing/xs, icon/md). */
 export function VideoIconButton({
   icon,
   label,
   cursorLabel,
+  tone = "white",
   className = "",
   type = "button",
   ...rest
@@ -63,7 +79,7 @@ export function VideoIconButton({
       {...rest}
       {...cursor.handlers}
     >
-      <Icon name={icon} size="var(--icon-md)" className={`${colorTransition} ${tone.icon}`} />
+      <Icon name={icon} size="var(--icon-md)" className={`${colorTransition} ${buttonTones.tertiary[tone].icon}`} />
       {cursor.node}
     </button>
   );

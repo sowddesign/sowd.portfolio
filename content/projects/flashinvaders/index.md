@@ -6,7 +6,7 @@
 # Les lignes commençant par « # » sont des commentaires, tu peux les supprimer.
 
 # Titre du projet (obligatoire)
-title: Flashinvaders
+title: Flash Invaders
 
 # Type de projet, affiché sur la tuile « new » (facultatif)
 type: Rework UI

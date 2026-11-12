@@ -8,6 +8,7 @@ import {
   headerImageDefaultBackground,
   type HeaderImageBackground,
 } from "./backgrounds";
+import { HoldHint } from "./HoldHint";
 import type { HeaderImagePlacement, HeaderImageText } from "./placement";
 
 /*
@@ -31,7 +32,7 @@ import type { HeaderImagePlacement, HeaderImageText } from "./placement";
  *   desktop : en bas à droite, par paires « a  -  b », alignés à droite, écart spacing/xxs ;
  *   mobile  : à gauche, centrés verticalement, un mot par ligne.
  * Marges et écart mobile de 24 px sans variable dans Figma : spacing/lg (même valeur).
- * Consigne « Reste appuyer » (smallAnim) pas encore reprise.
+ * Consigne « Reste appuyé » (smallAnim, HoldHint) : mise en page mobile, masquée pendant l'appui (décision de l'utilisateur).
  */
 
 export type HeaderImageProps = {
@@ -130,6 +131,13 @@ export function HeaderImage({
           // eslint-disable-next-line @next/next/no-img-element -- image décorative qui couvre le composant
           <img src={image} alt="" className="pointer-events-none absolute inset-0 size-full object-contain object-bottom" />
         )
+      )}
+      {layout === "mobile" && !hovered && (
+        <HoldHint
+          className={
+            background && headerImageDarkBackgrounds.has(background) ? "text-faded-white-40" : "text-faded-black-40"
+          }
+        />
       )}
       {hovered &&
         (touch ? (

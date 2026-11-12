@@ -1,35 +1,34 @@
 ---
-# MÉTHODE — PAGE « INTERVIEW UTILISATEURS »
+# MÉTHODE — PAGE « DÉVELOPPEMENT IA »
 # Son étape, sa place et son nom dans le menu se règlent dans content/methode/ordre.yaml.
 # Modifie seulement le texte après « : ». Ne change pas le nom avant « : ».
 # Si le texte contient « : », entoure-le de guillemets.
-# Les images vont dans public/methode/interview-utilisateurs/ (même nom que ce fichier).
+# Les images vont dans public/methode/developpement-ia/ (même nom que ce fichier).
 
 # Image d'en-tête : mots-clés (au survol ; en desktop, groupés deux par deux « a - b »)
 image_mots_cles:
   - à compléter
 # Fichier de l'image d'en-tête (facultatif : vide = fond blanc)
 # Nom seul = dans le dossier des images de la page ; sinon chemin depuis public (ex. public\pages\photo.png)
-image_fichier: public\pages\brand_03.webp
+image_fichier: public\pages\bright_06.webp
 # Couleur de fond derrière l'image (facultatif : vide = blanc).
 # Au choix (tokens primitive/color/brand) : brand/50, brand/100, brand/200, brand/300, brand/400, brand/500,
 # brand/600, brand/700, brand/800, brand/900, brand/950
-image_fond: brand/400
+image_fond: brand/300
 # Placement de l'image, repris de Figma (desktop 800 × 218, mobile 376 × 218), en % de la hauteur du cadre :
 # taille = hauteur de l'image, x = écart entre le centre de l'image et le centre du cadre, y = haut de l'image,
 # rotation = inclinaison de l'image en degrés (sens horaire)
-image_desktop: { taille: 157.1, x: 0.0, y: -38.5 }
+image_desktop: { taille: 138.0, x: 0.0, y: -11.7 }
 image_mobile: { taille: 100.0, x: 0.0, y: 0.0 }
 # Textes posés sur l'image, toujours visibles : centre du texte en % de l'image (x : largeur, y : hauteur),
 # rotation en degrés par rapport à l'image, « couleur: blanc » = text/neutral/white
 image_textes:
-  - texte: "interview  utilisateurs"
-    desktop: { x: 49.5, y: 30.2 }
-    mobile: { x: 49.2, y: 27.5 }
+  - texte: développement IA
+    desktop: { x: 40.1, y: 67.5 }
+    mobile: { x: 44.9, y: 67.3 }
 
-# « En quelques mots » : colonne de gauche, puis colonne de droite (ligne vide = nouveau paragraphe)
-definition_gauche: À compléter.
-definition_droite: À compléter.
+# « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace)
+definition: À compléter.
 
 # Bouton vers le projet cité (texte et adresse)
 projet_bouton: À compléter
