@@ -2,6 +2,7 @@ import accueilSource from "./pages/accueil.md";
 import aProposSource from "./pages/a-propos.md";
 import contactSource from "./pages/contact.md";
 import projetsSource from "./pages/projets.md";
+import introuvableSource from "./pages/introuvable.md";
 import communSource from "./commun.md";
 import cMediaSource from "./projects/c-media/page.md";
 import { iconNames, type IconName } from "@/components/ui/Icon/icon-names";
@@ -132,7 +133,7 @@ export const commun = texts("commun.md", communSource, [
   "methode_definition_titre",
   "methode_projet_titre",
   "methode_etape_suivante",
-  "methode_etape_suivante_mobile",
+  "methode_etape_suivante_court",
   "methode_precedente",
   "methode_suivante",
   "methode_ouvrir",
@@ -165,6 +166,14 @@ export const projets = texts("pages/projets.md", projetsSource, [
   "recent_titre",
   "autres_details",
   "autres_titre",
+]);
+
+export const introuvable = texts("pages/introuvable.md", introuvableSource, [
+  "entete_titre",
+  "entete_texte",
+  "retour_accueil",
+  "indice",
+  "graine",
 ]);
 
 export const aPropos = texts(
@@ -244,7 +253,7 @@ export const contactMessage = contactField("message", {
   icone: contact.message_icone,
 });
 
-/** Page projet C-Média (content/projects/c-media/page.md). */
+/** Page projet C-Media (content/projects/c-media/page.md). */
 export const cMedia = texts(
   "projects/c-media/page.md",
   cMediaSource,

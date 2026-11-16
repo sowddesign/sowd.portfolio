@@ -6,9 +6,9 @@
 
 # Titre de l'introduction (ouverte par défaut ; refermée sur les pages suivantes une fois lue jusqu'en bas)
 titre: "Introduction au projet : Scholar"
-# Bouton vers le projet : texte en desktop, texte en mobile, adresse
+# Bouton vers le projet : texte, texte court (affiché quand le texte ne tient pas sur une ligne), adresse
 bouton: Voir le projet Scholar
-bouton_mobile: Projet Scholar
+bouton_court: Projet Scholar
 lien: /projects/scholar
 ---
 

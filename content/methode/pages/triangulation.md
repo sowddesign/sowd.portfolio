@@ -31,11 +31,15 @@ image_textes:
     mobile: { x: 68.6, y: 84.6, rotation: -22.6 }
 
 # « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace)
-definition: À compléter.
+definition: |
+  La triangulation croise plusieurs méthodes de recherche pour répondre à une même question. Chacune compense les angles morts des autres : ce qu’un utilisateur dit en entretien, on le vérifie en l’observant agir.
 
-# Bouton vers le projet cité (texte et adresse)
-projet_bouton: À compléter
-projet_lien: /projects
+  On peut aussi croiser plusieurs sources ou plusieurs regards de chercheurs. Le but : fonder les décisions sur des résultats qui se recoupent.
+
+  Cette étape permet la transition depuis la phase Découvrir vers la phase Définir.
+
+# Projet cité : nom du fichier dans content/methode/projets/ (introduction au projet et bouton vers le projet)
+projet: c-media
 ---
 
 # « UTILISATION DANS UN PROJET » — texte sous l'en-tête de commentaires
@@ -48,7 +52,10 @@ projet_lien: /projects
 #   ### Texte                → sous-titre (caption/accentuation)
 #   1. texte                 → liste numérotée (une ligne par élément)
 #   - texte                  → liste à puces (une ligne par élément)
+#   || inverse               → idem, colonne de droite au-dessus en mobile (se combine : « || bas inverse »)
 #   ![description](fichier.png) → image (dans le dossier des images de la page)
+#   ![description](desktop.webp | mobile.webp) → image recadrée autrement en mobile
+#   ![description](fichier.webp){sans cadre} → image sans bordure ni coins
 #   > texte                  → légende (petite, en italique)
 #   = 47 | texte             → gros chiffre et son libellé
 #   [texte](lien) [texte]{brand} *italique* **gras** → comme dans les autres textes du site
@@ -56,4 +63,86 @@ projet_lien: /projects
 #
 # Les lignes commençant par « # » suivi d'un espace sont des commentaires.
 
-À compléter.
+## Objectifs
+
+Lors de mon alternance chez [C-Media](/projects/c-media), j’ai dû travailler sur une fonctionnalité existante et pourtant délaissée.
+
+---
+
+<<
+
+**Trois méthodes ont été mobilisées :**
+
+1. Entretiens individuels
+2. Tests utilisateurs
+3. Focus group
+
+||
+
+**Le paradoxe :**
+
+Les utilisateurs la citaient pourtant comme un besoin.
+
+>>
+
+## Entretiens individuels
+
+J’ai mené 3 entretiens individuels à partir d’un guide construit en amont.
+
+---
+
+Ils ont permis de recueillir le contexte, les habitudes et les difficultés de chaque utilisateur.
+
+---
+
+![Entretien en visioconférence entre une utilisatrice et un designer](entretiens-individuels.webp | entretiens-individuels-mobile.webp){sans cadre}
+
+## Tests utilisateurs
+
+J’ai ensuite organisé 3 tests sur la fonctionnalité. En observant les utilisateurs réaliser des tâches concrètes, j’ai repéré des points de friction que les entretiens ne révélaient pas.
+
+||
+
+![Une utilisatrice teste une maquette pendant qu’un designer prend des notes](tests-utilisateurs.webp){sans cadre}
+
+## Focus group
+
+![Groupe d’utilisateurs en discussion autour d’une table](focus-group.webp){sans cadre}
+
+|| inverse
+
+Enfin, j’ai animé un focus group avec une dizaine d’utilisateurs. Cette session collective a fait émerger des perceptions partagées, des attentes et des désaccords sur le produit.
+
+## Croiser les résultats
+
+<<
+
+J’ai rassemblé les enseignements des trois méthodes dans un document UX, pour repérer ce qui se recoupait et ce qui se contredisait.
+
+||
+
+> Les analyses ont été relues avec le lead designer, pour limiter les biais d’un seul regard.
+
+>>
+
+---
+
+**Ce que le croisement a révélé :**
+
+Un autre outil répondait déjà au besoin, et plusieurs fonctionnalités du périmètre étaient défaillantes : les utilisateurs n’avaient aucune raison de changer d’habitude.
+
+L’équipe produit s’appuyait sur un recueil des besoins ancien, et d’autres fonctionnalités passaient en priorité : celle-ci n’avait pas évolué avec les usages.
+
+*Les détails du projet restent confidentiels.*
+
+## Ce que cela a apporté
+
+Ces enseignements ont été traduits en maquettes et en prototypes sur Figma, puis validés par les utilisateurs.
+
+||
+
+![Des retours utilisateurs aux maquettes et aux prototypes](maquettes-prototypes.webp){sans cadre}
+
+---
+
+*La solution a été mise en production après mon départ : je n’ai donc pas pu en mesurer l’impact.*

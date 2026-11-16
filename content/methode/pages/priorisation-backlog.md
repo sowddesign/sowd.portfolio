@@ -33,30 +33,77 @@ image_textes:
     desktop: { x: 72.8, y: 50.0 }
     mobile: { x: 75.8, y: 46.3 }
 
-# « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace)
-definition: À compléter.
+# « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace).
+# *texte* = italique.
+definition: |
+  La priorisation des besoins consiste à ordonner les besoins utilisateurs et enjeux business en fonction de critères comme la valeur, l’ampleur du problème et la faisabilité.
 
-# Bouton vers le projet cité (texte et adresse)
-projet_bouton: À compléter
-projet_lien: /projects
+  Elle guide les itérations de conception et de développement vers les besoins les plus importants. Ses résultats alimentent directement le backlog produit, qui devient une feuille de route partagée.
+
+# Projet cité : nom du fichier dans content/methode/projets/ (introduction au projet et bouton vers le projet)
+projet: graine
 ---
 
-# « UTILISATION DANS UN PROJET » — texte sous l'en-tête de commentaires
+# « UTILISATION DANS UN PROJET » — texte sous l'en-tête de commentaires (l'introduction au projet vient du projet cité)
 #
-#   ## Titre                 → nouvelle partie (titre en body/accentuation)
-#   ---                      → nouvelle rangée
-#   ||                       → passe à la colonne de droite (sans « || » : pleine largeur)
-#   || bas                   → idem, colonne de droite calée en bas
-#   ligne vide               → nouvel élément dans la colonne
-#   ### Texte                → sous-titre (caption/accentuation)
-#   1. texte                 → liste numérotée (une ligne par élément)
-#   - texte                  → liste à puces (une ligne par élément)
-#   ![description](fichier.png) → image (dans le dossier des images de la page)
-#   > texte                  → légende (petite, en italique)
-#   = 47 | texte             → gros chiffre et son libellé
-#   [texte](lien) [texte]{brand} *italique* **gras** → comme dans les autres textes du site
-#   Lien vers un projet (/projects/…) : « Voir le projet » s'affiche au curseur.
+#   Même écriture que content/methode/pages/recherches-quantitatives.md, plus :
+#   ##### Titre              → titre en captionText/accentuation, suivi de son texte sur les lignes en dessous
+#                              (sans ligne vide)
 #
 # Les lignes commençant par « # » suivi d'un espace sont des commentaires.
 
-À compléter.
+## Prioriser les besoins
+
+Lors du projet graine, deux besoins revenaient dans toute notre recherche.
+
+> On les retrouve dans le persona de Sara : utiliser un scanner, et pouvoir partager ce qu’elle apprend.
+
+---
+
+Nous avons construit la première version de graine autour d’eux :
+
+---
+
+##### Comprendre ses plantes
+Le scan des plantes est la fonctionnalité principale de l’application.
+
+> → les autres fonctionnalités ont été priorisées autour de celle-ci.
+
+||
+
+##### Partager avec la communauté
+L’aspect communautaire traverse toute l’application.
+
+> → chaque fonctionnalité a été pensée pour y répondre.
+
+## Prioriser le travail de l’équipe
+
+Pour suivre l’avancement et tenir les échéances, j’ai organisé le projet sur [Monday](https://monday.com/lang/fr), en plusieurs phases :
+
+||
+
+- Gestion de projet
+- UX Research
+- UX Design
+- UI Design
+- Brand design & partenariats
+
+---
+
+Chaque phase était découpée en tâches et sous-tâches, pour voir clairement ce qui restait à faire.
+
+---
+
+![Backlog du projet graine sur Monday, découpé en phases, tâches et sous-tâches](backlog-monday.webp)
+
+> Backlog du projet sur Monday (documentation graine).
+
+---
+
+Avec des échéances serrées, il est rarement possible de mener toutes les méthodes prévues : il faut choisir.
+
+*Nous avons par exemple abandonné les entretiens guérilla : nous avions assez d’informations pour passer à l’UX puis à l’UI design.*
+
+## Ce que cela a apporté
+
+Ces deux besoins ont servi de boussole pour trier les fonctionnalités, et le backlog pour trier le travail : l’équipe savait à tout moment ce qui comptait le plus et ce qui pouvait attendre.

@@ -7,7 +7,7 @@
 
 # Contexte
 contexte_titre: "Contexte :"
-contexte_texte: "Dans le cadre de mon mastère à ICAN Design Paris, j’ai pu réaliser une alternance chez C-Média pendant l’année 2025-2026, en tant qu’UX/UI Designer."
+contexte_texte: "Dans le cadre de mon mastère à ICAN Design Paris, j’ai pu réaliser une alternance chez C-Media pendant l’année 2025-2026, en tant qu’UX/UI Designer."
 contexte_intro: "Avec quatre jours en entreprise et un jour à l’école chaque semaine, j’ai pu mettre en pratique la théorie apprise : "
 contexte_liste:
   - travailler sur des projets réels
@@ -16,9 +16,9 @@ contexte_liste:
 
 # L’entreprise
 entreprise_titre: L’entreprise
-entreprise_groupe_titre: Cegedim & C-Média
-entreprise_groupe_texte: "C-Média est une filiale du groupe Cegedim, acteur majeur des technologies et services dédiés à l’écosystème de la santé. "
-entreprise_filiale_texte: "Au sein de ce groupe, C-Média se spécialise dans la communication phygitale en pharmacie et parapharmacie :"
+entreprise_groupe_titre: Cegedim & C-Media
+entreprise_groupe_texte: "C-Media est une filiale du groupe Cegedim, acteur majeur des technologies et services dédiés à l’écosystème de la santé. "
+entreprise_filiale_texte: "Au sein de ce groupe, C-Media se spécialise dans la communication phygitale en pharmacie et parapharmacie :"
 entreprise_canaux:
   - Print
   - Digital
@@ -27,7 +27,7 @@ entreprise_canaux:
   - Sonore
 entreprise_solutions_texte: "Les solutions proposées s’adressent aux laboratoires, aux enseignes et aux pharmacies, pour déployer des campagnes de communication, animer les points de vente et mettre en valeur les produits."
 entreprise_logo_groupe: Logo Cegedim
-entreprise_logo_filiale: Logo C-Média
+entreprise_logo_filiale: Logo C-Media
 
 # L’équipe
 equipe_titre: L’équipe

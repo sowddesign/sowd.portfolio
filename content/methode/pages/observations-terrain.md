@@ -34,29 +34,157 @@ image_textes:
     mobile: { x: 60.2, y: 20.0 }
 
 # « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace)
-definition: À compléter.
+definition: |
+  Les observations terrain (shadowing, études in situ, etc.) consistent à suivre les utilisateurs dans leur environnement réel pour comprendre leurs pratiques, leurs routines et leurs contraintes.
 
-# Bouton vers le projet cité (texte et adresse)
-projet_bouton: À compléter
-projet_lien: /projects
+  Elles révèlent aussi, en direct, les émotions, les interactions et les points de contact liés au contexte d’usage, souvent invisibles dans les données chiffrées.
+
+# Projet cité : nom du fichier dans content/methode/projets/ (introduction au projet et bouton vers le projet)
+projet: flashinvaders
 ---
 
 # « UTILISATION DANS UN PROJET » — texte sous l'en-tête de commentaires
 #
-#   ## Titre                 → nouvelle partie (titre en body/accentuation)
-#   ---                      → nouvelle rangée
-#   ||                       → passe à la colonne de droite (sans « || » : pleine largeur)
-#   || bas                   → idem, colonne de droite calée en bas
-#   ligne vide               → nouvel élément dans la colonne
-#   ### Texte                → sous-titre (caption/accentuation)
-#   1. texte                 → liste numérotée (une ligne par élément)
-#   - texte                  → liste à puces (une ligne par élément)
-#   ![description](fichier.png) → image (dans le dossier des images de la page)
-#   > texte                  → légende (petite, en italique)
-#   = 47 | texte             → gros chiffre et son libellé
-#   [texte](lien) [texte]{brand} *italique* **gras** → comme dans les autres textes du site
-#   Lien vers un projet (/projects/…) : « Voir le projet » s'affiche au curseur.
+#   Même écriture que content/methode/pages/recherches-quantitatives.md.
 #
 # Les lignes commençant par « # » suivi d'un espace sont des commentaires.
 
-À compléter.
+## Objectifs
+
+Lors du projet [Flash Invaders](/projects/flashinvaders), afin de bien comprendre comment les joueurs utilisent l’application, j’ai organisé une balade dans Paris avec des joueurs de niveaux différents.
+
+---
+
+*L’application étant gamifiée, je parle de joueurs plutôt que d’utilisateurs.*
+
+---
+
+**Intuitions avant le rendez-vous :**
+
+<<
+
+1. Les joueurs expérimentés utilisent plusieurs applications pour chasser les invaders.
+
+||
+
+2. Pour aller d’un point A à un point B, les joueurs préfèrent passer par un maximum d’invaders plutôt que prendre le chemin le plus court.
+
+>>
+
+<<
+
+3. La communauté enrichit l’expérience, que les joueurs se connaissent ou non.
+
+||
+
+4. Certaines fonctionnalités sont difficiles à utiliser ou délaissées.
+
+## Organisation
+
+Grâce au questionnaire et aux entretiens utilisateurs, j’ai recruté des joueurs pour une balade dans Paris.
+
+---
+
+*Trois personnes ont répondu présent.*
+
+||
+
+---
+
+**Des profils différents :**
+
+1. L’expérimenté : il a déjà flashé des invaders et utilise souvent l’application.
+
+2. L’occasionnel : il ouvre l’application quand il croise un invader.
+
+3. Le novice : c’est sa première expérience avec l’application.
+
+*Croiser les profils était essentiel : un joueur expérimenté peut s’être habitué à une fonctionnalité qui freine le novice.*
+
+||
+
+## Déroulé
+
+#### Rendez-vous et départ :
+
+<<
+
+Brève explication du déroulé aux joueurs.
+
+||
+
+*Aucune restriction : ils pouvaient utiliser n’importe quelle application, se parler et interagir entre eux.*
+
+---
+
+#### Phase 1 : Observation
+
+<<
+
+Aucune interaction de ma part, pour ne pas influencer les joueurs : je me suis contenté de suivre, d’observer et de prendre des notes.
+
+||
+
+*Objectif : vérifier mes intuitions et repérer des comportements inattendus.*
+
+---
+
+#### Phase 2 : Questions
+
+<<
+
+À mi-parcours, j’ai interrogé chaque joueur individuellement, à l’écart du groupe, pour que les réponses ne s’influencent pas.
+
+||
+
+*Les questions portaient sur la manière d’enrichir l’expérience.*
+
+---
+
+#### Arrivée et remerciements :
+
+<<
+
+À l’arrivée, nous avons fait un bilan collectif : les points forts et les points faibles de l’application et ce que eux aimeraient voir arriver dans l’application.
+
+Pour finir, j’ai remercié les participants pour leur temps.
+
+||
+
+*Avoir des avis de différents profils était un vrai plus, car un joueur expérimenté peut s’être habitué à une fonctionnalité qui sera un frein pour le novice.*
+
+---
+
+#### Carte de la balade :
+
+<<
+
+![Carte de la balade du 8 mars 2025 dans Paris, du point A au point B](carte-balade.webp)
+
+|| bas
+
+> Parcours du 8 mars 2025 (documentation Flash Invaders)
+
+## De l’observation à la refonte
+
+1. **Une carte externe**
+L’expérimenté passait sans cesse de Flash Invaders à une carte Google Maps personnalisée.
+*→ Refonte : des marqueurs personnels directement dans l’application.*
+
+||
+
+2. **Des détours pour flasher plus**
+Les joueurs ont choisi un itinéraire qui passait par un maximum d’invaders.
+*→ Refonte : des balades guidées par des indices, qui font passer par les invaders sans les révéler, pour garder le plaisir de tomber dessus.*
+
+---
+
+3. **L’entraide**
+L’expérimenté a guidé les autres ; sans lui, le novice aurait peut-être abandonné.
+*→ Refonte : des fonctionnalités communautaires pour faire des balades à plusieurs, organiser des rendez-vous et partager ses parcours.*
+
+||
+
+4. **Des fonctionnalités délaissées**
+Certaines n’ont pas été utilisées du tout, d’autres ont été mal comprises.
+*→ Refonte : ces écrans ont été repensés côté interface.*

@@ -156,8 +156,8 @@ double_copyright: "© 2026  Tom  Lamy  - Création  graphique  originale."
 methode_definition_titre: En quelques mots
 methode_projet_titre: Utilisation dans un projet
 methode_etape_suivante: Voir la prochaine étape
-# Même bouton en mobile
-methode_etape_suivante_mobile: Prochaine étape
+# Texte court du même bouton, affiché quand le texte ne tient pas sur une ligne
+methode_etape_suivante_court: Prochaine étape
 # En-tête des étapes de la méthode : boutons vers l'étape précédente et suivante
 methode_precedente: précédente
 methode_suivante: suivante

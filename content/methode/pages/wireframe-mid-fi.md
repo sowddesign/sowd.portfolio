@@ -30,30 +30,65 @@ image_textes:
     desktop: { x: 35.8, y: 22.0 }
     mobile: { x: 36.8, y: 22.8 }
 
-# « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace)
-definition: À compléter.
+# « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace).
+# *texte* = italique.
+definition: |
+  Un wireframe mid-fi (moyenne fidélité) ajoute de la structure et du détail au croquis : des libellés réalistes, une hiérarchie affinée et des composants identifiés. Il reste neutre graphiquement, sans couleurs ni visuels riches.
 
-# Bouton vers le projet cité (texte et adresse)
-projet_bouton: À compléter
-projet_lien: /projects
+  Il fait le pont entre l’exploration low-fi, comme le wireframe papier, et les maquettes haute fidélité ou les prototypes interactifs.
+
+# Projet cité : nom du fichier dans content/methode/projets/ (introduction au projet et bouton vers le projet)
+projet: graine
 ---
 
-# « UTILISATION DANS UN PROJET » — texte sous l'en-tête de commentaires
+# « UTILISATION DANS UN PROJET » — texte sous l'en-tête de commentaires (l'introduction au projet vient du projet cité)
 #
-#   ## Titre                 → nouvelle partie (titre en body/accentuation)
-#   ---                      → nouvelle rangée
-#   ||                       → passe à la colonne de droite (sans « || » : pleine largeur)
-#   || bas                   → idem, colonne de droite calée en bas
-#   ligne vide               → nouvel élément dans la colonne
-#   ### Texte                → sous-titre (caption/accentuation)
-#   1. texte                 → liste numérotée (une ligne par élément)
-#   - texte                  → liste à puces (une ligne par élément)
-#   ![description](fichier.png) → image (dans le dossier des images de la page)
-#   > texte                  → légende (petite, en italique)
-#   = 47 | texte             → gros chiffre et son libellé
-#   [texte](lien) [texte]{brand} *italique* **gras** → comme dans les autres textes du site
-#   Lien vers un projet (/projects/…) : « Voir le projet » s'affiche au curseur.
+#   Même écriture que content/methode/pages/recherches-quantitatives.md, plus :
+#   || inverse               → colonne de droite au-dessus en mobile
+#
+# Mobile (pas de maquette Figma, choix de l'utilisateur) : texte avant l'écran (« || inverse »),
+# deux pistes empilées.
 #
 # Les lignes commençant par « # » suivi d'un espace sont des commentaires.
 
-À compléter.
+## Un écran comme terrain d’essai
+
+Lors du projet [graine](/projects/graine), j’ai conçu sur Figma un wireframe de moyenne fidélité de la fiche plante. Il a ensuite servi de base pour tester plusieurs directions artistiques.
+
+> La fiche plante a été choisie parce qu’elle concentre l’essentiel de l’application : la photo, le niveau de la plante, sa progression et ses besoins d’entretien.
+
+## Niveaux de gris
+
+![Wireframe mid-fi en niveaux de gris de la fiche plante de graine](fiche-plante-gris.webp)
+
+|| inverse
+
+Cet écran central de l’application m’a permis de tester les typographies, les icônes et la hiérarchie des informations.
+
+Sans couleur, l’attention se porte sur le placement des éléments et sur des détails que la couleur aurait pu masquer.
+
+## Plusieurs pistes de direction artistique
+
+La direction artistique n’était pas encore définie. La même structure m’a permis d’essayer plusieurs pistes sans redessiner l’écran.
+
+---
+
+<<
+
+![Fiche plante de graine dans une piste photographique : capucine, photo de fleur en en-tête](fiche-plante-photo.webp)
+
+Une piste photographique, peu concluante.
+
+||
+
+![Fiche plante de graine dans une piste illustrée : capucine, en-tête orange découpé en formes](fiche-plante-illustree.webp)
+
+Une piste illustrée, plus convaincante.
+
+*Cette version a été déclinée sur le reste de l’application.*
+
+>>
+
+## Ce que cela a apporté
+
+En figeant la structure en niveaux de gris, j’ai pu comparer les directions artistiques sur une base commune et choisir en connaissance de cause. La piste retenue a ensuite été déclinée sur toute l’application.

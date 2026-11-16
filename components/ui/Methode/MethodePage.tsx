@@ -9,6 +9,7 @@ import { IconButton } from "../IconButton";
 import { RichLines } from "../RichText";
 import { TextualButton } from "../TextualButton";
 import { ImageLightboxGroup } from "../ImageLightbox";
+import { ProjectLink } from "../ProjetHubContainer/ProjectLink";
 import { MethodePartView, methodeDivider as divider, methodeSpacing } from "./MethodeBody";
 import { MethodeProjectIntro } from "./MethodeProjectIntro";
 
@@ -123,6 +124,7 @@ function elementLength(item: MethodeElement): number {
     case "audio":
       return item.caption.length;
     case "image":
+    case "embed":
       return 0;
   }
 }
@@ -299,36 +301,46 @@ export function MethodePage({
   }, [mobile, openParts, share, slug]);
 
   /*
-   * Boutons de navigation : si le texte de l'un d'eux ne tient pas sur une ligne à côté de son icône,
-   * les deux boutons perdent leur icône (demande de l'utilisateur).
+   * Boutons de navigation, à toutes les tailles d'écran (choix de l'utilisateur) : si le texte de l'un d'eux ne tient
+   * pas sur une ligne à côté de son icône, les deux boutons prennent leur texte court ; si un texte court ne tient
+   * toujours pas, les deux boutons perdent aussi leur icône.
+   *   0 : texte + icône · 1 : texte court + icône · 2 : texte court sans icône.
    */
   const navRef = useRef<HTMLDivElement>(null);
   const iconSpace = useRef(0);
-  const [compactNav, setCompactNav] = useState(false);
+  const [navFit, setNavFit] = useState<0 | 1 | 2>(0);
+  const shortLabels = navFit > 0;
+  const compactNav = navFit === 2;
   useEffect(() => {
     const nav = navRef.current;
     if (!nav) return;
     const measure = () => {
-      const texts = [...nav.querySelectorAll<HTMLElement>(".type-caption-regular")];
+      const labels = [...nav.querySelectorAll<HTMLElement>("[data-label]")];
       const icon = nav.querySelector<HTMLElement>("[style*='--icon-url']");
       if (icon) iconSpace.current = icon.getBoundingClientRect().width + parseFloat(getComputedStyle(icon.parentElement!).columnGap);
-      const tight = texts.some((text) => {
-        // Largeur du texte sur une ligne, mesurée sur une copie invisible.
-        const probe = text.cloneNode(true) as HTMLElement;
+      // Largeur d'un texte sur une ligne, mesurée sur une copie invisible de la zone de texte du bouton.
+      const width = (text: HTMLElement, value: string) => {
+        const probe = text.cloneNode(false) as HTMLElement;
+        probe.textContent = value;
         probe.style.cssText = "position:absolute;visibility:hidden;white-space:nowrap;width:auto;height:auto;flex:none";
         text.parentElement!.append(probe);
         const needed = probe.getBoundingClientRect().width;
         probe.remove();
-        const available = text.getBoundingClientRect().width - (icon ? 0 : iconSpace.current);
-        return needed > available;
-      });
-      setCompactNav(tight);
+        return needed;
+      };
+      const fits = (key: "label" | "short") =>
+        labels.every((label) => {
+          const text = label.parentElement!;
+          const available = text.getBoundingClientRect().width - (icon ? 0 : iconSpace.current);
+          return width(text, label.dataset[key]!) <= available;
+        });
+      setNavFit(fits("label") ? 0 : fits("short") ? 1 : 2);
     };
     // ResizeObserver mesure aussi au premier affichage.
     const observer = new ResizeObserver(measure);
     observer.observe(nav);
     return () => observer.disconnect();
-  }, [mobile]);
+  }, [mobile, content.project.label, content.project.labelShort]);
 
   const header = (
     <div className="flex w-full flex-col">
@@ -361,7 +373,7 @@ export function MethodePage({
     </ImageLightboxGroup>
   );
 
-  const projectButton = (
+  const projectButtonBase = (
     <TextualButton
       variant="secondary"
       color="black"
@@ -371,8 +383,18 @@ export function MethodePage({
       // Projet pas encore accessible (« off » dans content/projects/ordre.yaml) : bouton grisé (demande de l'utilisateur).
       disabled={!content.project.available}
     >
-      {mobile ? content.project.labelMobile : content.project.label}
+      <span data-label={content.project.label} data-short={content.project.labelShort}>
+        {shortLabels ? content.project.labelShort : content.project.label}
+      </span>
     </TextualButton>
+  );
+  // Bouton grisé : « Bientôt disponible » au curseur (demande de l'utilisateur), comme les cartes projet.
+  const projectButton = content.project.available ? (
+    projectButtonBase
+  ) : (
+    <ProjectLink href={content.project.href} available={false} className="min-w-0">
+      {projectButtonBase}
+    </ProjectLink>
   );
   const nextButton = (
     <TextualButton
@@ -382,7 +404,9 @@ export function MethodePage({
       iconPosition="right"
       onClick={onNext}
     >
-      {mobile ? commun.methode_etape_suivante_mobile : commun.methode_etape_suivante}
+      <span data-label={commun.methode_etape_suivante} data-short={commun.methode_etape_suivante_court}>
+        {shortLabels ? commun.methode_etape_suivante_court : commun.methode_etape_suivante}
+      </span>
     </TextualButton>
   );
 

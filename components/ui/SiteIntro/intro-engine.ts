@@ -67,8 +67,12 @@ function el<K extends keyof SVGElementTagNameMap>(name: K, attrs: Record<string,
 
 /** Taille du logo éclos au centre de l'écran (px), reprise par la boucle d'attente. */
 export function introLogoSize() {
-  const k = (window.innerHeight / 2 + 12) / (stemBase[1] - (96 - (flowerSize / 2) * flowerDrop));
-  return flowerSize * k;
+  return flowerSize * introPlantScale();
+}
+
+/** Échelle de la plante (px par unité du repère plante), reprise par la tige de la page 404. */
+export function introPlantScale() {
+  return (window.innerHeight / 2 + 12) / (stemBase[1] - (96 - (flowerSize / 2) * flowerDrop));
 }
 
 export function createIntroEngine(svg: SVGSVGElement, callbacks: IntroCallbacks) {

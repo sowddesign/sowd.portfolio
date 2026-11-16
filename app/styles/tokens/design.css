@@ -197,6 +197,22 @@
   --site-intro-loop-fade: 400ms; /* page chargée pendant la boucle « 01 » : fondus de sortie de la boucle et de retour du logo au repos (valeur d'essai) */
   --site-intro-loop-gap: 200ms; /* temps sans logo entre les deux fondus (valeur d'essai) */
   --site-intro-nav-threshold: 200ms; /* blocs à chargement propre : attente avant d'afficher le chargement (valeur d'essai) */
+  /*
+   * notFound — page 404 (Figma node 5843:21876), tests desktop : valeurs en dur de Figma, sans variable (à reporter).
+   */
+  --not-found-digit-size: 419px; /* « 4 » : taille du texte (Figma, en dur) */
+  --not-found-digit-line-height: 527px; /* « 4 » : hauteur du calque texte Figma (interligne « normal » de Figma, plus court que celui du navigateur) */
+  --not-found-logo-size: 400px; /* logo entre les deux « 4 » (Figma, en dur) */
+  --not-found-seed-size: 12.628px; /* graine en bas de l'écran, à moitié hors champ (Figma, en dur) */
+  --not-found-button-width: 310px; /* bouton « Retourner à l'accueil » (Figma, en dur) */
+  --not-found-hole-size: 12px; /* trou noir dans le logo (Figma node 5843:22086, en dur) */
+  --not-found-hole-top: 304.39px; /* centre du trou, depuis le haut du logo (Figma, en dur) */
+  --not-found-drop-tolerance: 48px; /* graine lâchée à moins de cette distance du centre du trou (valeur d'essai) */
+  --not-found-sink-duration: var(--motion-duration-base); /* graine qui glisse dans le trou puis s'y enfonce (valeur d'essai) */
+  --not-found-fade-duration: 400ms; /* graine enfoncée : fondu des textes, du bouton, de la tige et du trou (valeur d'essai) */
+  --not-found-leaf-duration: 700ms; /* un « 4 » se replie et devient une feuille (valeur d'essai) */
+  --not-found-spiral-duration: 1000ms; /* la feuille part en spirale et rentre dans le logo (valeur d'essai) */
+  --not-found-spin-duration: 2200ms; /* le logo tourne pendant toute la séquence (valeur d'essai) */
   --photos-container-loader-size: 30%; /* Contact et headPage Container : boucle du logo pendant le chargement du visuel, en part de la hauteur du conteneur (valeur d'essai) */
   /* Découpe de l'écran : coins du haut corner/md ; en bas, le rond de la barre de lecture déborde de moitié. */
   --showreel-screen-clip: inset(
@@ -230,6 +246,10 @@
   --audio-manager-bar-height: var(--p-number-4); /* 4 : barre de lecture (Figma, sans variable) */
   --audio-manager-handle-size: var(--p-number-12); /* 12 : rond de lecture (Figma, sans variable) */
   --audio-manager-seek-zone: var(--video-manager-seek-zone); /* zone cliquable au-dessus et au-dessous de la barre, comme la vidéo */
+
+  /* Prototype Figma intégré (pages méthode) : hauteur de la barre d'outils du haut de l'intégration, masquée en
+     décalant le cadre vers le haut (mesurée sur les captures de l'utilisateur : 48 px, sans variable Figma). */
+  --embed-figma-toolbar-height: var(--p-number-48);
 
   /*
    * navSideTiles — largeur maximale de la colonne du numéro (Figma sans variable, valeurs actuelles retenues
@@ -291,7 +311,7 @@
 
   /* Pages projet — flèche entre ce que j'ai appris et ce que j'aimerais faire (Figma 10, sans variable). */
   --project-arrow-space: 0.625rem; /* 10 */
-  /* Pages projet — logo C-Média (Figma 347 de large, sans variable). */
+  /* Pages projet — logo C-Media (Figma 347 de large, sans variable). */
   --project-c-media-logo-width: 21.6875rem; /* 347 */
 
   /* projetHubContainer « autres » — hauteur de la carte (Figma 230, sans variable). */
