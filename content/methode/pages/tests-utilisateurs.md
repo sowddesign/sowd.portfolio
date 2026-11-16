@@ -30,30 +30,78 @@ image_textes:
     desktop: { x: 37.4, y: 23.0, rotation: -5.1 }
     mobile: { x: 37.5, y: 23.6, rotation: -5.1 }
 
-# « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace)
-definition: À compléter.
+# « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace).
+# *texte* = italique.
+definition: |
+  Les tests utilisateurs consistent à confier des tâches réalistes à des utilisateurs, souvent représentatifs de la cible. Pendant qu’ils les réalisent, l’équipe observe leurs comportements, leurs difficultés et recueille leurs commentaires.
 
-# Bouton vers le projet cité (texte et adresse)
-projet_bouton: À compléter
-projet_lien: /projects
+  L’objectif n’est pas d’évaluer l’utilisateur, mais de tester l’interface et le concept. Cette démarche permet de découvrir des problèmes concrets et d’identifier des possibilités d’amélioration avant ou pendant le développement.
+
+# Projet cité : nom du fichier dans content/methode/projets/ (introduction au projet et bouton vers le projet)
+projet: c-media
 ---
 
-# « UTILISATION DANS UN PROJET » — texte sous l'en-tête de commentaires
+# « UTILISATION DANS UN PROJET » — texte sous l'en-tête de commentaires (l'introduction au projet vient du projet cité)
 #
-#   ## Titre                 → nouvelle partie (titre en body/accentuation)
-#   ---                      → nouvelle rangée
-#   ||                       → passe à la colonne de droite (sans « || » : pleine largeur)
-#   || bas                   → idem, colonne de droite calée en bas
-#   ligne vide               → nouvel élément dans la colonne
-#   ### Texte                → sous-titre (caption/accentuation)
-#   1. texte                 → liste numérotée (une ligne par élément)
-#   - texte                  → liste à puces (une ligne par élément)
-#   ![description](fichier.png) → image (dans le dossier des images de la page)
-#   > texte                  → légende (petite, en italique)
-#   = 47 | texte             → gros chiffre et son libellé
-#   [texte](lien) [texte]{brand} *italique* **gras** → comme dans les autres textes du site
-#   Lien vers un projet (/projects/…) : « Voir le projet » s'affiche au curseur.
+#   Même écriture que content/methode/pages/recherches-quantitatives.md, plus :
+#   ![description](fichier.webp){sans cadre} → image sans bordure ni coins
+#   || inverse               → colonne de droite au-dessus en mobile
+#
+# Mobile (pas de maquette Figma, choix de l'utilisateur) : texte avant l'image (« || inverse »).
 #
 # Les lignes commençant par « # » suivi d'un espace sont des commentaires.
 
-À compléter.
+## Tester avec les promoteurs
+
+Lors de mon alternance chez [C-Media](/projects/c-media), j’ai organisé à plusieurs reprises des tests utilisateurs, principalement sur des prototypes Figma, auprès des promoteurs qui utilisent l’application mobile.
+
+> Les détails du projet restent confidentiels : cette fiche présente uniquement la démarche.
+
+## Préparation
+
+1. Définir les objectifs : pourquoi faire ce test ?
+
+||
+
+2. Définir un périmètre : des fonctionnalités, des écrans ou un parcours.
+
+---
+
+3. Identifier des profils représentatifs et les recruter.
+
+||
+
+4. Préparer les scénarios que l’utilisateur devra réaliser.
+
+---
+
+5. Définir des critères de réussite : parcours réussi ou non, erreurs, temps, difficulté ressentie.
+6. Réaliser le support de test, wireframe ou prototype selon l’avancement du projet. Ici, des prototypes Figma.
+
+||
+
+![Un designer prépare un test : post-it, wireframes, parcours et liste de tâches sur son bureau](preparation.webp){sans cadre}
+
+## Pendant le test
+
+Lorsque les participants réalisent le test, je les invite toujours à parler, à expliquer leurs actions et leurs impressions.
+
+J’observe sans guider. Une fois l’application en production, personne ne sera à côté d’eux pour leur expliquer.
+
+L’objectif est de prendre un maximum de notes, sur les comportements observés comme sur les verbatims.
+
+||
+
+![Une utilisatrice teste un prototype sur son téléphone pendant qu’un designer prend des notes](pendant-le-test.webp){sans cadre}
+
+## Après le test
+
+![Deux personnes analysent les résultats des tests sur un tableau : graphiques et niveaux de satisfaction](apres-le-test.webp){sans cadre}
+
+|| inverse
+
+Une fois les tests terminés, je rédige un compte rendu. Il structure un argumentaire qui oriente et priorise les corrections.
+
+## Ce que cela a apporté
+
+Les tests ont permis de corriger les prototypes avant le développement, et d’appuyer les choix de design sur des observations concrètes plutôt que sur des opinions, notamment face à la direction.

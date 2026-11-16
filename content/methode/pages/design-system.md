@@ -30,30 +30,68 @@ image_textes:
     desktop: { x: 65.0, y: 86.4 }
     mobile: { x: 66.2, y: 87.5 }
 
-# « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace)
-definition: À compléter.
+# « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace).
+# *texte* = italique.
+definition: |
+  Un design system est un ensemble de règles, de composants et de bonnes pratiques qui permet de créer des interfaces cohérentes et faciles à utiliser. Il regroupe notamment les couleurs, les typographies, les icônes, les boutons, les formulaires et les règles d’accessibilité.
 
-# Bouton vers le projet cité (texte et adresse)
-projet_bouton: À compléter
-projet_lien: /projects
+  Son objectif est de faire gagner du temps aux équipes et d’assurer une expérience homogène sur les différents écrans et produits. Par exemple, un même bouton doit conserver une apparence et un comportement similaires sur tout un site ou une application.
+
+# Projet cité : nom du fichier dans content/methode/projets/ (introduction au projet et bouton vers le projet)
+projet: graine
 ---
 
-# « UTILISATION DANS UN PROJET » — texte sous l'en-tête de commentaires
+# « UTILISATION DANS UN PROJET » — texte sous l'en-tête de commentaires (l'introduction au projet vient du projet cité)
 #
-#   ## Titre                 → nouvelle partie (titre en body/accentuation)
-#   ---                      → nouvelle rangée
-#   ||                       → passe à la colonne de droite (sans « || » : pleine largeur)
-#   || bas                   → idem, colonne de droite calée en bas
-#   ligne vide               → nouvel élément dans la colonne
-#   ### Texte                → sous-titre (caption/accentuation)
-#   1. texte                 → liste numérotée (une ligne par élément)
-#   - texte                  → liste à puces (une ligne par élément)
-#   ![description](fichier.png) → image (dans le dossier des images de la page)
-#   > texte                  → légende (petite, en italique)
-#   = 47 | texte             → gros chiffre et son libellé
-#   [texte](lien) [texte]{brand} *italique* **gras** → comme dans les autres textes du site
-#   Lien vers un projet (/projects/…) : « Voir le projet » s'affiche au curseur.
+#   Même écriture que content/methode/pages/recherches-quantitatives.md, plus :
+#   || légende en bas        → colonne de droite : son dernier élément (la légende) calé en bas en desktop,
+#                              placé juste sous la colonne de gauche en mobile
 #
 # Les lignes commençant par « # » suivi d'un espace sont des commentaires.
 
-À compléter.
+## Le design system de graine
+
+Lors du projet [graine](/projects/graine), je me suis occupé de la création et de la gestion du design system. Je présente ici ma méthode à travers un composant : le bouton.
+
+> Le bouton est un bon exemple : il cumule les tailles, les états, les variantes de couleur et les icônes.
+
+## Ma façon de travailler
+
+1. Lister tous les éléments à intégrer dans le composant.
+2. Créer un composant de base dans mon UI kit, avec tous ces éléments.
+3. Appliquer des variables : aucune valeur écrite en dur, sauf si c’est nécessaire ou demandé par les développeurs.
+
+---
+
+![Composant de base du bouton de graine : tailles, anatomie, espacements et typographies](bouton-composant-de-base.webp)
+
+---
+
+4. Intégrer ces composants de base dans un composant d’usage.
+
+*Les autres designers paramètrent ainsi des composants prêts à l’emploi, sans les détacher ni les modifier, ce qui limite les erreurs.*
+
+---
+
+![Composant d’usage du bouton de graine : variantes, états et déclinaisons de couleur](bouton-composant-usage.webp)
+
+---
+
+5. Décliner chaque composant pour toutes les couleurs et tous les usages.
+6. Valider avec les développeurs, puis finaliser la documentation.
+
+## Documentation
+
+![Documentation du bouton dans le design system de graine : anatomie, tailles et typographies](bouton-documentation.webp)
+
+|| légende en bas
+
+Pour faciliter la passation aux développeurs, chaque composant est documenté dans le design system : description, anatomie, tailles, typographie et règles d’usage sur mobile et sur web.
+
+*La documentation est rédigée en anglais, la langue de travail des développeurs.*
+
+> Anatomie d’un asset, le Bouton (documentation graine).
+
+## Ce que cela a apporté
+
+Grâce aux variables et aux composants d’usage, une modification faite dans le composant de base se répercute partout. Les écrans restent cohérents, et les développeurs disposent d’une référence unique pour chaque composant.

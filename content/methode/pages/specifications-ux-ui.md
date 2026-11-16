@@ -27,30 +27,68 @@ image_textes:
     desktop: { x: 55.5, y: 43.5, rotation: 27.5 }
     mobile: { x: 54.6, y: 41.4, rotation: 27.5 }
 
-# « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace)
-definition: À compléter.
 
-# Bouton vers le projet cité (texte et adresse)
-projet_bouton: À compléter
-projet_lien: /projects
+# « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace).
+# *texte* = italique.
+definition: |
+  Les spécifications UX/UI décrivent précisément comment une solution doit être comprise et implémentée. Elles détaillent la structure, les dimensions, les contenus, les composants, les comportements, les interactions, les états, le responsive, l’accessibilité et les règles de validation.
+
+  Elles transmettent aux développeurs non seulement l’apparence des écrans, mais aussi l’intention d’usage et la logique du parcours. Ainsi, elles assurent une compréhension commune de la solution et limitent les interprétations erronées lors de l’implémentation.
+
+# Projet cité : nom du fichier dans content/methode/projets/ (introduction au projet et bouton vers le projet)
+projet: c-media
 ---
 
-# « UTILISATION DANS UN PROJET » — texte sous l'en-tête de commentaires
+# « UTILISATION DANS UN PROJET » — texte sous l'en-tête de commentaires (l'introduction au projet vient du projet cité)
 #
-#   ## Titre                 → nouvelle partie (titre en body/accentuation)
-#   ---                      → nouvelle rangée
-#   ||                       → passe à la colonne de droite (sans « || » : pleine largeur)
-#   || bas                   → idem, colonne de droite calée en bas
-#   ligne vide               → nouvel élément dans la colonne
-#   ### Texte                → sous-titre (caption/accentuation)
-#   1. texte                 → liste numérotée (une ligne par élément)
-#   - texte                  → liste à puces (une ligne par élément)
-#   ![description](fichier.png) → image (dans le dossier des images de la page)
-#   > texte                  → légende (petite, en italique)
-#   = 47 | texte             → gros chiffre et son libellé
-#   [texte](lien) [texte]{brand} *italique* **gras** → comme dans les autres textes du site
-#   Lien vers un projet (/projects/…) : « Voir le projet » s'affiche au curseur.
+#   Même écriture que content/methode/pages/recherches-quantitatives.md.
+#
+# Mobile (pas de maquette Figma, choix de l'utilisateur) : texte puis illustration.
 #
 # Les lignes commençant par « # » suivi d'un espace sont des commentaires.
 
-À compléter.
+## Plusieurs équipes, une même méthode
+
+Lors de mon alternance chez C-Media, j’ai travaillé sur plusieurs interfaces, avec plusieurs équipes de développement. Une méthode commune rendait pourtant la passation très simple, en trois étapes.
+
+*Les détails du projet restent confidentiels : cette fiche présente uniquement la démarche.*
+
+## 1. Les tickets de cas d’usage
+
+Les cas d’usage (use cases, UC) étaient rédigés principalement par les PO, et parfois par les designers.
+
+---
+
+Chaque ticket décrivait précisément les éléments nécessaires pour répondre au besoin, les interactions existantes, ainsi que les données d’entrée et de sortie d’un parcours ou d’une fonctionnalité.
+
+## 2. Les maquettes en dev mode
+
+Une fois le besoin analysé et le ticket écrit, nous réalisions les maquettes, et les prototypes quand un test était nécessaire.
+
+---
+
+Chaque fonctionnalité avait sa page Figma et sa section en dev mode, sans aucune frame superflue : le développeur savait immédiatement ce qu’il devait développer.
+
+---
+
+*Le dev mode est une fonctionnalité de Figma permettant d’inspecter les maquettes et d’accéder aux spécifications et ressources nécessaires à leur intégration.*
+
+---
+
+![Page Figma du portfolio ouverte en dev mode : maquette de la page Démarche UX et panneau des spécifications](dev-mode-portfolio.webp)
+
+*Par souci de confidentialité, j’illustre avec mon portfolio, conçu selon la même méthode.*
+
+## 3. La passation (handoff)
+
+Dernière étape : ajouter le lien du dev mode au ticket, pour que le développeur le retrouve facilement.
+
+Une validation avec le développeur et le PO confirmait ensuite que la solution était techniquement faisable.
+
+||
+
+![Illustration : un designer présente la maquette Figma à une développeuse, qui valide d’un pouce levé](passation.webp){sans cadre}
+
+## Ce que cela a apporté
+
+Un ticket, une page Figma, un lien : chaque développeur trouvait au même endroit le besoin, les maquettes et les spécifications, quelle que soit son équipe. La passation était plus rapide et laissait moins de place aux interprétations.

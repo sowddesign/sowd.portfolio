@@ -27,30 +27,83 @@ image_textes:
     desktop: { x: 56.3, y: 78.3 }
     mobile: { x: 57.4, y: 82.4 }
 
-# « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace)
-definition: À compléter.
+# « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace).
+# *texte* = italique.
+definition: |
+  L’A/B testing compare deux versions d’une interface ou d’un parcours auprès d’utilisateurs réels, répartis aléatoirement entre une version A et une version B. Le but est de mesurer laquelle atteint le mieux un objectif donné.
 
-# Bouton vers le projet cité (texte et adresse)
-projet_bouton: À compléter
-projet_lien: /projects
+  Sans trafic suffisant pour mesurer, on peut en appliquer le principe de façon qualitative : c’est le test de préférence, où l’on présente plusieurs versions à des participants pour recueillir leur choix et leurs raisons.
+
+# Projet cité : nom du fichier dans content/methode/projets/ (introduction au projet et bouton vers le projet)
+projet: portfolio
 ---
 
-# « UTILISATION DANS UN PROJET » — texte sous l'en-tête de commentaires
+# « UTILISATION DANS UN PROJET » — texte sous l'en-tête de commentaires (l'introduction au projet vient du projet cité)
 #
-#   ## Titre                 → nouvelle partie (titre en body/accentuation)
-#   ---                      → nouvelle rangée
-#   ||                       → passe à la colonne de droite (sans « || » : pleine largeur)
-#   || bas                   → idem, colonne de droite calée en bas
-#   ligne vide               → nouvel élément dans la colonne
-#   ### Texte                → sous-titre (caption/accentuation)
-#   1. texte                 → liste numérotée (une ligne par élément)
-#   - texte                  → liste à puces (une ligne par élément)
-#   ![description](fichier.png) → image (dans le dossier des images de la page)
-#   > texte                  → légende (petite, en italique)
-#   = 47 | texte             → gros chiffre et son libellé
-#   [texte](lien) [texte]{brand} *italique* **gras** → comme dans les autres textes du site
-#   Lien vers un projet (/projects/…) : « Voir le projet » s'affiche au curseur.
+#   Même écriture que content/methode/pages/recherches-quantitatives.md.
+#
+# Mobile (pas de maquette Figma, choix de l'utilisateur) : image A/B coupée en deux (A puis B, « {mobile en deux} »),
+# protocole sur une colonne.
 #
 # Les lignes commençant par « # » suivi d'un espace sont des commentaires.
 
-À compléter.
+## Un portfolio pour tous
+
+Ce [Portfolio](/projects/portfolio) doit parler à tous : recruteurs, designers, futurs clients et personnes extérieures au métier. Pour le vérifier, je le teste en deux temps : d’abord auprès de participants, puis en ligne, auprès de vrais visiteurs.
+
+## Étape 1 : comparer avec des participants
+
+Pour la page projet de Flash Invaders, j’ai présenté deux dispositions à des participants.
+
+---
+
+![Page projet Flash Invaders en deux dispositions : A, les exemples de questions sous la photo ; B, dans la colonne de droite](flash-invaders-a-b.webp){mobile en deux}
+
+> Page projet Flash Invaders (Portfolio sowd)
+
+---
+
+En B, les exemples de questions passent dans la colonne de droite, à côté de la photo. Les participants ont préféré cette disposition, que j’ai retenue.
+
+## Étape 2 : l’A/B test en ligne
+
+Une préférence déclarée ne dit pas comment les visiteurs se comportent réellement. J’ai donc confronté les deux dispositions sur Maze, en test non modéré.
+
+### Le protocole
+
+<<
+
+1. Hypothèse :
+> → la disposition B permet de trouver l’information plus vite et plus facilement.
+
+||
+
+2. Tâche :
+> → retrouver les questions posées lors des entretiens exploratoires.
+
+>>
+
+<<
+
+3. Indicateurs :
+> → taux de réussite, temps pour accomplir la tâche, clics à côté.
+
+||
+
+4. Répartition :
+> → chaque testeur voit aléatoirement la version A ou la version B.
+
+>>
+
+<<
+
+5. Retours :
+> → une question ouverte en fin de test, pour comprendre les résultats.
+
+||
+
+>>
+
+## Résultats
+
+Test en cours. Les résultats seront publiés ici.

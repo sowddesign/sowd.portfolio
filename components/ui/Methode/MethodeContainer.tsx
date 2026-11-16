@@ -51,6 +51,7 @@ import { MethodePage } from "./MethodePage";
  *   (nom du fichier dans content/methode/pages/, ex. design-system). L'étape et la page s'ouvrent dès l'arrivée,
  *   puis un seul défilement doux mène à la page ouverte (desktop : haut du conteneur sous l'en-tête ; mobile :
  *   tuile choisie sous l'en-tête et la ligne de l'étape), pour un mouvement continu (demande de l'utilisateur).
+ *   L'adresse suit la page ouverte (useAddressSync) : rechargement et lien partagé rouvrent cette page.
  */
 
 /** Adresse d'une page de la méthode, ex. methodeHref("design-system") → "/?methode=design-system". */
@@ -80,6 +81,24 @@ function useLinkedPage(steps: MethodeStep[], openPage: (step: number, page: numb
     return () => cancelAnimationFrame(frame);
   }, [steps]);
   return linked;
+}
+
+/**
+ * Adresse tenue à jour avec la page ouverte (?methode=<page>, retirée quand aucune page n'est ouverte), sans entrée
+ * d'historique : un rechargement ou un lien partagé rouvre la même page (demande de l'utilisateur).
+ * Tant qu'aucune page n'a été ouverte, l'adresse est laissée telle quelle : useLinkedPage la lit (effets rejoués en
+ * développement, affichage desktop ou mobile monté un instant).
+ */
+function useAddressSync(slug: string | null) {
+  const opened = useRef(false);
+  useEffect(() => {
+    if (slug) opened.current = true;
+    if (!opened.current) return;
+    const url = new URL(window.location.href);
+    if (slug) url.searchParams.set("methode", slug);
+    else url.searchParams.delete("methode");
+    if (url.href !== window.location.href) window.history.replaceState(window.history.state, "", url);
+  }, [slug]);
 }
 
 const divider = <span aria-hidden className="block w-full shrink-0 border-t border-shape-neutral-black" />;
@@ -198,6 +217,7 @@ function MethodeContainerDesktop({ steps, className }: MethodeContainerProps) {
     setCurrent(stepIndex);
     setSelected(pageIndex);
   });
+  useAddressSync(page?.slug ?? null);
   const next = () => {
     if (selected !== null && selected < step.pages.length - 1) setSelected(selected + 1);
     /* Dernière page de l'étape : même glisse que « suivante » vers la page 01 de l'étape suivante
@@ -333,6 +353,7 @@ function MethodeContainerMobile({ steps, className }: MethodeContainerProps) {
     setOpen(stepIndex);
     setSelected(pageIndex);
   });
+  useAddressSync(open !== null && selected !== null ? (steps[open].pages[selected]?.slug ?? null) : null);
 
   /* Levé quand l'utilisateur referme la tuile ouverte ou passe d'une étape ouverte à une autre :
      le contenu refermé raccourcit la page, qui se retrouverait plus bas (jusqu'au pied de page). */

@@ -28,11 +28,12 @@ image_textes:
     mobile: { x: 40.5, y: 17.2, rotation: -9.2 }
 
 # « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace)
-definition: À compléter.
+definition: |
+  La problématique (ou question de recherche) est la formulation claire et délimitée du problème à résoudre. Elle fixe le périmètre de la réflexion : ce que l’on cherche vraiment à comprendre ou à améliorer.
+  Elle guide à la fois la méthodologie à adopter pour explorer le sujet et les choix de design qui en découlent.
 
-# Bouton vers le projet cité (texte et adresse)
-projet_bouton: À compléter
-projet_lien: /projects
+# Projet cité : nom du fichier dans content/methode/projets/ (introduction au projet et bouton vers le projet)
+projet: souffle
 ---
 
 # « UTILISATION DANS UN PROJET » — texte sous l'en-tête de commentaires
@@ -44,8 +45,10 @@ projet_lien: /projects
 #   ligne vide               → nouvel élément dans la colonne
 #   ### Texte                → sous-titre (caption/accentuation)
 #   1. texte                 → liste numérotée (une ligne par élément)
+#   > texte (sous « 1. »)    → note de l'élément numéroté (petite, en italique)
 #   - texte                  → liste à puces (une ligne par élément)
 #   ![description](fichier.png) → image (dans le dossier des images de la page)
+#   ![description](fichier.webp){sans cadre} → image sans bordure ni coins
 #   > texte                  → légende (petite, en italique)
 #   = 47 | texte             → gros chiffre et son libellé
 #   [texte](lien) [texte]{brand} *italique* **gras** → comme dans les autres textes du site
@@ -53,4 +56,59 @@ projet_lien: /projects
 #
 # Les lignes commençant par « # » suivi d'un espace sont des commentaires.
 
-À compléter.
+## Du constat à la problématique
+
+Lors du projet Souffle, nous sommes partis d’un thème large : comment prendre soin des soignants.
+
+Nos recherches ont montré que les infirmiers et infirmières en psychiatrie sont particulièrement exposés au burn-out, souvent à cause de la charge émotionnelle du métier.
+
+---
+
+1. Le thème :
+> → le soin des soignants.
+
+||
+
+2. La cible :
+> → les infirmiers et les infirmières en psychiatrie.
+
+---
+
+3. Le constat :
+> → les infirmiers et infirmières en psychiatrie sont particulièrement exposés au burn-out.
+
+||
+
+4. Le problème :
+> → l’épuisement professionnel.
+
+---
+
+5. La cause :
+> → la charge émotionnelle du métier, éprouvante et difficile à gérer.
+
+||
+
+> Chaque étape a resserré le périmètre jusqu’à la problématique.
+
+---
+
+#### La problématique :
+
+*« Comment prévenir l’épuisement professionnel des infirmiers et infirmières en psychiatrie face aux difficultés émotionnelles de leur travail ? »*
+
+## Ce que cela a apporté
+
+La problématique a orienté nos choix : « prévenir » nous a menés vers des exercices à pratiquer au quotidien, plutôt qu’un accompagnement une fois l’épuisement installé.
+
+---
+
+Et parce que la cause est émotionnelle, nous nous sommes appuyés sur la méthode ACT, qui apprend à accueillir ses émotions plutôt qu’à les éviter.
+
+---
+
+![Activité « Jouer avec ses pensées » de l’application Souffle](jouer-avec-ses-pensees.webp)
+
+|| bas
+
+> Activité « Jouer avec ses pensées » (application Souffle)

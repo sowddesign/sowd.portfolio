@@ -27,30 +27,82 @@ image_textes:
     desktop: { x: 39.0, y: 76.8 }
     mobile: { x: 40.4, y: 82.3, rotation: -2.9 }
 
-# « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace)
-definition: À compléter.
+# « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace).
+# *texte* = italique.
+definition: |
+  Le persona est une description fictive mais réaliste d’un utilisateur type, fondée sur la recherche.
+  Il incarne un profil représentatif des utilisateurs cibles, avec leurs objectifs, leurs besoins, leurs comportements et leurs contraintes.
 
-# Bouton vers le projet cité (texte et adresse)
-projet_bouton: À compléter
-projet_lien: /projects
+  De cette façon, chaque idée, chaque décision, chaque choix de design est alors confronté à la question :
+  *« Est-ce que cela conviendrait à notre persona ? »*
+  Cette référence commune aide l’équipe à aligner ses choix sur les besoins réels des utilisateurs plutôt que sur des intuitions ou des opinions internes.
+
+# Projet cité : nom du fichier dans content/methode/projets/ (introduction au projet et bouton vers le projet)
+projet: graine
 ---
 
-# « UTILISATION DANS UN PROJET » — texte sous l'en-tête de commentaires
+# « UTILISATION DANS UN PROJET » — texte sous l'en-tête de commentaires (l'introduction au projet vient du projet cité)
 #
-#   ## Titre                 → nouvelle partie (titre en body/accentuation)
-#   ---                      → nouvelle rangée
-#   ||                       → passe à la colonne de droite (sans « || » : pleine largeur)
-#   || bas                   → idem, colonne de droite calée en bas
-#   ligne vide               → nouvel élément dans la colonne
-#   ### Texte                → sous-titre (caption/accentuation)
-#   1. texte                 → liste numérotée (une ligne par élément)
-#   - texte                  → liste à puces (une ligne par élément)
-#   ![description](fichier.png) → image (dans le dossier des images de la page)
-#   > texte                  → légende (petite, en italique)
-#   = 47 | texte             → gros chiffre et son libellé
-#   [texte](lien) [texte]{brand} *italique* **gras** → comme dans les autres textes du site
-#   Lien vers un projet (/projects/…) : « Voir le projet » s'affiche au curseur.
+#   Même écriture que content/methode/pages/recherches-quantitatives.md, plus :
+#   ![description](desktop.webp | mobile.webp) → image recadrée autrement en mobile et en tablette petite
 #
 # Les lignes commençant par « # » suivi d'un espace sont des commentaires.
 
-À compléter.
+## De la cible au persona
+
+Lors du projet graine, deux cibles ont été identifiées : une principale et une secondaire, à ne pas négliger.
+
+---
+
+Nous avons donc réalisé un persona par cible :
+
+1. Sara, 24 ans.
+2. Un couple de 35 à 40 ans, avec un enfant d’environ 10 ans.
+
+---
+
+> Le procédé étant le même pour les deux, je n’en présenterai qu’un.
+
+## Données utilisateurs
+
+Pour construire le persona principal, Sara, j’ai croisé plusieurs enseignements issus de sources différentes :
+
+---
+
+Les 18 à 34 ans sont les plus susceptibles d’être intéressés par notre application.
+
+> → Recherches quantitatives (études)
+
+||
+
+Il y a plus de femmes que d’hommes qui estiment l’entretien des plantes contraignant.
+
+> → Recherches quantitatives (études)
+
+---
+
+Ils s’informent sur les plantes surtout sur internet et auprès de leurs proches.
+
+> → Recherches quantitatives (questionnaire)
+
+||
+
+70,2 % des répondants estiment que des missions quotidiennes les aideraient à mieux entretenir leurs plantes.
+
+> → Recherches quantitatives (questionnaire)
+
+## Humaniser ces données
+
+![Persona principal du projet graine : Sara H.](persona-sara.webp | persona-sara-mobile.webp)
+
+> Persona principal, Sara H. (documentation graine).
+
+## Ce que cela a apporté
+
+Face à chaque choix, nous nous sommes demandé comment Sara aimerait que soit son application.
+
+---
+
+Par exemple :
+
+Sara voudrait des rappels pour ne rien oublier. Les missions quotidiennes transforment ces rappels en objectifs à accomplir chaque jour.

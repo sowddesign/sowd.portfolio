@@ -28,30 +28,84 @@ image_textes:
     desktop: { x: 44.9, y: 22.6 }
     mobile: { x: 47.5, y: 22.2 }
 
-# « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace)
-definition: À compléter.
+# « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace).
+# *texte* = italique.
+definition: |
+  La synthèse des recherches consiste à organiser, regrouper et interpréter les données issues des différentes méthodes, quantitatives et qualitatives, pour les transformer en insights actionnables pour le design.
+  Elle permet de passer d’observations brutes (notes, métriques, verbatims, etc.) à une compréhension structurée des besoins, des frustrations et des opportunités de conception.
 
-# Bouton vers le projet cité (texte et adresse)
-projet_bouton: À compléter
-projet_lien: /projects
+# Projet cité : nom du fichier dans content/methode/projets/ (introduction au projet et bouton vers le projet)
+projet: graine
 ---
 
-# « UTILISATION DANS UN PROJET » — texte sous l'en-tête de commentaires
+# « UTILISATION DANS UN PROJET » — texte sous l'en-tête de commentaires (l'introduction au projet vient du projet cité)
 #
-#   ## Titre                 → nouvelle partie (titre en body/accentuation)
-#   ---                      → nouvelle rangée
-#   ||                       → passe à la colonne de droite (sans « || » : pleine largeur)
-#   || bas                   → idem, colonne de droite calée en bas
-#   ligne vide               → nouvel élément dans la colonne
-#   ### Texte                → sous-titre (caption/accentuation)
-#   1. texte                 → liste numérotée (une ligne par élément)
-#   - texte                  → liste à puces (une ligne par élément)
-#   ![description](fichier.png) → image (dans le dossier des images de la page)
-#   > texte                  → légende (petite, en italique)
-#   = 47 | texte             → gros chiffre et son libellé
-#   [texte](lien) [texte]{brand} *italique* **gras** → comme dans les autres textes du site
-#   Lien vers un projet (/projects/…) : « Voir le projet » s'affiche au curseur.
+#   Même écriture que content/methode/pages/recherches-quantitatives.md, plus :
+#   ![description](fichier.webp){mobile en deux} → en mobile et tablette petite : moitié gauche puis moitié droite
+#                              de l'image, l'une sous l'autre
+#   @ adresse | titre        → page intégrée (livre Heyzine…) : 16:9, 4:5 en mobile ; le titre est lu par les
+#                              lecteurs d'écran
 #
 # Les lignes commençant par « # » suivi d'un espace sont des commentaires.
 
-À compléter.
+## Le dossier
+
+Lors du projet [graine](/projects/graine), j’ai réalisé un dossier de recherche, des recherches quantitatives jusqu’au user journey, sur lequel s’est appuyé le design de l’application.
+
+---
+
+> Ce document inclut aussi toute la partie design, un livrable unique étant demandé en fin de projet.
+
+## Le contenu
+
+1. Des chiffres clés tirés d’études sourcées, qui justifient les enseignements associés.
+
+||
+
+2. La présentation du questionnaire et l’analyse des réponses.
+
+---
+
+3. La problématique, qui guide toute la phase de design.
+
+||
+
+4. Les personas : principal et secondaire.
+
+---
+
+5. Un user journey représentatif du problème identifié, auquel devra répondre l’application.
+
+||
+
+## Le support
+
+La direction artistique devait rappeler le réel et le tangible. J’ai donc choisi le livre numérique, au format horizontal, plus adapté à la lecture sur écran.
+
+||
+
+Le contenu et la mise en page ont été conçus sur Figma, puis exportés en PDF.
+
+---
+
+![Extraits du fichier Figma du dossier de recherche du projet graine](dossier-figma.webp){mobile en deux}
+
+> Extraits du fichier Figma du dossier de recherche (documentation graine).
+
+---
+
+Le PDF a ensuite été transformé en livre numérique avec [Heyzine](https://heyzine.com).
+
+---
+
+@ https://heyzine.com/flip-book/c3e6f0745c.html | Dossier de recherche du projet graine, en livre numérique (Heyzine)
+
+Voir la [documentation graine](https://heyzine.com/flip-book/c3e6f0745c.html)
+
+## Ce que cela a apporté
+
+Le dossier a servi de référence tout au long de la phase de design : chaque choix pouvait s’appuyer sur un insight, un chiffre ou le parcours du persona.
+
+||
+
+En fin de projet, il a été présenté au jury comme preuve de concept, de la recherche jusqu’aux maquettes finales.

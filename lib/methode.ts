@@ -23,10 +23,34 @@ import { isProjectAvailable, PROJECTS_ORDER_FILE } from "./projects";
  * À n'utiliser que côté serveur (lecture du disque).
  */
 
-export type MethodeImage = { src: string; alt: string; width: number; height: number };
+/**
+ * Image : framed faux = sans bordure ni coins (« ![texte](fichier.webp){sans cadre} », frame Figma « methode 10 ») ;
+ * mobile = autre recadrage affiché en mobile (« ![texte](desktop.webp | mobile.webp) ») ;
+ * split = en mobile, moitié gauche puis moitié droite du même fichier, l'une sous l'autre
+ * (« ![texte](fichier.webp){mobile en deux} », frame Figma « methode 07 », synthèse des recherches) ;
+ * mention = texte posé sur l'image, en bas à droite (« ![texte](fichier.webp){mention: texte} », frame Figma
+ * « methode 09 », scénarios d'usage).
+ */
+export type MethodeImage = {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+  framed: boolean;
+  mobile?: { src: string; width: number; height: number };
+  /** Plusieurs extraits empilés en mobile (« ![texte](desktop.webp | extrait-1.webp + extrait-2.webp) »,
+   * frame Figma « methode 16 », arborescence) ; mobile = le premier. */
+  mobileParts?: { src: string; width: number; height: number }[];
+  split?: boolean;
+  mention?: string;
+};
 
-/** Élément numéroté : numéro, image facultative à côté du numéro, paragraphes (à côté du numéro, ou sous l'image). */
-export type MethodeNumberedItem = { number: string; image?: MethodeImage; paragraphs: MdLine[] };
+/**
+ * Élément numéroté : numéro, image facultative à côté du numéro, paragraphes (à côté du numéro, ou sous l'image),
+ * notes facultatives sous les paragraphes (« > texte » sous « 1. texte », captionText/small/italic, frame Figma
+ * « methode 11 », problématique).
+ */
+export type MethodeNumberedItem = { number: string; image?: MethodeImage; paragraphs: MdLine[]; notes?: MdLine[] };
 
 export type MethodeElement =
   | { kind: "subtitle"; line: MdLine }
@@ -38,11 +62,18 @@ export type MethodeElement =
   | { kind: "figure"; value: string; label: MdLine }
   /** Extrait audio (« ~ fichier.mp3 | légende ») : fichier dans le dossier des images de la page. */
   | { kind: "audio"; src: string; caption: string }
+  /** Page intégrée (« @ adresse | titre ») : livre Heyzine, etc. ; titre lu par les lecteurs d'écran. */
+  | { kind: "embed"; src: string; title: string }
   /** Titre captionText/accentuation et son texte (« ##### Titre » puis le texte en dessous). */
   | { kind: "titled"; title: MdLine; lines: MdLine[] };
 
-/** Rangée d'un bloc : une colonne (pleine largeur) ou deux ; alignEnd cale la colonne de droite en bas. */
-export type MethodeRow = { columns: MethodeElement[][]; alignEnd: boolean };
+/**
+ * Rangée d'un bloc : une colonne (pleine largeur) ou deux ; alignEnd cale la colonne de droite en bas ;
+ * reverseMobile place la colonne de droite au-dessus en mobile (« || inverse ») ;
+ * captionEnd cale le dernier élément de la colonne de droite (sa légende) en bas en desktop, et le place juste sous la
+ * colonne de gauche en mobile (« || légende en bas », frame Figma « methode 21 », design system).
+ */
+export type MethodeRow = { columns: MethodeElement[][]; alignEnd: boolean; reverseMobile: boolean; captionEnd: boolean };
 /** Bloc : rangées l'une sous l'autre. */
 export type MethodeBlock = MethodeRow[];
 /** Sous-partie : sous-titre facultatif et ses blocs. */
@@ -78,9 +109,9 @@ export type MethodePageContent = {
   definition: MethodeDefinitionGroup[];
   intro?: MethodeProjectIntro;
   parts: MethodePart[];
-  /** Bouton du projet ; labelMobile : texte en mobile ; available faux : page du projet pas encore accessible
+  /** Bouton du projet ; labelShort : texte court, affiché quand le texte ne tient pas sur une ligne ; available faux : page du projet pas encore accessible
       (projet « off » dans content/projects/ordre.yaml), bouton grisé. */
-  project: { label: string; labelMobile: string; href: string; available: boolean };
+  project: { label: string; labelShort: string; href: string; available: boolean };
 };
 
 const METHODE_DIR = path.join(process.cwd(), "content", "methode");
@@ -184,7 +215,7 @@ function definitionGroups(source: string, fail: (message: string) => never): Met
     });
 }
 
-/** Largeur et hauteur d'une image PNG ou JPEG (pour réserver sa place avant le chargement). */
+/** Largeur et hauteur d'une image PNG, JPEG, WebP ou GIF (pour réserver sa place avant le chargement). */
 function imageSize(file: string, fail: (message: string) => never) {
   // Début du fichier seulement : les dimensions sont dans l'en-tête.
   const data = Buffer.alloc(65536);
@@ -196,6 +227,16 @@ function imageSize(file: string, fail: (message: string) => never) {
     return fail(`image introuvable : ${path.relative(process.cwd(), file)}.`);
   }
   if (data.readUInt32BE(0) === 0x89504e47) return { width: data.readUInt32BE(16), height: data.readUInt32BE(20) };
+  if (data.toString("ascii", 0, 4) === "GIF8") return { width: data.readUInt16LE(6), height: data.readUInt16LE(8) };
+  if (data.toString("ascii", 0, 4) === "RIFF" && data.toString("ascii", 8, 12) === "WEBP") {
+    const chunk = data.toString("ascii", 12, 16);
+    if (chunk === "VP8X") return { width: data.readUIntLE(24, 3) + 1, height: data.readUIntLE(27, 3) + 1 };
+    if (chunk === "VP8 ") return { width: data.readUInt16LE(26) & 0x3fff, height: data.readUInt16LE(28) & 0x3fff };
+    if (chunk === "VP8L") {
+      const bits = data.readUInt32LE(21);
+      return { width: (bits & 0x3fff) + 1, height: ((bits >> 14) & 0x3fff) + 1 };
+    }
+  }
   for (let i = 2; i + 9 < data.length; ) {
     const marker = data.readUInt16BE(i);
     if (marker >= 0xffc0 && marker <= 0xffcf && ![0xffc4, 0xffc8, 0xffcc].includes(marker)) {
@@ -203,13 +244,15 @@ function imageSize(file: string, fail: (message: string) => never) {
     }
     i += 2 + data.readUInt16BE(i + 2);
   }
-  return fail(`format d'image non reconnu (PNG ou JPEG) : ${path.relative(process.cwd(), file)}.`);
+  return fail(`format d'image non reconnu (PNG, JPEG, WebP ou GIF) : ${path.relative(process.cwd(), file)}.`);
 }
 
-const NUMBERED = /^(\d+)\.\s+(.*)$/;
-const IMAGE = /^!\[([^\]]*)\]\(([^)\s]+)\)$/;
+/** « 1. texte » ou « a. texte » (lettre, frame Figma « methode 16 », arborescence). */
+const NUMBERED = /^(\d+|[a-z])\.\s+(.*)$/;
+const IMAGE = /^!\[([^\]]*)\]\(([^)|\s]+)(?:\s*\|\s*([^)|]+?))?\s*\)((?:\{(?:sans cadre|mobile en deux|mention:[^}]+)\})*)$/;
 const FIGURE = /^=\s*(\S+)\s*\|\s*(.+)$/;
 const AUDIO = /^~\s*(\S+)\s*\|\s*(.+)$/;
+const EMBED = /^@\s*(https:\/\/\S+)\s*\|\s*(.+)$/;
 
 /** Extrait audio : le fichier doit exister dans le dossier des images de la page. */
 function audio(source: string, folder: string, fail: (message: string) => never): MethodeElement {
@@ -220,9 +263,24 @@ function audio(source: string, folder: string, fail: (message: string) => never)
 }
 
 function image(source: string, folder: string, fail: (message: string) => never): MethodeImage {
-  const [, alt, name] = source.match(IMAGE)!;
-  const src = `/${folder}/${name}`;
-  return { src, alt, ...imageSize(path.join(METHODE_IMAGES_DIR, path.relative("methode", folder), name), fail) };
+  const [, alt, name, mobile, options] = source.match(IMAGE)!;
+  const mobileNames = mobile ? mobile.split("+").map((part) => part.trim()) : [];
+  const split = options.includes("{mobile en deux}");
+  const mention = options.match(/\{mention:([^}]+)\}/)?.[1].trim();
+  if (split && mobile) fail("« {mobile en deux} » et un recadrage mobile « | » ne se combinent pas.");
+  const file = (name: string) => ({
+    src: `/${folder}/${name}`,
+    ...imageSize(path.join(METHODE_IMAGES_DIR, path.relative("methode", folder), name), fail),
+  });
+  return {
+    alt,
+    ...file(name),
+    framed: !options.includes("{sans cadre}"),
+    ...(mobileNames.length > 0 ? { mobile: file(mobileNames[0]) } : {}),
+    ...(mobileNames.length > 1 ? { mobileParts: mobileNames.map(file) } : {}),
+    ...(split ? { split } : {}),
+    ...(mention ? { mention } : {}),
+  };
 }
 
 function element(source: string, folder: string, fail: (message: string) => never): MethodeElement {
@@ -237,13 +295,18 @@ function element(source: string, folder: string, fail: (message: string) => neve
     };
   }
   if (lines.length === 1 && AUDIO.test(first)) return audio(first, folder, fail);
+  if (lines.length === 1 && EMBED.test(first)) {
+    const [, src, title] = first.match(EMBED)!;
+    return { kind: "embed", src, title: title.trim() };
+  }
   if (lines.length === 1 && IMAGE.test(first)) return { kind: "image", ...image(first, folder, fail) };
   if (lines.length === 1 && FIGURE.test(first)) {
     const [, value, label] = first.match(FIGURE)!;
     return { kind: "figure", value, label: parseMethodeLine(label, fail) };
   }
   if (NUMBERED.test(first)) {
-    // Chaque « 1. » commence un élément ; les lignes suivantes sans numéro sont ses paragraphes suivants.
+    // Chaque « 1. » commence un élément ; les lignes suivantes sans numéro sont ses paragraphes suivants,
+    // celles en « > » ses notes (en dernier).
     const items: MethodeNumberedItem[] = [];
     for (const line of lines) {
       const numbered = line.match(NUMBERED);
@@ -255,7 +318,14 @@ function element(source: string, folder: string, fail: (message: string) => neve
             : { number: `${number}.`, paragraphs: [parseMethodeLine(text, fail)] },
         );
       } else {
-        items[items.length - 1].paragraphs.push(parseMethodeLine(line, fail));
+        const item = items[items.length - 1];
+        if (line.startsWith("> ")) {
+          if (item.image) fail("« > note » sous un élément numéroté avec image n'est pas prévu.");
+          (item.notes ??= []).push(parseMethodeLine(line.slice(2), fail));
+        } else {
+          if (item.notes) fail(`élément « ${item.number} » : les notes « > » se placent après ses paragraphes.`);
+          item.paragraphs.push(parseMethodeLine(line, fail));
+        }
       }
     }
     return { kind: "numbered", items };
@@ -279,21 +349,32 @@ function elements(source: string, folder: string, fail: (message: string) => nev
 }
 
 /**
- * Bloc : éléments en pleine largeur, et deux colonnes entre « << » et « >> » (« || » ou « || bas » passe
- * à droite). Sans « << », « || » met à gauche tout ce qui le précède dans le bloc ; sans « >> », les colonnes
+ * Bloc : éléments en pleine largeur, et deux colonnes entre « << » et « >> » (« || » passe à droite ;
+ * « || bas » cale la colonne de droite en bas ; « || inverse » la place au-dessus en mobile ; les deux se combinent).
+ * Sans « << », « || » met à gauche tout ce qui le précède dans le bloc ; sans « >> », les colonnes
  * vont jusqu'au bout du bloc.
  */
 function block(source: string, folder: string, fail: (message: string) => never): MethodeBlock {
-  const pieces = source.split(/^(<<|>>|\|\|(?:[ \t]+bas)?)[ \t]*$/m);
+  const pieces = source.split(/^(<<|>>|\|\|(?:[ \t]+(?:légende en bas|bas|inverse))*)[ \t]*$/m);
   const rows: MethodeBlock = [];
   let full: MethodeElement[] = [];
-  let pair: { left: MethodeElement[]; right: MethodeElement[] | null; alignEnd: boolean } | null = null;
+  type Pair = {
+    left: MethodeElement[];
+    right: MethodeElement[] | null;
+    alignEnd: boolean;
+    reverseMobile: boolean;
+    captionEnd: boolean;
+  };
+  let pair: Pair | null = null;
   const flushFull = () => {
-    if (full.length > 0) rows.push({ columns: [full], alignEnd: false });
+    if (full.length > 0) rows.push({ columns: [full], alignEnd: false, reverseMobile: false, captionEnd: false });
     full = [];
   };
   const flushPair = () => {
-    if (pair) rows.push({ columns: pair.right ? [pair.left, pair.right] : [pair.left], alignEnd: pair.alignEnd });
+    if (pair) {
+      const { left, right, alignEnd, reverseMobile, captionEnd } = pair;
+      rows.push({ columns: right ? [left, right] : [left], alignEnd, reverseMobile, captionEnd });
+    }
     pair = null;
   };
   pieces.forEach((piece, i) => {
@@ -307,18 +388,21 @@ function block(source: string, folder: string, fail: (message: string) => never)
     if (marker === "<<") {
       if (pair) fail("« << » : les colonnes précédentes ne sont pas fermées par « >> ».");
       flushFull();
-      pair = { left: [], right: null, alignEnd: false };
+      pair = { left: [], right: null, alignEnd: false, reverseMobile: false, captionEnd: false };
     } else if (marker === ">>") {
       if (!pair) fail("« >> » sans « << » avant.");
       flushPair();
     } else {
       if (pair?.right) fail("deux colonnes au plus (un seul « || » entre « << » et « >> »).");
       if (!pair) {
-        pair = { left: full, right: null, alignEnd: false };
+        pair = { left: full, right: null, alignEnd: false, reverseMobile: false, captionEnd: false };
         full = [];
       }
+      const options = marker.split(/\s+/).slice(1);
       pair!.right = [];
-      pair!.alignEnd = marker.endsWith("bas");
+      pair!.captionEnd = marker.includes("légende en bas");
+      pair!.alignEnd = options.includes("bas") && !pair!.captionEnd;
+      pair!.reverseMobile = options.includes("inverse");
     }
   });
   flushPair();
@@ -382,7 +466,7 @@ function projectIntro(slug: string) {
       throw new Error(`content/methode/projets/${slug}.md : ${message}`);
     }),
   };
-  return { intro, label: text("bouton")!, labelMobile: text("bouton_mobile")!, href: text("lien")! };
+  return { intro, label: text("bouton")!, labelShort: text("bouton_court")!, href: text("lien")! };
 }
 
 export function getMethodeIntro(intro: string): MethodeIntroContent {
@@ -496,8 +580,8 @@ async function loadMethodePage(slug: string, version: number): Promise<MethodePa
     ...(project ? { intro: project.intro } : {}),
     parts: parts(withoutComments(body), folder, fail),
     project: project
-      ? { label: project.label, labelMobile: project.labelMobile, href: project.href, available: linkAvailable(project.href) }
-      : { label: legacyLabel, labelMobile: legacyLabel, href: text("projet_lien")!, available: linkAvailable(text("projet_lien")!) },
+      ? { label: project.label, labelShort: project.labelShort, href: project.href, available: linkAvailable(project.href) }
+      : { label: legacyLabel, labelShort: legacyLabel, href: text("projet_lien")!, available: linkAvailable(text("projet_lien")!) },
   };
 }
 

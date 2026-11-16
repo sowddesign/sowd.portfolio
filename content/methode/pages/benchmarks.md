@@ -102,7 +102,7 @@ Elle repose sur des exercices courts, visuels et ludiques, plutôt que sur des c
 
 ---
 
-![Brilliant : choix des objectifs à l’onboarding](brilliant-onboarding.png)
+![Brilliant : choix des objectifs à l’onboarding](brilliant-onboarding.webp)
 
 ||
 
@@ -112,7 +112,7 @@ L’utilisateur choisit lui-même ses objectifs, et l’application lui propose 
 
 ---
 
-![Brilliant : choix du niveau, illustré par des exemples](brilliant-niveau.png)
+![Brilliant : choix du niveau, illustré par des exemples](brilliant-niveau.webp)
 
 ||
 
@@ -122,7 +122,7 @@ Pour évaluer son niveau, chaque option est illustrée par un exemple concret. C
 
 ---
 
-![Brilliant : exercice en glisser-déposer](brilliant-exercices.png)
+![Brilliant : exercice en glisser-déposer](brilliant-exercices.webp)
 
 ||
 
@@ -138,7 +138,7 @@ Elle propose des exercices courts, des jeux, des dictées et un parcours personn
 
 ---
 
-![Sans fautes : choix de l’avatar parmi des figures de la langue française](sans-fautes-avatars.png)
+![Sans fautes : choix de l’avatar parmi des figures de la langue française](sans-fautes-avatars.webp)
 
 ||
 
@@ -148,7 +148,7 @@ L’application met en scène des figures de la langue française (Victor Hugo, 
 
 ---
 
-![Sans fautes : proposition de jouer en famille](sans-fautes-famille.png)
+![Sans fautes : proposition de jouer en famille](sans-fautes-famille.webp)
 
 ||
 
@@ -169,6 +169,6 @@ L’application propose de jouer à plusieurs. Ce n’est pas une priorité pour
 
 ||
 
-![Scholar : question du test de niveau](scholar-test-niveau.png)
+![Scholar : question du test de niveau](scholar-test-niveau.webp)
 
 > Test de niveau (application Scholar)

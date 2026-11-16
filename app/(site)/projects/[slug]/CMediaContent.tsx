@@ -8,7 +8,7 @@ import { SchemaUXEquipe } from "@/components/ui/SchemaUXEquipe";
 import { parseLine } from "@/lib/markdown";
 
 /*
- * Contenu de la page projet C-Média — maquette Figma « projectCmedia » (fichier portfolio, node 5763:30825).
+ * Contenu de la page projet C-Media — maquette Figma « projectCmedia » (fichier portfolio, node 5763:30825).
  * Textes : content/projects/c-media/page.md ; images : public/projects/c-media/.
  * Mobile : une colonne ; tablette et desktop (la tablette suit le desktop) : grille de 12 colonnes,
  * gouttière spacing/lg. Les blocs qui changent de place passent en « display: contents » à partir de la tablette
@@ -154,7 +154,7 @@ export function CMediaContent() {
       {/* L’entreprise */}
       <Section title={t.entreprise_titre}>
         <div className="flex flex-col gap-xl tablet:gap-xxl tablet:pb-lg">
-          {/* Cegedim & C-Média */}
+          {/* Cegedim & C-Media */}
           <div className={`flex flex-col gap-xl ${grid} tablet:gap-y-xxl`}>
             <h3 className="type-subheading tablet:col-span-12">{t.entreprise_groupe_titre}</h3>
             <div className="flex flex-col gap-xs tablet:row-start-2 tablet:col-span-4 tablet:gap-sm">

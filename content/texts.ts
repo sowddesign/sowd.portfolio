@@ -132,7 +132,7 @@ export const commun = texts("commun.md", communSource, [
   "methode_definition_titre",
   "methode_projet_titre",
   "methode_etape_suivante",
-  "methode_etape_suivante_mobile",
+  "methode_etape_suivante_court",
   "methode_precedente",
   "methode_suivante",
   "methode_ouvrir",
@@ -244,7 +244,7 @@ export const contactMessage = contactField("message", {
   icone: contact.message_icone,
 });
 
-/** Page projet C-Média (content/projects/c-media/page.md). */
+/** Page projet C-Media (content/projects/c-media/page.md). */
 export const cMedia = texts(
   "projects/c-media/page.md",
   cMediaSource,

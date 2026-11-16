@@ -30,30 +30,80 @@ image_textes:
     desktop: { x: 59.5, y: 22.5 }
     mobile: { x: 65.0, y: 21.0 }
 
-# « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace)
-definition: À compléter.
+# « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace).
+# *texte* = italique.
+definition: |
+  Le design d’interaction est une pratique consistant à concevoir les comportements des interfaces. Il définit comment elles réagissent aux actions des utilisateurs et comment elles les guident dans leur parcours.
 
-# Bouton vers le projet cité (texte et adresse)
-projet_bouton: À compléter
-projet_lien: /projects
+  Il s’appuie sur des micro-interactions, des feedbacks, des transitions, du son, des mouvements et d’autres signaux. Ces éléments rendent l’interface plus lisible, plus prévisible et plus agréable à utiliser.
+
+# Projet cité : nom du fichier dans content/methode/projets/ (introduction au projet et bouton vers le projet)
+projet: portfolio
 ---
 
-# « UTILISATION DANS UN PROJET » — texte sous l'en-tête de commentaires
+# « UTILISATION DANS UN PROJET » — texte sous l'en-tête de commentaires (l'introduction au projet vient du projet cité)
 #
-#   ## Titre                 → nouvelle partie (titre en body/accentuation)
-#   ---                      → nouvelle rangée
-#   ||                       → passe à la colonne de droite (sans « || » : pleine largeur)
-#   || bas                   → idem, colonne de droite calée en bas
-#   ligne vide               → nouvel élément dans la colonne
-#   ### Texte                → sous-titre (caption/accentuation)
-#   1. texte                 → liste numérotée (une ligne par élément)
-#   - texte                  → liste à puces (une ligne par élément)
-#   ![description](fichier.png) → image (dans le dossier des images de la page)
-#   > texte                  → légende (petite, en italique)
-#   = 47 | texte             → gros chiffre et son libellé
-#   [texte](lien) [texte]{brand} *italique* **gras** → comme dans les autres textes du site
-#   Lien vers un projet (/projects/…) : « Voir le projet » s'affiche au curseur.
+#   Même écriture que content/methode/pages/recherches-quantitatives.md (images PNG, JPEG, WebP ou GIF).
+#
+# Mobile (pas de maquette Figma, choix de l'utilisateur) : captures du survol et écrans de l'appui long
+# empilés ; bandeau animé en pleine largeur.
 #
 # Les lignes commençant par « # » suivi d'un espace sont des commentaires.
 
-À compléter.
+## Un portfolio qui se découvre
+
+Pour créer ce [Portfolio](/projects/portfolio), j’ai conçu un système d’interactions qui fait participer le visiteur au lieu de le laisser seulement lire, dans le but de stimuler sa curiosité.
+
+*Pour chaque page, je testais au moins deux versions, parfois trois, avant de retenir la plus efficace.*
+
+## Un système récurrent
+
+Certains éléments sont masqués au premier abord, mais se révèlent facilement : au survol sur ordinateur, par un appui long sur mobile.
+
+### Sur ordinateur : le survol
+
+![Page d’accueil du portfolio : le double diamant en noir et blanc, deux tournesols](survol-accueil.webp)
+
+---
+
+![Survol du titre « double diamant » : le curseur s’approche du schéma](survol-titre.webp)
+
+||
+
+![Survol de « problème » : le premier tournesol retrouve ses couleurs et son explication s’affiche](survol-probleme.webp)
+
+---
+
+Le double diamant est placé sur le chemin du défilement : le passage de la souris est presque inévitable.
+
+*En survolant, le visiteur révèle les couleurs, le schéma et les explications, et comprend que d’autres éléments du site réagissent de la même façon.*
+
+### Sur mobile : l’appui long
+
+![Page Recherches quantitatives sur mobile : la loupe en noir et blanc et l’indication « Reste appuyé »](appui-long-avant.webp)
+
+||
+
+![Page Recherches quantitatives sur mobile après l’appui long : la loupe en couleurs et ses mots-clés](appui-long-apres.webp)
+
+---
+
+Sans survol possible, l’appui long prend le relais. L’élément, d’abord en noir et blanc, retrouve ses couleurs et révèle des mots-clés.
+
+*Une indication incite au premier appui. Une fois le geste compris, il se réutilise partout sur le site.*
+
+## Guider le comportement
+
+Certains éléments sont conçus pour inciter à une action : de petites animations jouent le rôle d’appels à l’action (CTA).
+
+---
+
+![Feuilles de tournesol animées qui invitent au survol ou à l’appui long](feuilles-animees.gif)
+
+---
+
+*Ici, les feuilles s’animent pour inviter à survoler, ou à maintenir l’appui et révéler des informations cachées.*
+
+## Ce que cela a apporté
+
+Un même geste, appris une fois, se réutilise sur tout le site : la découverte devient un réflexe plutôt qu’un effort. Le visiteur s’implique davantage dans la lecture, sans que l’information essentielle ne soit jamais cachée.

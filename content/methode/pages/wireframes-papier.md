@@ -30,30 +30,59 @@ image_textes:
     desktop: { x: 62.8, y: 46.8 }
     mobile: { x: 63.1, y: 80.7 }
 
-# « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace)
-definition: À compléter.
+# « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace).
+# *texte* = italique.
+definition: |
+  Le wireframe papier représente une interface en très basse fidélité, dessinée ou assemblée à la main à partir de découpes, sans passer par un logiciel.
 
-# Bouton vers le projet cité (texte et adresse)
-projet_bouton: À compléter
-projet_lien: /projects
+  Il se concentre sur le « quoi » et le « où » (éléments, navigation, fonctionnalités) plutôt que sur le « look & feel ». On explore ainsi rapidement la structure, la hiérarchie des contenus et les parcours, et on itère très tôt à partir des besoins identifiés pendant la recherche.
+
+# Projet cité : nom du fichier dans content/methode/projets/ (introduction au projet et bouton vers le projet)
+projet: scholar
 ---
 
-# « UTILISATION DANS UN PROJET » — texte sous l'en-tête de commentaires
+# « UTILISATION DANS UN PROJET » — texte sous l'en-tête de commentaires (l'introduction au projet vient du projet cité)
 #
-#   ## Titre                 → nouvelle partie (titre en body/accentuation)
-#   ---                      → nouvelle rangée
-#   ||                       → passe à la colonne de droite (sans « || » : pleine largeur)
-#   || bas                   → idem, colonne de droite calée en bas
-#   ligne vide               → nouvel élément dans la colonne
-#   ### Texte                → sous-titre (caption/accentuation)
-#   1. texte                 → liste numérotée (une ligne par élément)
-#   - texte                  → liste à puces (une ligne par élément)
-#   ![description](fichier.png) → image (dans le dossier des images de la page)
-#   > texte                  → légende (petite, en italique)
-#   = 47 | texte             → gros chiffre et son libellé
-#   [texte](lien) [texte]{brand} *italique* **gras** → comme dans les autres textes du site
-#   Lien vers un projet (/projects/…) : « Voir le projet » s'affiche au curseur.
+#   Même écriture que content/methode/pages/recherches-quantitatives.md.
 #
 # Les lignes commençant par « # » suivi d'un espace sont des commentaires.
 
-À compléter.
+## Première version papier
+
+Lors du projet [Scholar](/projects/scholar), j’ai préféré itérer sur papier avant d’ouvrir Figma. Grâce au benchmark mené en amont, j’avais déjà beaucoup de matière : des écrans, un parcours, mais aussi des idées d’interactions et d’animations.
+
+> Dessiner à la main m’a permis de poser tout le parcours d’un coup, sans me laisser freiner par l’outil.
+
+## D’une interface au parcours complet
+
+En une seule planche, j’ai dessiné l’ensemble de l’onboarding, du premier écran jusqu’au test de niveau.
+
+---
+
+![Planche de wireframes papier de Scholar dessinée au stylo : écrans d’onboarding, de test de niveau et d’accueil](planche-scholar.webp)
+
+> Planche de wireframes papier de Scholar : l’onboarding (ligne du haut), le test de niveau (lignes du milieu) et l’écran d’accueil (en bas à gauche).
+
+---
+
+#### L’onboarding
+
+Accueil, consentement, puis une série de questions pour connaître l’utilisateur : qui il est, ce qu’il veut apprendre, son niveau estimé et le temps qu’il souhaite consacrer à chaque session.
+
+---
+
+#### Le test de niveau
+
+Des questions à choix multiple ou à saisie libre. Après chaque réponse, un écran d’explication indique si elle est juste et pourquoi.
+
+---
+
+#### Les premières idées graphiques
+
+Sur l’écran d’accueil, j’ai noté des pistes pour la direction artistique : une illustration à l’encre, la mise en avant de la typographie étudiée, un chargement animé autour des lettres.
+
+La barre de navigation y est aussi dessinée : cours, suivi de progression, collection, communauté et profil.
+
+## Ce que cela a apporté
+
+Le papier m’a permis de valider l’enchaînement des écrans avant de passer sur Figma. Les maquettes ont ensuite repris cette structure, en se concentrant sur l’interface et la direction artistique.

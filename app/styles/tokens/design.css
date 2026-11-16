@@ -231,6 +231,10 @@
   --audio-manager-handle-size: var(--p-number-12); /* 12 : rond de lecture (Figma, sans variable) */
   --audio-manager-seek-zone: var(--video-manager-seek-zone); /* zone cliquable au-dessus et au-dessous de la barre, comme la vidéo */
 
+  /* Prototype Figma intégré (pages méthode) : hauteur de la barre d'outils du haut de l'intégration, masquée en
+     décalant le cadre vers le haut (mesurée sur les captures de l'utilisateur : 48 px, sans variable Figma). */
+  --embed-figma-toolbar-height: var(--p-number-48);
+
   /*
    * navSideTiles — largeur maximale de la colonne du numéro (Figma sans variable, valeurs actuelles retenues
    * comme maximum par l'utilisateur). Elle rétrécit jusqu'à la largeur de 3 chiffres.
@@ -291,7 +295,7 @@
 
   /* Pages projet — flèche entre ce que j'ai appris et ce que j'aimerais faire (Figma 10, sans variable). */
   --project-arrow-space: 0.625rem; /* 10 */
-  /* Pages projet — logo C-Média (Figma 347 de large, sans variable). */
+  /* Pages projet — logo C-Media (Figma 347 de large, sans variable). */
   --project-c-media-logo-width: 21.6875rem; /* 347 */
 
   /* projetHubContainer « autres » — hauteur de la carte (Figma 230, sans variable). */
