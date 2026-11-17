@@ -54,7 +54,7 @@ export type TextFieldProps = {
    *  absent de Figma) : texte saisi en text/brand/dark (même couleur que les tokens « darkest »), icône « ! » en shape/brand/darkest ;
    *  l'erreur reste affichée, même en revenant dans le champ, jusqu'à la correction (demande de l'utilisateur). */
   isValid?: (value: string) => boolean;
-  /** En erreur : texte qui remplace details sous le trait, en text/brand/dark. */
+  /** En erreur : texte qui remplace details sous le trait, en text/brand/dark. « **texte** » : gras. */
   errorDetails?: string;
   name?: string;
   /** Autocomplétion du navigateur (attribut HTML autocomplete : given-name, family-name, email, tel…). */
@@ -238,7 +238,18 @@ export function TextField({
         <span aria-hidden className="w-full shrink-0 border-t border-shape-neutral-white" />
 
         {error && errorDetails ? (
-          <p className="type-caption-small-italic text-left text-text-brand-dark">{errorDetails}</p>
+          <p className="type-caption-small-italic text-left whitespace-pre-line text-text-brand-dark">
+            {/* « **texte** » : gras, graisse accentuation (comme RichText). */}
+            {errorDetails.split(/\*\*(.+?)\*\*/).map((part, i) =>
+              i % 2 === 1 ? (
+                <span key={i} className="[font-weight:var(--typography-weight-paragraph-accentuation)]">
+                  {part}
+                </span>
+              ) : (
+                part
+              ),
+            )}
+          </p>
         ) : (
           details && <p className="type-caption-small-italic text-left text-text-neutral-white">{details}</p>
         )}

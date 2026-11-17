@@ -7,7 +7,7 @@
 titre: Contact
 
 # Texte au-dessus de l'écran du visuel de photos (doubles espaces conservés)
-photos_texte: "Quelques  photos  pour  que  tu  vois  qui  lira  ton  message. :)"
+photos_texte: "Quelques  photos  pour  que  tu  voies  qui  lira  ton  message. :)"
 
 # Formulaire « me contacter » : petit texte au-dessus du titre (doubles espaces conservés), puis titre
 formulaire_details: "Si  tu  souhaites"
@@ -70,11 +70,13 @@ message_details: N’hésite pas à donner le plus de détails possible concerna
 message_obligatoire: oui
 message_icone: ""
 
-# Champ « email » en erreur (adresse invalide) : remplace son petit texte sous le trait jusqu'à la correction
-email_invalide: Il faut un @ et . quelque chose pour que votre adresse mail soit valide.
+# Champ « email » en erreur (adresse invalide) : remplace son petit texte sous le trait jusqu'à la correction.
+# « \n » (entre guillemets) : retour à la ligne, ici et dans telephone_invalide ;
+# « **texte** » : gras
+email_invalide: "**Adresse mail non valide :**\nVérifie qu'il ne manque pas « @ » ou « .com »."
 
 # Champ « telephone » en erreur (numéro trop court ou invalide) : remplace son petit texte sous le trait jusqu'à la correction
-telephone_invalide: "Il manque des chiffres ou le numéro n’est pas valide (ex. : 06 12 34 56 78 ou +33 6 12 34 56 78)."
+telephone_invalide: "**Téléphone non valide :**\nVérifie qu'il ne manque pas de chiffre."
 
 # Bouton du formulaire, avant et après l'envoi
 envoyer: Envoyer
@@ -86,10 +88,10 @@ alerte_envoye: Ton message a été correctement envoyé.
 # Échec : texte principal, puis petite ligne en italique dessous ("" = aucune).
 # Une adresse e-mail écrite dans ces textes devient un lien cliquable.
 # Échec : pas de connexion internet
-alerte_hors_ligne: Ton message n'a pas pu être envoyé dû à un problème de connexion.
+alerte_hors_ligne: Ton message n'a pas pu être envoyé en raison d’un problème de connexion.
 alerte_hors_ligne_details: N'oublie pas de copier ton message avant de rafraîchir la page.
 # Échec : toute autre erreur (service indisponible, envoi refusé…)
-alerte_echec: Ton message n'a pas pu être envoyé dû à un problème technique.
+alerte_echec: Ton message n'a pas pu être envoyé en raison d’un problème technique.
 alerte_echec_details: Tu peux me contacter directement via sowd.design@gmail.com.
 
 # Objet du mail que tu reçois

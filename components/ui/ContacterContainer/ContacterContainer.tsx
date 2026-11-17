@@ -22,7 +22,8 @@ import { isValidPhone } from "./phone";
  * Champs, textes, obligatoire, icônes et types : content/pages/contact.md.
  * Champs « au moins un » (e-mail et téléphone, node 5869:26518) : regroupés pleine largeur sous leur texte
  * (captionText/small/italic, text/brand/bright) ; tablette deux colonnes et desktop : sur une ligne séparés par « et / ou »
- * (body/regular), texte → ligne spacing/sm ; une colonne (mobile, tabletBis) : l'un sous l'autre, tout à spacing/lg.
+ * (body/regular) ; une colonne (mobile, tabletBis) : l'un sous l'autre. Tout à spacing/lg (texte → champs : 24, choix de
+ * l'utilisateur ; Figma desktop : spacing/sm).
  * Puis un trait shape/brand/bright, l'objet, et le message suivi du bouton, chacun sur sa ligne de la grille.
  * Légende « * : obligatoire » (captionText/regular, choix de l'utilisateur, text/brand/bright) : flottante, spacing/xs sous le trait du titre,
  * à spacing/md (mobile) ou spacing/lg du bord droit (demande de l'utilisateur).
@@ -330,7 +331,7 @@ export function ContacterContainer({ className = "" }: ContacterContainerProps) 
             <div
               key="groupe"
               data-groupe
-              className={`flex flex-col gap-lg tablet:col-span-full tablet:gap-sm tablet:@max-[33.875rem]/contacter:gap-lg`}
+              className="flex flex-col gap-lg tablet:col-span-full"
             >
               <p className="type-caption-small-italic text-text-brand-bright">{contact.au_moins_un_texte}</p>
               <div
