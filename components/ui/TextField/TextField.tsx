@@ -57,8 +57,12 @@ export type TextFieldProps = {
   /** En erreur : texte qui remplace details sous le trait, en text/brand/dark. */
   errorDetails?: string;
   name?: string;
+  /** Autocomplétion du navigateur (attribut HTML autocomplete : given-name, family-name, email, tel…). */
+  autoComplete?: string;
   defaultValue?: string;
   onValueChange?: (value: string) => void;
+  /** Filtre de la saisie : les caractères qu'il retire ne s'écrivent pas (ex. lettres dans un téléphone). Pas une propriété Figma. */
+  sanitize?: (value: string) => string;
   className?: string;
 };
 
@@ -74,8 +78,10 @@ export function TextField({
   isValid,
   errorDetails,
   name,
+  autoComplete,
   defaultValue = "",
   onValueChange,
+  sanitize,
   className = "",
 }: TextFieldProps) {
   const id = useId();
@@ -91,7 +97,8 @@ export function TextField({
 
   const fieldRef = useRef<HTMLInputElement & HTMLTextAreaElement>(null);
 
-  const update = (next: string) => {
+  const update = (input: string) => {
+    const next = sanitize ? sanitize(input) : input;
     setValue(next);
     onValueChange?.(next);
   };
@@ -109,6 +116,7 @@ export function TextField({
     ref: fieldRef,
     id,
     name,
+    autoComplete,
     value,
     required,
     "aria-label": label,
@@ -125,6 +133,13 @@ export function TextField({
       error ? "text-text-brand-dark" : "text-text-neutral-white",
       raised ? "w-full" : "absolute inset-0 opacity-0",
       "resize-none [field-sizing:content]",
+      // Rempli par l'autocomplétion du navigateur : même aspect qu'un champ rempli à la main (demande de l'utilisateur).
+      // Texte : couleur du champ écrite en dur (le navigateur impose sa propre couleur, currentColor ne suffit pas).
+      // Fond : celui du navigateur (forcé par lui) est retardé indéfiniment par une transition très longue.
+      error
+        ? "autofill:[-webkit-text-fill-color:var(--color-text-brand-dark)]"
+        : "autofill:[-webkit-text-fill-color:var(--color-text-neutral-white)]",
+      "autofill:[transition:background-color_100000s_step-end]",
       type === "textArea" ? "grow" : "",
     ].join(" "),
   };
@@ -144,7 +159,8 @@ export function TextField({
   const titleText = (
     <>
       {label}
-      {required && "*"}
+      {/* Astérisque en text/brand/bright (Figma, node 4440:8265). */}
+      {required && <span className="text-text-brand-bright">*</span>}
     </>
   );
 

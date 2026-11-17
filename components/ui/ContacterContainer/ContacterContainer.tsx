@@ -1,12 +1,13 @@
 "use client";
 
-import { useLayoutEffect, useRef, useState, type FormEvent } from "react";
+import { Fragment, useLayoutEffect, useRef, useState, type FormEvent } from "react";
 import { contact, contactFields, contactMessage, contactObjet, type ContactField } from "@/content/texts";
 import { AlertMessage, type AlertMessageType } from "../AlertMessage";
 import { HyperLink } from "../HyperLink";
 import { PageHead } from "../PageHead";
 import { TextField } from "../TextField";
 import { TextualButton } from "../TextualButton";
+import { isValidPhone } from "./phone";
 
 /*
  * Formulaire de contact — composant Figma « contacterContainer » (fichier portfolio, node 5051:23973).
@@ -19,8 +20,14 @@ import { TextualButton } from "../TextualButton";
  * Les écarts de la grille Form (48 / 24) ne sont pas liés à une variable dans Figma : spacing/xxl et spacing/lg.
  *
  * Champs, textes, obligatoire, icônes et types : content/pages/contact.md.
- * Envoyer (choix de l'utilisateur) : désactivé tant qu'un champ obligatoire est vide ou qu'une adresse
- * e-mail saisie n'est pas valide.
+ * Champs « au moins un » (e-mail et téléphone, node 5869:26518) : regroupés pleine largeur sous leur texte
+ * (captionText/small/italic, text/brand/bright) ; tablette deux colonnes et desktop : sur une ligne séparés par « et / ou »
+ * (body/regular), texte → ligne spacing/sm ; une colonne (mobile, tabletBis) : l'un sous l'autre, tout à spacing/lg.
+ * Puis un trait shape/brand/bright, l'objet, et le message suivi du bouton, chacun sur sa ligne de la grille.
+ * Légende « * : obligatoire » (captionText/regular, choix de l'utilisateur, text/brand/bright) : flottante, spacing/xs sous le trait du titre,
+ * à spacing/md (mobile) ou spacing/lg du bord droit (demande de l'utilisateur).
+ * Envoyer (choix de l'utilisateur) : désactivé tant qu'un champ obligatoire est vide, qu'aucun champ « au moins un »
+ * n'est rempli correctement, ou qu'une adresse e-mail saisie n'est pas valide.
  *
  * Envoi (Web3Forms, clé NEXT_PUBLIC_WEB3FORMS_KEY ; le mail arrive à l'adresse liée à la clé) :
  * une alerte flottante (AlertMessage) sort du bas du conteneur, par-dessus le contenu : progress pendant l'envoi, puis validate (minutée)
@@ -68,14 +75,20 @@ const inputTypes = { texte: "text", email: "email", telephone: "tel" } as const;
  */
 const ONE_COLUMN = "tablet:@max-[33.875rem]/contacter:col-span-full";
 
-/* Adresse e-mail : texte@domaine.extension, sans espace. Le téléphone n'est pas vérifié (formats internationaux). */
+/* Adresse e-mail : texte@domaine.extension, sans espace. Téléphone : voir phone.ts. */
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const isValid = (field: ContactField, value: string) => {
   const text = value.trim();
-  if (text === "") return !field.obligatoire;
-  return field.type !== "email" || EMAIL_PATTERN.test(text);
+  if (text === "") return !field.obligatoire || field.auMoinsUn;
+  if (field.type === "email") return EMAIL_PATTERN.test(text);
+  if (field.type === "telephone") return isValidPhone(text);
+  return true;
 };
+
+/* Champs « au moins un » : regroupés à la place du premier d'entre eux. */
+const groupIndexes = contactFields.flatMap((field, index) => (field.auMoinsUn ? [index] : []));
+const groupStart = groupIndexes[0] ?? -1;
 
 export type ContacterContainerProps = {
   className?: string;
@@ -83,6 +96,8 @@ export type ContacterContainerProps = {
 
 export function ContacterContainer({ className = "" }: ContacterContainerProps) {
   const [values, setValues] = useState<string[]>(() => contactFields.map(() => ""));
+  /* Champs « au moins un » remplis, dans l'ordre où ils l'ont été : le premier garde l'astérisque. */
+  const [filledOrder, setFilledOrder] = useState<number[]>([]);
   const [objet, setObjet] = useState("");
   const [message, setMessage] = useState("");
   const [sent, setSent] = useState(false);
@@ -103,6 +118,7 @@ export function ContacterContainer({ className = "" }: ContacterContainerProps) 
     };
     setPrefill(next);
     setValues(next.values);
+    setFilledOrder(groupIndexes);
     setObjet(next.objet);
     setMessage(next.message);
     setSent(false);
@@ -113,6 +129,7 @@ export function ContacterContainer({ className = "" }: ContacterContainerProps) 
   const [alertOpen, setAlertOpen] = useState(false);
 
   const ready = contactFields.every((field, index) => isValid(field, values[index])) &&
+    (groupIndexes.length === 0 || groupIndexes.some((index) => values[index].trim() !== "")) &&
     isValid(contactObjet, objet) &&
     isValid(contactMessage, message);
 
@@ -134,8 +151,13 @@ export function ContacterContainer({ className = "" }: ContacterContainerProps) 
       const style = getComputedStyle(form);
       const inner = form.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
       const half = (inner - (parseFloat(style.columnGap) || 0)) / 2;
-      const first = contactFields.findIndex((_, index) => {
-        const field = form.children[index] as HTMLElement | undefined;
+      // Champs simples seulement, dans l'ordre (le groupe « au moins un » est toujours pleine largeur).
+      const fieldEls = Array.from(form.children).filter((el) => !el.hasAttribute("data-groupe"));
+      const first = contactFields.findIndex((contactField, index) => {
+        if (contactField.auMoinsUn) return false;
+        const field = fieldEls[contactFields.slice(0, index).filter((other) => !other.auMoinsUn).length] as
+          | HTMLElement
+          | undefined;
         const text = field?.querySelector("textarea");
         if (!field || !text || values[index] === "") return false;
         measure.textContent = values[index];
@@ -193,7 +215,8 @@ export function ContacterContainer({ className = "" }: ContacterContainerProps) 
           headers: { "Content-Type": "application/json", Accept: "application/json" },
           body: JSON.stringify({
             access_key: key,
-            subject: contact.mail_objet,
+            // Objet saisi : « fr:portfolio : <objet> » (demande de l'utilisateur) ; sinon l'objet par défaut.
+            subject: objet.trim() ? `${contact.mail_objet_debut}${objet.trim()}` : contact.mail_objet,
             from_name: name,
             // « email » : adresse de réponse du mail reçu (Web3Forms).
             ...(emailIndex !== -1 && values[emailIndex].trim() !== "" ? { email: values[emailIndex].trim() } : {}),
@@ -236,9 +259,46 @@ export function ContacterContainer({ className = "" }: ContacterContainerProps) 
     iconAfter: "filled" as const,
   });
 
+  const renderField = (index: number, className: string) => {
+    const field = contactFields[index];
+    return (
+      <TextField
+        key={`${field.titre}-${fillKey}`}
+        {...fieldProps(field)}
+        // « Au moins un » (demande de l'utilisateur) : tant qu'aucun champ du groupe n'est rempli, tous ont l'astérisque ;
+        // ensuite, seul le premier rempli le garde (si on le vide, il passe au suivant encore rempli).
+        required={field.auMoinsUn ? filledOrder.length === 0 || filledOrder[0] === index : field.obligatoire}
+        defaultValue={prefill?.values[index]}
+        inputType={inputTypes[field.type]}
+        // Téléphone : seuls chiffres, espaces, +, points, tirets, barres obliques et parenthèses s'écrivent (demande de l'utilisateur).
+        sanitize={field.type === "telephone" ? (value) => value.replace(/[^\d\s+.\-/()]/g, "") : undefined}
+        autoComplete={field.autocompletion}
+        isValid={field.type === "texte" ? undefined : (value) => isValid(field, value)}
+        errorDetails={
+          field.type === "email" ? contact.email_invalide : field.type === "telephone" ? contact.telephone_invalide : undefined
+        }
+        onValueChange={(value) => {
+          setValues((current) => current.map((old, i) => (i === index ? value : old)));
+          if (field.auMoinsUn) {
+            const filled = value.trim() !== "";
+            setFilledOrder((order) =>
+              filled ? (order.includes(index) ? order : [...order, index]) : order.filter((other) => other !== index),
+            );
+          }
+        }}
+        className={className}
+      />
+    );
+  };
+
   return (
     <div className={`@container/contacter relative flex w-full flex-col gap-xxl ${className}`}>
-      <PageHead type="H2" details={contact.formulaire_details} title={contact.formulaire_titre} />
+      <div className="relative">
+        <PageHead type="H2" details={contact.formulaire_details} title={contact.formulaire_titre} />
+        <p className="type-caption-regular absolute top-full right-md mt-xs text-text-brand-bright tablet:right-lg">
+          {contact.obligatoire_legende}
+        </p>
+      </div>
 
       {DEV && (
         <div className="type-caption-regular mx-md -my-lg flex flex-wrap gap-lg text-text-neutral-white tablet:mx-lg">
@@ -261,43 +321,61 @@ export function ContacterContainer({ className = "" }: ContacterContainerProps) 
         onSubmit={submit}
         className="relative flex w-full flex-col gap-xxl px-md tablet:grid tablet:grid-cols-8 tablet:gap-x-lg tablet:gap-y-xxl tablet:px-lg desktop:grid-cols-12"
       >
-        {contactFields.map((field, index) => (
-          <TextField
-            key={`${field.titre}-${fillKey}`}
-            {...fieldProps(field)}
-            defaultValue={prefill?.values[index]}
-            inputType={inputTypes[field.type]}
-            isValid={field.type === "email" ? (value) => EMAIL_PATTERN.test(value.trim()) : undefined}
-            errorDetails={field.type === "email" ? contact.email_invalide : undefined}
-            onValueChange={(value) => setValues((current) => current.map((old, i) => (i === index ? value : old)))}
-            className={index >= fullFrom ? "col-span-full" : `tablet:col-span-4 ${ONE_COLUMN} desktop:col-span-6`}
-          />
-        ))}
+        {contactFields.map((field, index) => {
+          if (!field.auMoinsUn) {
+            return renderField(index, index >= fullFrom ? "col-span-full" : `tablet:col-span-4 ${ONE_COLUMN} desktop:col-span-6`);
+          }
+          if (index !== groupStart) return null;
+          return (
+            <div
+              key="groupe"
+              data-groupe
+              className={`flex flex-col gap-lg tablet:col-span-full tablet:gap-sm tablet:@max-[33.875rem]/contacter:gap-lg`}
+            >
+              <p className="type-caption-small-italic text-text-brand-bright">{contact.au_moins_un_texte}</p>
+              <div
+                className={`flex flex-col gap-lg tablet:flex-row tablet:items-center tablet:@max-[33.875rem]/contacter:flex-col tablet:@max-[33.875rem]/contacter:items-stretch`}
+              >
+                {groupIndexes.map((groupIndex, order) => (
+                  <Fragment key={groupIndex}>
+                    {order > 0 && (
+                      <p className="type-body-regular whitespace-nowrap text-text-neutral-white">
+                        {contact.au_moins_un_separateur}
+                      </p>
+                    )}
+                    {renderField(groupIndex, `tablet:min-w-0 tablet:flex-1 tablet:@max-[33.875rem]/contacter:flex-none`)}
+                  </Fragment>
+                ))}
+              </div>
+            </div>
+          );
+        })}
 
         {/* Copie invisible pour mesurer la largeur d'un texte saisi sur une ligne (même style que le champ). */}
         <span ref={measureRef} aria-hidden className="type-body-regular pointer-events-none invisible absolute whitespace-pre" />
 
-        {/* Textarea (messageContainer en mobile) : objet et message, puis bouton, pleine largeur. */}
-        <div className="flex w-full flex-col gap-lg tablet:col-span-full">
-          {/* Objet puis message : spacing/xxl (48, demande de l'utilisateur ; Figma : 24 sans variable). */}
-          <div className="flex flex-col gap-xxl">
-            <TextField
-              key={fillKey}
-              {...fieldProps(contactObjet)}
-              defaultValue={prefill?.objet}
-              onValueChange={setObjet}
-            />
-            <TextField
-              key={`${messageKey}-${fillKey}`}
-              defaultValue={messageKey === prefill?.messageKey ? prefill?.message : undefined}
-              type="textArea"
-              {...fieldProps(contactMessage)}
-              onValueChange={(value) => {
-                setMessage(value);
-                if (value !== "") setSent(false);
-              }}
-            />
-          </div>
+        {/* Trait shape/brand/bright, puis objet : chacun sur sa ligne de la grille (spacing/xxl entre elles). */}
+        <span aria-hidden data-groupe className="w-full border-t border-shape-brand-bright tablet:col-span-full" />
+        <TextField
+          key={fillKey}
+          {...fieldProps(contactObjet)}
+          defaultValue={prefill?.objet}
+          onValueChange={setObjet}
+          className="tablet:col-span-full"
+        />
+
+        {/* Textarea (messageContainer en mobile) : message puis bouton, pleine largeur. */}
+        <div data-groupe className="flex w-full flex-col gap-lg tablet:col-span-full">
+          <TextField
+            key={`${messageKey}-${fillKey}`}
+            defaultValue={messageKey === prefill?.messageKey ? prefill?.message : undefined}
+            type="textArea"
+            {...fieldProps(contactMessage)}
+            onValueChange={(value) => {
+              setMessage(value);
+              if (value !== "") setSent(false);
+            }}
+          />
           {ready || sent ? (
             <TextualButton type="submit" color="white" icon={sent ? "Check" : "ArrowRight"} iconPosition="right">
               {sent ? contact.envoye : contact.envoyer}
