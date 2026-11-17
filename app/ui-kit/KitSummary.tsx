@@ -15,7 +15,9 @@ import { NavigationButton } from "@/components/ui/NavigationButton";
  * le titre du composant juste sous l'en-tête.
  */
 
-export type KitSummaryGroup = { title: string; items: { id: string; label: string }[] };
+/** Élément du sommaire : id = ancre d'un composant de la page ; href = lien vers une autre page. */
+export type KitSummaryItem = { label: string } & ({ id: string; href?: undefined } | { href: string; id?: undefined });
+export type KitSummaryGroup = { title: string; items: KitSummaryItem[] };
 
 /** Événement qui ouvre le sommaire depuis un autre bouton (KitShortcut) ; detail : élément d'où il grandit. */
 export const openSummaryEvent = "ui-kit:open-summary";
@@ -141,11 +143,17 @@ function SummaryOverlay({
               <div key={group.title} className="flex flex-col gap-xs">
                 <h2 className="type-body-accentuation">{group.title}</h2>
                 {/* Textes du sommaire en body/accentuation (demande de l'utilisateur), à la place de button/md. */}
-                {group.items.map((item) => (
-                  <NavigationButton key={item.id} size="md" onClick={() => close(item.id)}>
-                    <span className="type-body-accentuation">{item.label}</span>
-                  </NavigationButton>
-                ))}
+                {group.items.map((item) =>
+                  item.href !== undefined ? (
+                    <NavigationButton key={item.href} size="md" href={item.href}>
+                      <span className="type-body-accentuation">{item.label}</span>
+                    </NavigationButton>
+                  ) : (
+                    <NavigationButton key={item.id} size="md" onClick={() => close(item.id)}>
+                      <span className="type-body-accentuation">{item.label}</span>
+                    </NavigationButton>
+                  ),
+                )}
               </div>
             ))}
           </nav>

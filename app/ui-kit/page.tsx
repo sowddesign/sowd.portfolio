@@ -31,6 +31,7 @@ import { MessageContainer } from "@/components/ui/MessageContainer";
 import { DoubleFlower } from "@/components/ui/DoubleFlower";
 import { getPhotos } from "@/lib/photos";
 import { ProgressBarDemo } from "./ProgressBarDemo";
+import { AlertMessageDemo } from "./AlertMessageDemo";
 import { VideoControlsDemo } from "./VideoControlsDemo";
 import { NavSideMenusDemo } from "./NavSideMenusDemo";
 import { NavSideTilesDemo } from "./NavSideTilesDemo";
@@ -169,6 +170,7 @@ const summary: KitSummaryGroup[] = [
     items: [
       { id: "text-field", label: "TextField" },
       { id: "contacter-container", label: "ContacterContainer" },
+      { id: "alert-message", label: "AlertMessage" },
     ],
   },
   {
@@ -192,6 +194,15 @@ const summary: KitSummaryGroup[] = [
     ],
   },
   { title: "Vidéo", items: [{ id: "video-controls", label: "VideoManager" }] },
+  {
+    title: "Pages",
+    items: [
+      /* Adresse inconnue : affiche app/not-found.tsx. */
+      { href: "/page-introuvable", label: "Page 404" },
+      /* Éditeur de formes du motif, servi par app/ui-kit/dessin en développement seulement. */
+      { href: "/ui-kit/dessin/motif-dessin.html", label: "Création de dessin" },
+    ],
+  },
 ];
 
 export default async function UiKitPage() {
@@ -438,6 +449,12 @@ export default async function UiKitPage() {
         </h2>
         <ContacterContainer />
       </section>
+      <section className="flex flex-col gap-md bg-background-neutral-black py-xxl text-text-neutral-white">
+        <h2 id="alert-message" className="type-h4 px-(--grid-spacing)">
+          AlertMessage — progress, validate, error
+        </h2>
+        <AlertMessageDemo />
+      </section>
 
       {/* Démarche UX */}
       <section className="flex flex-col gap-md bg-background-neutral-black py-xxl text-text-neutral-white">
@@ -519,7 +536,7 @@ export default async function UiKitPage() {
       </section>
       <section className="flex flex-col gap-md bg-background-brand-bright p-xxl text-text-neutral-black">
         <h2 id="nav-side-menus" className="type-h4">
-          NavSideMenus — tuiles, compteur « Terminés » et tuile vide
+          NavSideMenus — tuiles, compteur « Terminés », tuile Bonus et tuile vide
         </h2>
         <NavSideMenusDemo />
       </section>

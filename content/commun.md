@@ -170,4 +170,14 @@ methode_agrandir: Agrandir l’image
 methode_image_fermer: Fermer l’image agrandie
 # Menu des étapes : compteur d'étapes terminées (en affichage réduit, lu seulement par les lecteurs d'écran)
 methode_terminees: Terminés
+# Tuile « Bonus » qui remplace le compteur quand toutes les pages de l'étape sont lues : numéro, puis texte
+methode_bonus: Bonus
+methode_bonus_texte: Lecture complétée
+# Page bonus : premier bouton sous l'image (le second reprend methode_etape_suivante), puis son adresse
+methode_bonus_page_secrete: Voir la page secrète
+# Texte court du bouton, quand le texte ne tient pas sur une ligne (comme les autres pages de la méthode)
+methode_bonus_page_secrete_court: Page secrète
+methode_bonus_page_secrete_lien: /page-secrete
+# Bouton de téléchargement dans l'image (image haute qualité) : texte accessible et texte au curseur
+methode_bonus_telecharger: Télécharger
 ---

@@ -11,7 +11,7 @@ entete_texte: Cette page n’existe pas ou a été déplacée.
 retour_accueil: Retourner à l’accueil
 
 # Indice de la page secrète
-indice: Accédez à la page secrète grâce à la graine tout en bas.
+indice: Accédez à la page secrète en redonnant la tige à cette fleur.
 
 # Graine à tirer (lecteur d'écran)
 graine: Graine à tirer jusqu’au logo

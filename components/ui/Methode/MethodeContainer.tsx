@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 import { commun } from "@/content/texts";
 import type { MethodeIntroContent, MethodePageContent, MethodePageEntry, MethodeStep } from "@/lib/methode";
 import { useCursorLabel } from "../CursorLabel";
@@ -9,8 +9,10 @@ import { NavSideMenus } from "../NavSideMenus";
 import type { NavSideTileLayout } from "../NavSideTiles";
 import { TextualButton } from "../TextualButton";
 import { tabletQuery, useMediaQuery } from "../use-media-query";
+import { MethodeFinish } from "./MethodeFinish";
 import { MethodeIntro } from "./MethodeIntro";
 import { MethodePage } from "./MethodePage";
+import { readingServerSnapshot, readingSnapshot, saveReading, subscribeReading } from "./reading-store";
 
 /*
  * Méthode, conteneur des étapes — composant Figma « methodeContainer » (fichier portfolio, node 4284:4168).
@@ -41,12 +43,17 @@ import { MethodePage } from "./MethodePage";
  *   (Figma : brand, black demandé par l'utilisateur ; le Plus tourne en X, IconButton « turned »),
  *   sans texte au curseur (tactile). Étape ouverte : liste des pages ; la page choisie s'ouvre sous sa tuile
  *   et repousse les suivantes (variante Figma 01Demo). La tuile choisie reste collée sous l'en-tête du site
- *   (--page-header-height) ; la ligne de l'étape ouverte aussi selon STICKY_STEP_ROW (A/B test) ; choisir une tuile ramène en haut de celle-ci,
+ *   (--page-header-height) ; la ligne de l'étape ouverte aussi selon STICKY_STEP_ROW (A/B test), et toujours quand aucune
+ *   page n'est ouverte (tuiles fermées ou page Bonus ouverte, demande de l'utilisateur : « Découvrir » reste à l'écran) ; choisir une tuile ramène en haut de celle-ci,
  *   défilement doux et court (--motion-duration-base, --motion-ease-out) ; refermer la tuile ouverte ou ouvrir une autre étape ramène au choix de la page,
  *   sans animation (demandes de l'utilisateur).
  * Desktop et tablette : choisir une tuile (clic ou glisse depuis l'introduction) cale le haut du conteneur
  *   sous l'en-tête du site, défilement doux natif (demande de l'utilisateur).
- * Progression de lecture : gardée par page (la plus grande valeur atteinte), affichée dans les tuiles.
+ * Page « Bonus » (desktop et tablette) : tuile qui remplace le compteur « Terminés » quand toutes les pages de l'étape
+ *   sont lues (NavSideMenus) ; elle ouvre MethodeFinish (variante Figma finish) à la place de la page.
+ *   Mobile : la page Bonus s'ouvre sous la tuile, comme les autres pages (choix de l'utilisateur).
+ * Progression de lecture : gardée par page (la plus grande valeur atteinte), affichée dans les tuiles,
+ *   et gardée entre les visites (localStorage, demande de l'utilisateur ; pas l'intro, qui reste par visite).
  * Lien vers une page de la méthode depuis une autre page du site : /?methode=<nom de la page>
  *   (nom du fichier dans content/methode/pages/, ex. design-system). L'étape et la page s'ouvrent dès l'arrivée,
  *   puis un seul défilement doux mène à la page ouverte (desktop : haut du conteneur sous l'en-tête ; mobile :
@@ -120,10 +127,10 @@ function StepTitle({ step }: { step: MethodeStep }) {
   );
 }
 
+/* Progression gardée entre les visites (reading-store, localStorage). */
 function useProgress() {
-  const [progress, setProgress] = useState<Record<string, number>>({});
-  const update = (slug: string, value: number) =>
-    setProgress((all) => (value > (all[slug] ?? 0) ? { ...all, [slug]: value } : all));
+  const progress = useSyncExternalStore(subscribeReading, readingSnapshot, readingServerSnapshot);
+  const update = saveReading;
   const stepsOf = (pages: MethodePageEntry[]) =>
     pages.map((page) => ({
       number: page.number,
@@ -149,7 +156,17 @@ export function MethodeContainer({ steps, className = "" }: MethodeContainerProp
 
 function MethodeContainerDesktop({ steps, className }: MethodeContainerProps) {
   const [current, setCurrent] = useState(0);
-  const [selected, setSelected] = useState<number | null>(null);
+  const [selected, setSelectedPage] = useState<number | null>(null);
+  /* Page « Bonus » ouverte (aucune page choisie alors). */
+  const [bonusOpen, setBonusOpen] = useState(false);
+  const setSelected = (index: number | null) => {
+    setBonusOpen(false);
+    setSelectedPage(index);
+  };
+  const toggleBonus = () => {
+    setSelectedPage(null);
+    setBonusOpen((open) => !open);
+  };
   const [layout, setLayout] = useState<NavSideTileLayout>("desktop");
   /* Largeur d'une moitié (desktop), pour mesurer la liste même quand elle est réduite. */
   const bodyRef = useRef<HTMLDivElement>(null);
@@ -183,12 +200,12 @@ function MethodeContainerDesktop({ steps, className }: MethodeContainerProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const root = rootRef.current;
-    if (selected === null || !root) return;
+    if ((selected === null && !bonusOpen) || !root) return;
     const top = root.getBoundingClientRect().top + window.scrollY - cssNumber("--page-header-height");
     if (Math.abs(window.scrollY - top) < 1) return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     window.scrollTo({ top, behavior: reduce ? "instant" : "smooth" });
-  }, [selected, current]);
+  }, [selected, bonusOpen, current]);
   const step = steps[current];
   const tablet = layout === "reduced";
   /* Texte au curseur des boutons « précédente » et « suivante » : « Étape : » et le nom de l'étape visée
@@ -285,6 +302,9 @@ function MethodeContainerDesktop({ steps, className }: MethodeContainerProps) {
             steps={stepsOf(step.pages)}
             selected={selected}
             onSelectedChange={setSelected}
+            bonus={Boolean(step.finish)}
+            bonusSelected={bonusOpen}
+            onBonusToggle={toggleBonus}
             measureWidth={half}
             onLayoutChange={setLayout}
             className="grow"
@@ -292,7 +312,9 @@ function MethodeContainerDesktop({ steps, className }: MethodeContainerProps) {
         </div>
         <span aria-hidden className="block shrink-0 border-l border-shape-neutral-black" />
         <div ref={pageRef} className="min-w-0 flex-1">
-          {page ? (
+          {bonusOpen && step.finish ? (
+            <MethodeFinish content={step.finish} onNext={next} />
+          ) : page ? (
             <PageGlide
               nextPage={glide === null ? null : (steps[glide].pages[0]?.content ?? null)}
               onLand={() => {
@@ -333,7 +355,13 @@ function MethodeContainerDesktop({ steps, className }: MethodeContainerProps) {
 
 function MethodeContainerMobile({ steps, className }: MethodeContainerProps) {
   const [open, setOpen] = useState<number | null>(null);
-  const [selected, setSelected] = useState<number | null>(null);
+  const [selected, setSelectedPage] = useState<number | null>(null);
+  /* Page « Bonus » ouverte sous sa tuile (aucune page choisie alors). */
+  const [bonusOpen, setBonusOpen] = useState(false);
+  const setSelected = (index: number | null) => {
+    setBonusOpen(false);
+    setSelectedPage(index);
+  };
   const { update, stepsOf } = useProgress();
   const rootRef = useRef<HTMLDivElement>(null);
   /* Hauteur de la ligne de l'étape ouverte : la tuile choisie se colle juste dessous. */
@@ -346,7 +374,9 @@ function MethodeContainerMobile({ steps, className }: MethodeContainerProps) {
     observer.observe(row);
     return () => observer.disconnect();
   }, [open]);
-  const stickyTop = `calc(var(--page-header-height, 0px) + ${STICKY_STEP_ROW ? rowHeight : 0}px)`;
+  /* Ligne de l'étape ouverte collée sous l'en-tête : STICKY_STEP_ROW, ou aucune page ouverte (demande de l'utilisateur). */
+  const stickyRow = STICKY_STEP_ROW || selected === null;
+  const stickyTop = `calc(var(--page-header-height, 0px) + ${stickyRow ? rowHeight : 0}px)`;
 
   /* Ouverture par l'adresse : défilement doux jusqu'à la tuile (au lieu du passage direct d'un choix de tuile). */
   const smoothNextRef = useLinkedPage(steps, (stepIndex, pageIndex) => {
@@ -362,6 +392,12 @@ function MethodeContainerMobile({ steps, className }: MethodeContainerProps) {
     backToRowRef.current = index === null;
     setSelected(index);
   };
+  /* Tuile Bonus : même geste qu'une tuile de page (refermer ramène au choix de la page). */
+  const toggleBonus = () => {
+    backToRowRef.current = bonusOpen;
+    setSelectedPage(null);
+    setBonusOpen((current) => !current);
+  };
   /* Levé par « Prochaine étape » : la page suivante s'affiche directement en place, sans défilement visible
      ni clignement (demande de l'utilisateur). */
   const instantNextRef = useRef(false);
@@ -369,7 +405,7 @@ function MethodeContainerMobile({ steps, className }: MethodeContainerProps) {
   /* Tuile choisie : ramenée en haut, sous l'en-tête et la ligne de l'étape (l'ancienne page refermée
      a pu raccourcir la page au-dessus). */
   useLayoutEffect(() => {
-    if (selected === null) {
+    if (selected === null && !bonusOpen) {
       /* Tuile refermée ou autre étape ouverte : retour au choix de la page, la ligne de l'étape sous l'en-tête du site
          (demande de l'utilisateur). */
       const block = backToRowRef.current ? rowRef.current?.parentElement : null;
@@ -388,8 +424,13 @@ function MethodeContainerMobile({ steps, className }: MethodeContainerProps) {
     const tile = rootRef.current?.querySelector<HTMLElement>("[data-selected-tile]");
     if (!tile) return;
     const header = cssNumber("--page-header-height");
-    const row = STICKY_STEP_ROW ? (rowRef.current?.offsetHeight ?? 0) : 0;
-    const top = tile.getBoundingClientRect().top + window.scrollY - header - row;
+    const row = stickyRow ? (rowRef.current?.offsetHeight ?? 0) : 0;
+    const tileTop = tile.getBoundingClientRect().top + window.scrollY - header - row;
+    /* Page « Bonus » : son bas (trait sous les boutons) calé en bas de l'écran, les tuiles au-dessus restent visibles
+       (demande de l'utilisateur) ; plus haute que l'écran : tuile Bonus en haut, comme les autres pages. */
+    const top = bonusOpen
+      ? Math.min(tileTop, tile.getBoundingClientRect().bottom + window.scrollY - window.innerHeight)
+      : tileTop;
     const linked = smoothNextRef.current;
     const instant = instantNextRef.current;
     smoothNextRef.current = false;
@@ -412,7 +453,7 @@ function MethodeContainerMobile({ steps, className }: MethodeContainerProps) {
     } else {
       return quickScrollTo(top);
     }
-  }, [selected, open, smoothNextRef]);
+  }, [selected, bonusOpen, open, smoothNextRef, stickyRow]);
 
   const toggle = (index: number) => {
     backToRowRef.current = open !== null && open !== index;
@@ -439,7 +480,7 @@ function MethodeContainerMobile({ steps, className }: MethodeContainerProps) {
             <div
               ref={isOpen ? rowRef : undefined}
               className={
-                isOpen && STICKY_STEP_ROW ? "sticky top-(--page-header-height,0px) z-2 bg-background-neutral-white" : ""
+                isOpen && stickyRow ? "sticky top-(--page-header-height,0px) z-2 bg-background-neutral-white" : ""
               }
             >
               <div className="flex cursor-pointer items-center gap-md px-md" onClick={() => toggle(i)}>
@@ -468,6 +509,10 @@ function MethodeContainerMobile({ steps, className }: MethodeContainerProps) {
                 steps={stepsOf(step.pages)}
                 selected={selected}
                 onSelectedChange={selectTile}
+                bonus={Boolean(step.finish)}
+                bonusSelected={bonusOpen}
+                onBonusToggle={toggleBonus}
+                bonusPanel={step.finish && <MethodeFinish content={step.finish} device="mobile" onNext={next} />}
                 mobile
                 stickyTop={stickyTop}
                 panel={

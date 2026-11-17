@@ -25,14 +25,22 @@ export type NavSideStep = {
   progress: number;
 };
 
+export type NavSideFrameState = {
+  layout: NavSideTileLayout;
+  finished: number;
+  numberWidth?: number;
+  completions: number;
+};
+
 export type NavSideTilesProps = {
   steps: NavSideStep[];
   /** Index de l'étape sélectionnée, null si aucune. */
   selected: number | null;
   onSelectedChange: (index: number | null) => void;
   className?: string;
-  /** Habillage autour des tuiles (NavSideMenus), avec l'affichage retenu et le nombre d'étapes terminées. */
-  frame?: (tiles: ReactNode, state: { layout: NavSideTileLayout; finished: number }) => ReactNode;
+  /** Habillage autour des tuiles (NavSideMenus), avec l'affichage retenu, le nombre d'étapes terminées,
+      la largeur commune de la colonne du numéro et le nombre d'accomplissements joués (goutte arrivée sur le Check). */
+  frame?: (tiles: ReactNode, state: NavSideFrameState) => ReactNode;
   /** Affichage mobile imposé (variante Figma device=mobile), souris comprise. */
   mobile?: boolean;
   /** Contenu ouvert sous la tuile sélectionnée. */
@@ -62,6 +70,7 @@ export function NavSideTiles({
   const containers = useRef<(HTMLDivElement | null)[]>([]);
   const [overflow, setOverflow] = useState(false);
   const [numberWidth, setNumberWidth] = useState<number>();
+  const [completions, setCompletions] = useState(0);
 
   /* Progression sauvegardée : chaque étape garde la plus grande valeur reçue, même quand une autre est sélectionnée. */
   const [saved, setSaved] = useState<number[]>(() => steps.map((step) => step.progress));
@@ -107,6 +116,7 @@ export function NavSideTiles({
             numberWidth={numberWidth}
             selected={selected === i}
             onToggle={() => onSelectedChange(selected === i ? null : i)}
+            onCompleted={() => setCompletions((count) => count + 1)}
           />
         </div>
         {open && panel}
@@ -135,7 +145,9 @@ export function NavSideTiles({
           />
         ))}
       </div>
-      {frame ? frame(tiles, { layout, finished: next.filter((value) => value >= 1).length }) : tiles}
+      {frame
+        ? frame(tiles, { layout, finished: next.filter((value) => value >= 1).length, numberWidth, completions })
+        : tiles}
     </div>
   );
 }

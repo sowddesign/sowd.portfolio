@@ -11,11 +11,13 @@ import { openSummaryEvent } from "./KitSummary";
  * Flottants en bas à gauche, au-dessus de l'indicateur Next.js (« N ») :
  * - hors UI kit : chargement lent simulé (sablier, rechargement de la page ; sablier qui coule quand il est actif),
  *   rejouer l'intro du site, puis flèche gauche vers /ui-kit ;
- * - dans l'UI kit : livre ouvert, ouvre le sommaire.
+ * - dans l'UI kit : livre ouvert, ouvre le sommaire ;
+ * - partout, en haut de la pile (demande de l'utilisateur) : balai, vide le cache du site pour ce navigateur
+ *   (localStorage, sessionStorage, caches du navigateur) puis recharge la page.
  * Masqués, « N » compris, tant que le pointeur ne s'approche pas à moins de REVEAL_EDGE px du bord gauche de
  * l'écran ou ne survole pas l'un d'eux (demande de l'utilisateur) ; au toucher, un appui près du bord les affiche.
  * Textes au curseur (validés par l'utilisateur) : « UI kit », « Sommaire », « Intro »,
- * « Chargement lent » / « Chargement normal ».
+ * « Chargement lent » / « Chargement normal », « Vider le cache ».
  */
 const REVEAL_EDGE = 44;
 const noSubscription = () => () => {};
@@ -35,6 +37,21 @@ function hidePortal(hidden: boolean) {
     root.appendChild(style);
   }
   portal.toggleAttribute("data-dev-hidden", hidden);
+}
+
+/* Remet à zéro ce que le site garde dans ce navigateur (lecture de la méthode, intro vue, chargement lent…). */
+async function clearSiteCache() {
+  try {
+    localStorage.clear();
+  } catch {}
+  try {
+    sessionStorage.clear();
+  } catch {}
+  try {
+    const keys = await caches.keys();
+    await Promise.all(keys.map((key) => caches.delete(key)));
+  } catch {}
+  window.location.reload();
 }
 
 export function KitShortcut() {
@@ -70,6 +87,14 @@ export function KitShortcut() {
         shown ? "opacity-100" : "pointer-events-none opacity-0"
       }`}
     >
+      <IconButton
+        icon="Broom"
+        label="Vider le cache du site"
+        cursorLabel="Vider le cache"
+        variant="primary"
+        color="brand"
+        onClick={clearSiteCache}
+      />
       {inKit ? (
         <IconButton
           icon="BookOpen"

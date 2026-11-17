@@ -42,6 +42,12 @@ champs:
     icone: Phone
     type: telephone
 
+# Objet du message (pleine largeur, juste au-dessus du message) : mêmes réglages que les champs
+objet_titre: Objet
+objet_details: ""
+objet_obligatoire: non
+objet_icone: ""
+
 # Zone du message (pleine largeur, au-dessus du bouton) : mêmes réglages que les champs
 message_titre: Ton message
 message_details: détails détaillés
@@ -54,4 +60,19 @@ email_invalide: Il faut un @ et . quelque chose pour que votre adresse mail soit
 # Bouton du formulaire, avant et après l'envoi
 envoyer: Envoyer
 envoye: Message envoyé
+
+# Messages d'alerte qui sortent de sous le bouton pendant et après l'envoi
+alerte_envoi: Message en cours d’envoi.
+alerte_envoye: Ton message a été correctement envoyé.
+# Échec : texte principal, puis petite ligne en italique dessous ("" = aucune).
+# Une adresse e-mail écrite dans ces textes devient un lien cliquable.
+# Échec : pas de connexion internet
+alerte_hors_ligne: Ton message n'a pas pu être envoyé dû à un problème de connexion.
+alerte_hors_ligne_details: N'oublie pas de copier ton message avant de rafraîchir la page.
+# Échec : toute autre erreur (service indisponible, envoi refusé…)
+alerte_echec: Ton message n'a pas pu être envoyé dû à un problème technique.
+alerte_echec_details: Tu peux me contacter directement via sowd.design@gmail.com.
+
+# Objet du mail que tu reçois
+mail_objet: Nouveau message depuis le portfolio
 ---
