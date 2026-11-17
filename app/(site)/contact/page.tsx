@@ -20,12 +20,14 @@ export default function Contact() {
       <PageHead title={contact.titre} />
 
       {/* contentContainer */}
-      <div className="flex w-full flex-col pb-xxl tablet:flex-row tablet:pb-none">
+      {/* Marge basse mobile (spacing/xxl) portée par ContacterContainer, dernier bloc en mobile : l'alerte d'envoi
+          se place ainsi à spacing/lg du bas de la zone visible, comme en tablette et desktop. */}
+      <div className="flex w-full flex-col tablet:flex-row">
         <div className="flex w-full tablet:w-auto tablet:flex-1">
           <PhotosContainer photos={getPhotos()} />
         </div>
         <span aria-hidden className="w-full shrink-0 border-t border-shape-neutral-white tablet:h-auto tablet:w-auto tablet:border-t-0 tablet:border-l" />
-        <ContacterContainer className="tablet:min-w-0 tablet:flex-1 tablet:py-lg" />
+        <ContacterContainer className="pb-xxl tablet:min-w-0 tablet:flex-1 tablet:py-lg" />
       </div>
 
       <span aria-hidden className="w-full shrink-0 border-t border-shape-neutral-white" />

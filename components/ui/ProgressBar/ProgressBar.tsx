@@ -16,9 +16,13 @@ import { useEffect, useRef, useState } from "react";
  * le remplissage rattrape la valeur avec un ressort amorti, et le bord droit qui progresse penche d'avant en arrière
  * (deux ondes superposées), d'autant plus que le liquide avance vite (au repos : --progress-bar-edge-rest). L'onde reste dans la barre.
  * Mouvement réduit : remplissage direct, bord droit.
+ *
+ * Remplissage de la tuile « Bonus » (NavSideMenus, propositions d'animation à l'essai) : color « darkest »
+ * (background/brand/darkest, couleur de la tuile Bonus), fillParent (hauteur du parent au lieu de --progress-bar-height),
+ * vertical (le liquide monte du bas vers le haut, bord du haut ondulant) et onDraw (part remplie à chaque image).
  */
 
-export type ProgressBarColor = "black" | "white" | "brand" | "whitish";
+export type ProgressBarColor = "black" | "white" | "brand" | "whitish" | "darkest";
 
 export type ProgressBarProps = {
   /** Propriété Figma « color ». */
@@ -35,6 +39,12 @@ export type ProgressBarProps = {
   /** Barre décorative, doublée par un autre contrôle accessible (barre de lecture vidéo). */
   "aria-hidden"?: boolean;
   className?: string;
+  /** Prend la hauteur de son parent (remplissage d'un bloc) au lieu de --progress-bar-height. */
+  fillParent?: boolean;
+  /** Le liquide monte du bas vers le haut. */
+  vertical?: boolean;
+  /** Part remplie affichée (0 à 1), à chaque image dessinée. */
+  onDraw?: (fraction: number) => void;
 };
 
 const fill: Record<ProgressBarColor, string> = {
@@ -42,6 +52,7 @@ const fill: Record<ProgressBarColor, string> = {
   white: "text-shape-neutral-white",
   brand: "text-shape-brand-brand",
   whitish: "text-shape-brand-whitish",
+  darkest: "text-background-brand-darkest",
 };
 
 /* Réglages de l'onde du bord lus dans les tokens. */
@@ -70,15 +81,22 @@ export function ProgressBar({
   "aria-label": ariaLabel,
   "aria-hidden": ariaHidden,
   className = "",
+  fillParent = false,
+  vertical = false,
+  onDraw,
 }: ProgressBarProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const targetRef = useRef(0);
   const wakeRef = useRef<() => void>(() => {});
   const onFilledRef = useRef(onFilled);
+  const onDrawRef = useRef(onDraw);
+  const verticalRef = useRef(vertical);
 
   useEffect(() => {
     onFilledRef.current = onFilled;
-  }, [onFilled]);
+    onDrawRef.current = onDraw;
+    verticalRef.current = vertical;
+  }, [onFilled, onDraw, vertical]);
 
   const clamped = Math.min(1, Math.max(0, value));
   const [shown, setShown] = useState(clamped);
@@ -109,11 +127,17 @@ export function ProgressBar({
       const W = canvas.width;
       const H = canvas.height;
       g.clearRect(0, 0, W, H);
-      const x = state.d * W;
-      if (x <= 0) return;
+      onDrawRef.current?.(state.d);
+      const up = verticalRef.current;
+      const x = state.d * (up ? H : W);
       g.fillStyle = getComputedStyle(canvas).color;
+      if (x <= 0) return;
       g.beginPath();
-      g.moveTo(0, 0);
+      // Vertical : même liquide, avancée du bas vers le haut, bord du haut ondulant.
+      const point = (along: number, across: number) =>
+        up ? g.lineTo(across * W, H - Math.min(H, Math.max(0, along))) : g.lineTo(Math.min(W, Math.max(0, along)), across * H);
+      if (up) g.moveTo(0, H);
+      else g.moveTo(0, 0);
       // Bord droit : deux ondes superposées le font ballotter, leur amplitude suit l'élan du liquide.
       const amp = reducedMotion.matches ? 0 : (wave.rest + wave.amplitude * state.energy) * dpr;
       const ripple = reducedMotion.matches ? 0 : wave.rippleAmplitude * state.energy * dpr;
@@ -123,9 +147,10 @@ export function ProgressBar({
         const offset =
           amp * Math.sin(2 * Math.PI * (wave.waves * u - state.t * wave.speed)) +
           ripple * Math.sin(2 * Math.PI * (wave.rippleWaves * u - state.t * wave.rippleSpeed));
-        g.lineTo(Math.min(W, Math.max(0, x + offset)), u * H);
+        point(x + offset, u);
       }
-      g.lineTo(0, H);
+      if (up) g.lineTo(W, H);
+      else g.lineTo(0, H);
       g.closePath();
       g.fill();
     };
@@ -210,7 +235,7 @@ export function ProgressBar({
       aria-valuemin={ariaHidden ? undefined : 0}
       aria-valuemax={ariaHidden ? undefined : 100}
       aria-valuenow={ariaHidden ? undefined : Math.round(shown * 100)}
-      className={`block h-(--progress-bar-height) w-full ${fill[color]} ${className}`}
+      className={`block ${fillParent ? "h-full" : "h-(--progress-bar-height)"} w-full ${fill[color]} ${className}`}
     />
   );
 }

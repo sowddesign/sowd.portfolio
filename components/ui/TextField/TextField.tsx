@@ -168,8 +168,14 @@ export function TextField({
       <div className="flex cursor-text flex-col gap-none" onClick={focusField}>
         {/* Horizontal Container */}
         <div className="flex flex-col gap-sm pt-none pr-none pb-none pl-sm">
-          {/* textContainer — textArea : hauteur minimale Figma 217 px (240 px avec trait et détails), sans variable. */}
-          <div className={`flex items-start gap-sm ${type === "textArea" ? "min-h-[13.5625rem]" : ""}`}>
+          {/* textContainer — textArea : hauteur minimale Figma 217 px (240 px avec trait et détails), sans variable.
+              textField : hauteur Figma 48 (spacing/sm + icon/md + spacing/sm), gardée sans icône pour que le champ
+              ne grandisse pas quand la croix apparaît (demande de l'utilisateur). */}
+          <div
+            className={`flex items-start gap-sm ${
+              type === "textArea" ? "min-h-[13.5625rem]" : "min-h-[calc(var(--spacing-sm)*2+var(--icon-md))]"
+            }`}
+          >
             {iconBefore && (
               <span className="flex shrink-0 py-sm">
                 <Icon

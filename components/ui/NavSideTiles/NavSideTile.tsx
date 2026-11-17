@@ -47,6 +47,8 @@ export type NavSideTileProps = {
   /** Largeur commune de la colonne du numéro, mesurée par NavSideTiles pour aligner les tuiles. */
   numberWidth?: number;
   containerRef?: Ref<HTMLDivElement>;
+  /** Fin de l'accomplissement (arrivée de la goutte sur le Check) : la tuile Bonus peut se dévoiler ensuite. */
+  onCompleted?: () => void;
 };
 
 /* Hauteur d'une tuile : marges du conteneur, contenu (button-size/sm), barre et trait. */
@@ -67,6 +69,7 @@ export function NavSideTile({
   measure = false,
   numberWidth,
   containerRef,
+  onCompleted,
 }: NavSideTileProps) {
   const finished = progress >= 1;
   const reduced = layout === "reduced";
@@ -209,7 +212,15 @@ export function NavSideTile({
       <div className={`pointer-events-none relative flex flex-1 flex-col`}>{content}</div>
       {bar}
       <span aria-hidden className="block w-full shrink-0 border-t border-shape-neutral-black" />
-      {phase === "flying" && <CompletionDrop targetRef={checkRef} onLand={() => setPhase("landed")} />}
+      {phase === "flying" && (
+        <CompletionDrop
+          targetRef={checkRef}
+          onLand={() => {
+            setPhase("landed");
+            onCompleted?.();
+          }}
+        />
+      )}
     </div>
   );
 }

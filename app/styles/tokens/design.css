@@ -123,6 +123,15 @@
   --double-flower-credit-height: 3.25rem; /* 52 : hauteur fixe du copyright desktop dans Figma (sans variable) */
 
   /*
+   * alertMessages — valeurs d'essai à régler avec l'utilisateur (pas de variable Figma).
+   * Durée : temps d'affichage d'une alerte minutée (6 à 10 s demandé), décompté par la barre.
+   * Sortie : l'alerte monte du bas du conteneur puis y redescend.
+   */
+  --alert-message-duration: 8000ms;
+  --alert-message-slide-duration: var(--motion-duration-base);
+  --alert-message-slide-ease: var(--motion-ease-out);
+
+  /*
    * progressBar — valeurs propres à ce composant (modifiables ici sans toucher au reste).
    * Épaisseur : 4 (décision, Figma 2 sans variable) — variable à reporter dans le DS.
    * Liquide contenu (ballottement du bord droit, variante A choisie par l'utilisateur) : lu par le composant au montage.
@@ -263,9 +272,6 @@
   --nav-side-tile-drop-trace: 250ms; /* durée du tracé du Check */
   --nav-side-tile-drop-jump: 18px; /* hauteur du saut au-dessus de la ligne droite */
   --nav-side-tile-drop-size: 4px; /* diamètre de la tête de la goutte */
-
-  /* navSideMenus — hauteur du compteur « Terminés » (Figma fixe, sans variable) — variable à reporter dans le DS. */
-  --nav-side-menus-counter-height: 3.5rem; /* 56 */
 
   /* methodeContainer — hauteur fixe en desktop et tablette (Figma 830, sans variable, voulue par l'utilisateur). */
   --methode-container-height: 51.875rem; /* 830 */

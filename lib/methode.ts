@@ -94,6 +94,23 @@ export type MethodeDefinitionGroup =
 
 export type MethodeIntroContent ={ label: string; title: string; text: string; hint: string };
 
+/**
+ * Page « Bonus » d'une étape (composant Figma « methode », pageSelected=finish), dans le même fichier que son introduction
+ * (clés fin_*) : titre, texte, image affichée et image haute qualité téléchargée (public/methode/fin/).
+ */
+export type MethodeFinishContent = {
+  title: string;
+  text: string;
+  image: { src: string; width: number; height: number };
+  /** Pixels de l'image qu'on peut rogner en haut et en bas (fin_image_rognage, facultatif). */
+  crop: { top: number; bottom: number };
+  /** Carte haute qualité (fin_image_hd) ; la date du jour y est écrite à fin_date_position (bord droit, haut de ligne). */
+  download: string;
+  /** Nom du fichier téléchargé : portfolio-sowd-<numéro>-<étape>.png, sans accent (demande de l'utilisateur). */
+  fileName: string;
+  datePosition: { right: number; top: number };
+};
+
 export type MethodePageContent = {
   /** Nom du fichier (content/methode/pages/<slug>.md). */
   slug: string;
@@ -118,6 +135,8 @@ const METHODE_DIR = path.join(process.cwd(), "content", "methode");
 // Images des pages méthode. Chemin fixe jusqu'à public/methode : un chemin dynamique depuis public/ ferait embarquer
 // tout public/ (vidéo comprise) dans la fonction serveur, au-delà de la limite de taille de Netlify.
 const METHODE_IMAGES_DIR = path.join(process.cwd(), "public", "methode");
+// Images des pages « Bonus » (clés fin_*), même raison : chemin fixe jusqu'au dossier.
+const METHODE_FIN_DIR = path.join(process.cwd(), "public", "methode", "fin");
 
 export type MethodePageEntry = {
   /** Nom du fichier (content/methode/pages/<slug>.md). */
@@ -135,6 +154,8 @@ export type MethodeStep = {
   title: string;
   description: string;
   intro: MethodeIntroContent | null;
+  /** Page « Bonus », null si l'introduction n'a pas de clés fin_*. */
+  finish: MethodeFinishContent | null;
   pages: MethodePageEntry[];
 };
 
@@ -469,6 +490,40 @@ function projectIntro(slug: string) {
   return { intro, label: text("bouton")!, labelShort: text("bouton_court")!, href: text("lien")! };
 }
 
+/** Page « Bonus » (clés fin_* de intros/<intro>.md) ; null sans « fin_titre ». */
+function getMethodeFinish(intro: string, number: string, title: string): MethodeFinishContent | null {
+  const { text, fail } = read(`intros/${intro}.md`);
+  if (!text("fin_titre", true)) return null;
+  const imageName = text("fin_image")!.trim();
+  const downloadName = text("fin_image_hd")!.trim();
+  // Chemins écrits en entier dans chaque appel (chemin fixe jusqu'à public/methode/fin) : voir METHODE_IMAGES_DIR.
+  if (!existsSync(path.join(METHODE_FIN_DIR, downloadName))) {
+    fail(`image introuvable : public/methode/fin/${downloadName}.`);
+  }
+  const crop = (text("fin_image_rognage", true) ?? "0 0").trim().split(/\s+/).map(Number);
+  if (crop.length !== 2 || crop.some((n) => !Number.isInteger(n) || n < 0)) {
+    fail("fin_image_rognage : deux nombres entiers de pixels attendus (haut bas).");
+  }
+  const date = text("fin_date_position")!.trim().split(/\s+/).map(Number);
+  if (date.length !== 2 || date.some((n) => !Number.isFinite(n) || n < 0)) {
+    fail("fin_date_position : deux nombres de pixels attendus (droite haut).");
+  }
+  return {
+    title: text("fin_titre")!,
+    text: text("fin_texte")!,
+    image: { src: `/methode/fin/${imageName}`, ...imageSize(path.join(METHODE_FIN_DIR, imageName), fail) },
+    crop: { top: crop[0], bottom: crop[1] },
+    download: `/methode/fin/${downloadName}`,
+    fileName: `portfolio-sowd-${number}-${title
+      .normalize("NFD")
+      .replace(/[̀-ͯ]/g, "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "")}.png`,
+    datePosition: { right: date[0], top: date[1] },
+  };
+}
+
 export function getMethodeIntro(intro: string): MethodeIntroContent {
   const { text } = read(`intros/${intro}.md`);
   return { label: text("libelle")!, title: text("titre")!, text: text("texte")!, hint: text("consigne")! };
@@ -639,6 +694,7 @@ async function loadMethode(version: number): Promise<MethodeStep[]> {
         title,
         description,
         intro: existsSync(path.join(METHODE_DIR, "intros", `${intro}.md`)) ? getMethodeIntro(intro) : null,
+        finish: existsSync(path.join(METHODE_DIR, "intros", `${intro}.md`)) ? getMethodeFinish(intro, number(i), title) : null,
         pages,
       };
     }),

@@ -12,6 +12,7 @@ import { ImageLightboxGroup } from "../ImageLightbox";
 import { ProjectLink } from "../ProjetHubContainer/ProjectLink";
 import { MethodePartView, methodeDivider as divider, methodeSpacing } from "./MethodeBody";
 import { MethodeProjectIntro } from "./MethodeProjectIntro";
+import { isPartRead, savePartRead } from "./reading-store";
 
 /*
  * Méthode, modèle de page — frame Figma « methode 01 » (fichier content, node 6291:11332), desktop et mobile.
@@ -160,24 +161,19 @@ function readOf(el: HTMLElement) {
 }
 
 /**
- * Avancée (0 à 1) sur une distance. À moins d'un pixel de la fin, c'est terminé : avec les traits arrondis au pixel
- * d'écran (--divider-width), le défilement peut s'arrêter à une fraction de pixel avant le bout.
+ * Avancée (0 à 1) sur une distance. À moins de deux pixels de la fin, c'est terminé : avec un zoom navigateur
+ * (pixels d'écran fractionnaires) et les traits arrondis au pixel d'écran (--divider-width), le défilement s'arrête
+ * avant le bout de la distance calculée (scrollHeight et clientHeight sont arrondis chacun à l'entier).
  */
 function progressOf(position: number, distance: number) {
-  return position >= distance - 1 ? 1 : Math.min(1, Math.max(0, position / distance));
+  return position >= distance - 2 ? 1 : Math.min(1, Math.max(0, position / distance));
 }
 
 type Part = "definition" | "projet";
 
-/* Parties lues jusqu'en bas (mobile) : gardées le temps de la visite (sessionStorage), par page. */
-const partKey = (slug: string, part: Part) => `methode-partie-lue:${slug}:${part}`;
-
+/* Parties lues jusqu'en bas (mobile) : gardées entre les visites (reading-store, localStorage), par page. */
 function storedParts(slug: string) {
-  try {
-    return (["definition", "projet"] as const).filter((part) => sessionStorage.getItem(partKey(slug, part)) === "1").join(" ");
-  } catch {
-    return "";
-  }
+  return (["definition", "projet"] as const).filter((part) => isPartRead(slug, part)).join(" ");
 }
 
 const noSubscription = () => () => {};
@@ -257,8 +253,11 @@ export function MethodePage({
       report.current?.(distance > 0 ? progressOf(el.scrollTop, distance) : 1);
     };
     measure();
+    /* Zone et contenu : le contenu change de hauteur sans défilement (introduction au projet fermée ou rouverte,
+       images chargées) ; s'il tient alors entier à l'écran, la page est lue. */
     const observer = new ResizeObserver(measure);
     observer.observe(el);
+    for (const child of el.children) observer.observe(child);
     el.addEventListener("scroll", measure, { passive: true });
     return () => {
       observer.disconnect();
@@ -279,9 +278,7 @@ export function MethodePage({
         if (!el || el.getClientRects().length === 0 || el.closest("[inert]")) continue;
         read.current[part] = Math.max(read.current[part], readOf(el));
         if (read.current[part] >= 1) {
-          try {
-            sessionStorage.setItem(partKey(slug, part), "1");
-          } catch {}
+          savePartRead(slug, part);
           setReadHere((parts) => (parts.includes(part) ? parts : [...parts, part]));
         }
       }

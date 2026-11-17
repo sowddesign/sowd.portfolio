@@ -255,13 +255,14 @@ const mobileVisuals: Record<Phase, Visual[]> = {
       shadow: "complete",
     },
   ],
+  /* 01 et 02 : tournesol de droite à la boîte de l'état problème (Figma : 77, 0,33, 402 × 482, il remontait ; écart validé). */
   "01": [
-    { image: "mobile-offsunfw", box: [77, 0.33, 402, 482] },
+    { image: "mobile-offsunfw", box: [77, 0, 402, 515] },
     { image: "mobile-sunfw", box: [0, 0, 402, 515], shadow: "complete" },
     { image: "half-01", box: [-1, 72.33, 192, 443], shadow: "half" },
   ],
   "02": [
-    { image: "mobile-offsunfw", box: [77, 0.33, 402, 482] },
+    { image: "mobile-offsunfw", box: [77, 0, 402, 515] },
     { image: "mobile-sunfw", box: [0, 0, 402, 515], shadow: "complete" },
     { image: "half-02", box: [204, 72.33, 192, 443], shadow: "half" },
   ],
@@ -488,13 +489,12 @@ type LabelAnchor = { left: number; top: number } | { right: number; bottom: numb
 const phaseLabels = {
   decouvrir: { left: 303, top: 34 },
   developper: { left: 888, top: 34 },
+  /* Même place dans tous les états (le décalage de l'état 02 dans la maquette desktop est une coquille). */
   definir: { right: 552, bottom: 687 },
-  /* État 02 : définir est décalé dans la maquette desktop. */
-  definir02: { right: 698, bottom: 687 },
   livrer: { right: 1137, bottom: 687 },
 } satisfies Record<string, LabelAnchor>;
 
-function PhaseLabel({ text, at }: { text: string; at: LabelAnchor }) {
+function PhaseLabel({ text, at, phase }: { text: string; at: LabelAnchor; phase: FlowerPhase }) {
   const style: CSSProperties =
     "left" in at
       ? {
@@ -507,7 +507,7 @@ function PhaseLabel({ text, at }: { text: string; at: LabelAnchor }) {
         };
   return (
     <DesktopStage>
-      <span data-phase-label className="absolute type-caption-accentuation whitespace-nowrap" style={style}>
+      <span data-phase-label={phase} className="absolute type-caption-accentuation whitespace-nowrap" style={style}>
         {text}
       </span>
     </DesktopStage>
@@ -661,6 +661,14 @@ export function DoubleFlower({ diamonds = false, className = "" }: DoubleFlowerP
   const desktopFlowerAt = (event: { clientX: number; clientY: number }): FlowerPhase | null => {
     const stage = stageRef.current;
     if (!stage) return null;
+    /* Libellés de phase du calque affiché : survolables comme leur demi-tournesol (demande de l'utilisateur). */
+    for (const label of desktopSceneRef.current?.querySelectorAll<HTMLElement>(
+      "[data-layer]:not([inert]) [data-phase-label]",
+    ) ?? []) {
+      const r = label.getBoundingClientRect();
+      if (event.clientX >= r.left && event.clientX <= r.right && event.clientY >= r.top && event.clientY <= r.bottom)
+        return label.dataset.phaseLabel as FlowerPhase;
+    }
     const { x, y } = framePoint(event, stage, desktopFrame);
     return flowerAt(masks.current, desktopVisuals, flowerPhases, desktopFrame.width, x, y);
   };
@@ -887,15 +895,16 @@ export function DoubleFlower({ diamonds = false, className = "" }: DoubleFlowerP
               {(all || view === "probleme") && <Title text={commun.double_probleme} className={place.probleme} />}
               {(all || view === "solution") && <Title text={commun.double_solution} end className={place.solution} />}
               {(all || view === "probleme" || view === "01") && (
-                <PhaseLabel text={commun.double_decouvrir} at={phaseLabels.decouvrir} />
+                <PhaseLabel text={commun.double_decouvrir} at={phaseLabels.decouvrir} phase="01" />
               )}
               {(all || view === "solution" || view === "03") && (
-                <PhaseLabel text={commun.double_developper} at={phaseLabels.developper} />
+                <PhaseLabel text={commun.double_developper} at={phaseLabels.developper} phase="03" />
               )}
-              {(all || view === "probleme") && <PhaseLabel text={commun.double_definir} at={phaseLabels.definir} />}
-              {view === "02" && <PhaseLabel text={commun.double_definir} at={phaseLabels.definir02} />}
+              {(all || view === "probleme" || view === "02") && (
+                <PhaseLabel text={commun.double_definir} at={phaseLabels.definir} phase="02" />
+              )}
               {(all || view === "solution" || view === "04") && (
-                <PhaseLabel text={commun.double_livrer} at={phaseLabels.livrer} />
+                <PhaseLabel text={commun.double_livrer} at={phaseLabels.livrer} phase="04" />
               )}
               {phase && (
                 /* Écran tactile : le texte passe sous la scène, au format mobile. */

@@ -141,6 +141,12 @@ export const commun = texts("commun.md", communSource, [
   "methode_agrandir",
   "methode_image_fermer",
   "methode_terminees",
+  "methode_bonus",
+  "methode_bonus_texte",
+  "methode_bonus_page_secrete",
+  "methode_bonus_page_secrete_court",
+  "methode_bonus_page_secrete_lien",
+  "methode_bonus_telecharger",
 ]);
 
 export const accueil = texts("pages/accueil.md", accueilSource, [
@@ -188,6 +194,10 @@ export const contact = texts("pages/contact.md", contactSource, [
   "photos_texte",
   "formulaire_details",
   "formulaire_titre",
+  "objet_titre",
+  "objet_details",
+  "objet_obligatoire",
+  "objet_icone",
   "message_titre",
   "message_details",
   "message_obligatoire",
@@ -195,6 +205,13 @@ export const contact = texts("pages/contact.md", contactSource, [
   "email_invalide",
   "envoyer",
   "envoye",
+  "alerte_envoi",
+  "alerte_envoye",
+  "alerte_hors_ligne",
+  "alerte_hors_ligne_details",
+  "alerte_echec",
+  "alerte_echec_details",
+  "mail_objet",
 ]);
 
 /* Champs du formulaire de contact (content/pages/contact.md) : ordre, textes, obligatoire, icône et type. */
@@ -244,6 +261,14 @@ if (!Array.isArray(contactFieldBlocks) || !contactFieldBlocks.every((block) => t
 export const contactFields = (contactFieldBlocks as Record<string, string>[]).map((block, index) =>
   contactField(`champ n° ${index + 1}`, block),
 );
+
+/** Objet du message, pleine largeur juste au-dessus du message. */
+export const contactObjet = contactField("objet", {
+  titre: contact.objet_titre,
+  details: contact.objet_details,
+  obligatoire: contact.objet_obligatoire,
+  icone: contact.objet_icone,
+});
 
 /** Zone du message, pleine largeur au-dessus du bouton Envoyer. */
 export const contactMessage = contactField("message", {

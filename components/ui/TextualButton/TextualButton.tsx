@@ -31,6 +31,8 @@ type BaseProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "color" | "disabl
   href?: string;
   /** Avec href : lien de téléchargement (<a download>) ; une chaîne donne le nom du fichier. */
   download?: boolean | string;
+  /** Avec href : ouvre la destination dans un nouvel onglet (toujours le cas pour un lien externe). */
+  newTab?: boolean;
   /** Secondary : affiche le trait du bas. Masqué dans pageHeader, où seule la barre de survol apparaît. */
   showDivider?: boolean;
 };
@@ -56,6 +58,7 @@ export function TextualButton({
   type = "button",
   href,
   download,
+  newTab = false,
   showDivider = true,
   ...rest
 }: TextualButtonProps) {
@@ -122,7 +125,7 @@ export function TextualButton({
     );
   }
 
-  if (href !== undefined && !disabled && /^https?:\/\//.test(href)) {
+  if (href !== undefined && !disabled && (newTab || /^https?:\/\//.test(href))) {
     return (
       <a href={href} target="_blank" rel="noopener noreferrer" className={rootClassName}>
         {content}
