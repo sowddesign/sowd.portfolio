@@ -180,4 +180,6 @@ methode_bonus_page_secrete_court: Page secrète
 methode_bonus_page_secrete_lien: /page-secrete
 # Bouton de téléchargement dans l'image (image haute qualité) : texte accessible et texte au curseur
 methode_bonus_telecharger: Télécharger
+# Légende sous l'image, sans lien
+methode_bonus_legende: Réalisé par sowd avec l'éditeur de la page secrète.
 ---

@@ -1,3 +1,4 @@
+import { InlineScript } from "@/components/ui/InlineScript/InlineScript";
 import { PageFooter } from "@/components/ui/PageFooter";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { SiteIntro, introScript } from "@/components/ui/SiteIntro";
@@ -10,7 +11,7 @@ import { CenterReveal } from "./CenterReveal";
 export default function SiteLayout({ children }: LayoutProps<"/">) {
   return (
     <>
-      <script dangerouslySetInnerHTML={{ __html: introScript }} />
+      <InlineScript html={introScript} />
       <PageHeader />
       <main className="flex flex-1 flex-col">{children}</main>
       <PageFooter />

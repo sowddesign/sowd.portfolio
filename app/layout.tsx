@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Merriweather_Sans, Plus_Jakarta_Sans } from "next/font/google";
+import { InlineScript } from "@/components/ui/InlineScript/InlineScript";
 import { commun } from "@/content/texts";
 import "./globals.css";
 
@@ -39,7 +40,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       className={`${plusJakartaSans.variable} ${merriweatherSans.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <script dangerouslySetInnerHTML={{ __html: dividerScript }} />
+        <InlineScript html={dividerScript} />
         {children}
         {KitShortcut && <KitShortcut />}
       </body>

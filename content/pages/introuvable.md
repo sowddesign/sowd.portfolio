@@ -10,8 +10,10 @@ entete_texte: Cette page n’existe pas ou a été déplacée.
 # Bouton vers l'accueil
 retour_accueil: Retourner à l’accueil
 
+# Bouton au centre du logo, une fois la fleur plantée (vers l'éditeur de la page secrète)
+acceder_editeur: Dessiner
 # Indice de la page secrète
-indice: Accédez à la page secrète en redonnant la tige à cette fleur.
+indice: Cette page est secrète, mais de par les secrets qu’elle renferme. Sauras-tu tous les découvrir?
 
 # Graine à tirer (lecteur d'écran)
 graine: Graine à tirer jusqu’au logo

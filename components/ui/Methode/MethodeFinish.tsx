@@ -41,7 +41,22 @@ export function MethodeFinish({
   onNext?: () => void;
 }) {
   const mobile = device === "mobile";
-  const side = mobile ? "px-md" : "px-sm";
+  /* Côtés : spacing/md en mobile, spacing/lg (24 px) en desktop (demande de l'utilisateur). */
+  const side = mobile ? "px-md" : "px-lg";
+
+  /* Desktop : le défilement de la page n'est retenu (overscroll-contain) que si le contenu dépasse ;
+     sinon la molette sur la page Bonus fait défiler le site (demande de l'utilisateur). */
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [overflows, setOverflows] = useState(false);
+  useEffect(() => {
+    const scroller = scrollRef.current;
+    if (!scroller) return;
+    const check = () => setOverflows(scroller.scrollHeight > scroller.clientHeight);
+    const observer = new ResizeObserver(check);
+    observer.observe(scroller);
+    if (scroller.firstElementChild) observer.observe(scroller.firstElementChild);
+    return () => observer.disconnect();
+  }, [mobile]);
 
   /* 0 : texte + icône · 1 : texte court + icône · 2 : texte court sans icône (même règle que MethodePage). */
   const navRef = useRef<HTMLDivElement>(null);
@@ -122,7 +137,11 @@ export function MethodeFinish({
     const root = getComputedStyle(document.documentElement);
     const family = root.getPropertyValue("--font-merriweather-sans").trim();
     const font = `700 ${CARD_DATE.size}px ${family}`;
-    await Promise.all([loaded, document.fonts.load(font)]);
+    /* Seule la vraie police est chargée : la police de secours de next/font (local("Arial")) échoue sur iPhone
+       (NetworkError) ; un échec de chargement ne bloque pas le téléchargement. */
+    const mainFamily = family.split(",")[0].trim();
+    const fontLoaded = document.fonts.load(`700 ${CARD_DATE.size}px ${mainFamily}`).catch(() => undefined);
+    await Promise.all([loaded, fontLoaded]);
     const canvas = document.createElement("canvas");
     canvas.width = card.naturalWidth;
     canvas.height = card.naturalHeight;
@@ -145,8 +164,12 @@ export function MethodeFinish({
     const link = document.createElement("a");
     link.href = url;
     link.download = content.fileName;
+    /* Mobile : le lien doit être dans la page et l'adresse gardée le temps que le téléchargement démarre. */
+    link.style.display = "none";
+    document.body.appendChild(link);
     link.click();
-    URL.revokeObjectURL(url);
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 60_000);
   };
   /* Primary black (choix de l'utilisateur), en haut à droite de l'image, marges spacing/sm. */
   const downloadButtons = (
@@ -173,6 +196,10 @@ export function MethodeFinish({
   } as CSSProperties;
   const objectY = top + bottom > 0 ? (top / (top + bottom)) * 100 : 50;
 
+  /* Légende sans lien (demande de l'utilisateur), style des légendes de la méthode ; écart avec l'image
+     spacing/sm en desktop, spacing/xs en mobile (comme les légendes sous une image). */
+  const caption = <p className="type-caption-small-italic">{commun.methode_bonus_legende}</p>;
+
   const body = (
     <div className={`flex shrink-0 flex-col items-center gap-lg ${mobile ? "" : "grow"}`}>
       <div className={`flex w-full flex-col gap-sm ${side} wrap-break-word`}>
@@ -181,7 +208,7 @@ export function MethodeFinish({
       </div>
       {/* Image déjà recadrée comme dans Figma (fin_image) ; marges sur les côtés
           (demande de l'utilisateur, comme les textes et les boutons). */}
-      <div className={`flex w-full flex-col ${mobile ? "gap-xs" : "grow gap-sm"} ${side}`}>
+      <div className={`flex w-full flex-col ${mobile ? "gap-xs" : "grow"} ${side}`}>
         {mobile ? (
           <div className="relative w-full">
             <Image
@@ -195,7 +222,7 @@ export function MethodeFinish({
             {downloadButtons}
           </div>
         ) : (
-          <div className="@container flex w-full grow flex-col">
+          <div className="@container flex w-full grow flex-col gap-sm">
             <div
               style={frame}
               className="relative max-h-(--finish-image-max) min-h-(--finish-image-min) w-full grow basis-0 border border-border-neutral-black"
@@ -210,8 +237,11 @@ export function MethodeFinish({
               />
               {downloadButtons}
             </div>
+            {/* Desktop : juste sous l'image, même quand celle-ci a atteint sa hauteur maximale. */}
+            {caption}
           </div>
         )}
+        {mobile && caption}
       </div>
       <div ref={navRef} className={`grid w-full grid-cols-2 ${mobile ? "gap-x-md" : "gap-x-lg"} ${side}`}>
         <div className="min-w-0">{secretButton}</div>
@@ -235,7 +265,12 @@ export function MethodeFinish({
       <span aria-hidden className="block w-full shrink-0 border-t border-shape-neutral-black" />
       {/* Défile quand le contenu dépasse la hauteur du conteneur (écrans larges, demande de l'utilisateur),
           comme les pages de la méthode ; le trait du haut reste fixe. */}
-      <div className="scroll-bar-discreet flex min-h-0 flex-1 flex-col overflow-x-clip overflow-y-auto overscroll-contain py-sm">
+      <div
+        ref={scrollRef}
+        className={`scroll-bar-discreet flex min-h-0 flex-1 flex-col overflow-x-clip overflow-y-auto py-sm ${
+          overflows ? "overscroll-contain" : ""
+        }`}
+      >
         {body}
       </div>
     </div>

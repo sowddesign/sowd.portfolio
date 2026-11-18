@@ -147,6 +147,7 @@ export const commun = texts("commun.md", communSource, [
   "methode_bonus_page_secrete_court",
   "methode_bonus_page_secrete_lien",
   "methode_bonus_telecharger",
+  "methode_bonus_legende",
 ]);
 
 export const accueil = texts("pages/accueil.md", accueilSource, [
@@ -178,6 +179,7 @@ export const introuvable = texts("pages/introuvable.md", introuvableSource, [
   "entete_titre",
   "entete_texte",
   "retour_accueil",
+  "acceder_editeur",
   "indice",
   "graine",
 ]);

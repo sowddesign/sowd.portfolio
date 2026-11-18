@@ -20,7 +20,7 @@ export function AlertMessageDemo() {
     <div className="flex flex-col gap-lg px-(--grid-spacing)">
       {demos.map((demo, index) =>
         open[index] ? (
-          <AlertMessage key={runs[index]} {...demo} onClose={() => set(index, false)} />
+          <AlertMessage key={`alert-${index}-${runs[index]}`} {...demo} onClose={() => set(index, false)} />
         ) : (
           <button
             key={`replay-${index}`}

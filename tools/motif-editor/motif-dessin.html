@@ -11,7 +11,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
 </style></head><body>
 <div class="bar"><span>Taille du logo :</span>
 <button data-s="4">4 px</button><button data-s="8">8 px</button><button data-s="12" class="on">12 px</button><button data-s="16">16 px</button><button data-s="20">20 px</button><button data-s="24">24 px</button>
-<span style="width:16px"></span><span>Formes :</span><button data-forme="1">1</button><button data-forme="2">2</button><button data-forme="3">3</button><button data-forme="4">4</button><button data-forme="5">5</button><button id="reset">Effacer</button>
+<span style="width:16px"></span><span>Formes :</span><button data-forme="1">1</button><button data-forme="2">2</button><button data-forme="3">3</button><button data-forme="4">4</button><button data-forme="5">5</button><button data-forme="6">6</button><button data-forme="7">7</button><button data-forme="8">8</button><button data-forme="9">9</button><button data-forme="10">10</button><button data-forme="11">11</button><button data-forme="12">12</button><button data-forme="13">13</button><button data-forme="14">14</button><button data-forme="16">16</button><button data-forme="17">17</button><button id="reset">Effacer</button>
 <label>Couleur <input type="color" id="color" value="#fac038"></label><label>Centre <input type="color" id="color2" value="#634603"></label><button id="export">Exporter en PNG</button>
 <label><input type="checkbox" id="outline" checked> contour visible au repos</label></div>
 <div class="zone" id="zone"><canvas id="cv"></canvas></div>
@@ -94,7 +94,12 @@ async function sampler(src){
   const cover=(o,kind,r)=>{let n=0,t=0;for(let a=-r;a<=r+1e-6;a+=r/3)for(let b=-r;b<=r+1e-6;b+=r/3){if(a*a+b*b>r*r+1e-6)continue;t++;if(px((o.cx+a-ox)/k,(o.cy+b-oy)/k)===kind)n++}return n/t};
   return{at:o=>px((o.cx-ox)/k,(o.cy-oy)/k),cover,toImg:o=>[(o.cx-ox)/k,(o.cy-oy)/k]};
 }
-/* Formes 1 à 5 : ref-forme-N.webp ; les centres (jaune foncé) prennent la couleur secondaire. */
+/* Formes 1 à 17 : ref-forme-N.webp ; les centres (jaune foncé) prennent la couleur secondaire.
+   Formes 7 à 17 (page 404, deux couleurs, formes-404.cjs puis formes-404-refs.cjs) : personnages en pixels,
+   graine, livre, écran du showreel, souffle, loupe, arbre, visage, briques, appareil photo (pas de 15).
+   Forme 6 : tige et feuilles (dessin noir, pour la page 404), le noir est colorié comme un contour.
+   Formes 7 à 10 (page 404, dessinées par formes-404.cjs) : personnages en pixels et bulle, graine, livre, écran.
+   Forme 11 (page 404) : icône du projet Souffle dessinée à la main (souffle-icone-originale.png), passée en aplat noir. */
 document.querySelectorAll('[data-forme]').forEach(b=>b.onclick=async()=>{
   const s=await sampler(`ref-forme-${b.dataset.forme}.webp`),r=size*0.45;
   const core=cells.filter(c=>s.cover(c,'c',r)>=0.5);
