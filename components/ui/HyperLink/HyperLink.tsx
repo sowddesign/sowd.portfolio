@@ -12,7 +12,7 @@ import { useCursorLabel } from "../CursorLabel";
  * - survol : un second trait border/brand/somber se trace de gauche à droite par-dessus
  *   (--motion-duration-base, --motion-ease-out, comme le tracé des boutons secondary) et repart en arrière ;
  * - appui : texte text/brand/dark et traits border/brand/darkest (fondu --motion-duration-fast) ;
- * - lien déjà visité : texte text/brand/dark et trait border/brand/darkest
+ * - lien déjà visité : texte text/neutral/black et trait border/brand/darkest
  *   (les navigateurs n'autorisent que des changements de couleur sur :visited).
  * Le second trait est une copie du texte (data-text) transparente et soulignée,
  * pour suivre exactement le soulignement du lien, jambages compris.
@@ -77,7 +77,7 @@ export function HyperLink({ href, children, size = "caption", cursorLabel, class
         "group/link",
         size === "caption" ? "type-caption-hyperlien" : "type-body-hyperlien",
         "transition-colors duration-(--motion-duration-fast) ease-(--motion-ease-out) motion-reduce:transition-none",
-        "visited:text-text-brand-dark visited:decoration-border-brand-darkest",
+        "visited:text-text-neutral-black visited:decoration-border-brand-darkest",
         "active:text-text-brand-dark active:decoration-border-brand-darkest",
         cursor.className,
         className,

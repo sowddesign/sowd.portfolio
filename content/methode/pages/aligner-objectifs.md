@@ -24,21 +24,23 @@ image_mobile: { taille: 100.0, x: 0.0, y: 0.0 }
 # rotation en degrés par rapport à l'image, « couleur: blanc » = text/neutral/white
 image_textes:
   - texte: aligner
-    desktop: { x: 41.2, y: 73.5, rotation: -13.0 }
+    desktop: { x: 42.2, y: 73.5, rotation: -13.0 }
     mobile: { x: 42.9, y: 85.1 }
   - texte: les
     desktop: { x: 63.1, y: 52.9, rotation: -13.0 }
     mobile: { x: 62.4, y: 64.5 }
   - texte: objectifs
-    desktop: { x: 86.2, y: 28.5, rotation: -13.0 }
+    desktop: { x: 87.2, y: 28.5, rotation: -13.0 }
     mobile: { x: 88.3, y: 36.9 }
 
 # « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace).
 # *texte* = italique.
 definition: |
-  Aligner les objectifs consiste à s’assurer que les objectifs utilisateurs (tâches, besoins, émotions) et les objectifs business (conversion, rétention, coût, image) sont pris en compte de façon cohérente dans la conception.
+  Aligner les objectifs consiste à vérifier que les objectifs des utilisateurs (tâches, besoins, émotions) et ceux de l’entreprise (ventes, fidélisation, coûts, image) sont pris en compte de façon cohérente dans la conception.
 
-  Cela permet de clarifier le « pourquoi » côté entreprise et côté utilisateur, puis de vérifier que les solutions proposées servent les deux.
+  Cela permet de clarifier le « **[pourquoi]{dark}** » de chaque côté, puis de vérifier que les solutions proposées servent **[les deux]{dark}**.
+
+  *Elle fait le lien entre la phase Définir, où l’on précise le problème à résoudre, et la phase Développer, où l’on imagine des solutions.*
 
 # Projet cité : nom du fichier dans content/methode/projets/ (introduction au projet et bouton vers le projet)
 projet: c-media
@@ -54,15 +56,17 @@ projet: c-media
 
 ## Évolution demandée par la direction
 
-Lors de mon alternance chez [C-Media](/projects/c-media), j’ai travaillé sur une fonctionnalité demandée par la direction.
+Lors de mon alternance chez [C-Media](/projects/c-media), j’ai travaillé sur une fonctionnalité demandée par la **[direction]{dark}**.
 
 ---
 
-En binôme avec le lead UX, nous l’avons confrontée aux besoins des promoteurs (les équipes terrain qui utilisent l’application mobile), pour concevoir une solution utile à l’entreprise comme à eux, plutôt qu’une contrainte imposée.
+Avec le lead designer, nous avons confronté cette demande aux besoins des promoteurs (les équipes terrain qui utilisent l’application mobile sur laquelle nous travaillions).
+
+L’objectif : concevoir une solution utile à l’entreprise comme à eux, plutôt qu’une contrainte imposée.
 
 ## Problème
 
-L’idée initiale répondait à un objectif de productivité, mais elle risquait de surcharger les promoteurs et de transformer un outil utile en outil contraignant.
+L’idée initiale répondait à un objectif de productivité. Elle risquait pourtant de **[surcharger]{dark}** les promoteurs et de transformer un outil utile en charge supplémentaire.
 
 Or, leurs besoins portaient sur la rapidité d’exécution, l’adaptation permanente au contexte et la capacité à ne pas perdre d’informations importantes.
 
@@ -76,31 +80,31 @@ Or, leurs besoins portaient sur la rapidité d’exécution, l’adaptation perm
 
 || inverse
 
-**Trois méthodes ont été mobilisées :**
+**Trois leviers ont été mobilisés :**
 
-1. Un atelier d’idéation
+1. Un atelier d’idéation, une séance collective pour imaginer des solutions
 2. Une présentation orientée utilisateurs auprès de la direction
-3. Un prototype testé
+3. Un prototype testé auprès des promoteurs
 
-*Elles ont rendu visibles les usages, les frictions et les arbitrages nécessaires.*
+*Ils ont rendu visibles les usages, les frictions et les compromis nécessaires.*
 
 ## Arbitrage
 
-La solution conserve l’intention de la direction, mais repense la façon dont les informations sont collectées et restituées.
+La solution conserve l’**[intention]{dark}** de la direction, mais repense la façon dont les informations sont collectées et restituées.
 
 Elle fournit à l’entreprise les données dont elle a besoin, tout en apportant une fonctionnalité réellement utile au quotidien des promoteurs.
 
-*Les détails du projet restent confidentiels.*
+{petit} *Les détails du projet restent confidentiels.*
 
 ||
 
 ![Trois personnes comparent un parcours et des données sur un tableau](arbitrage.webp){sans cadre}
 
-## Résultats
+## Ce que cela a apporté
 
 Les tests utilisateurs ont validé l’approche, et la direction a retenu plusieurs fonctionnalités issues de cette phase d’alignement.
 
-*Le recadrage a été accepté grâce à des preuves d’usage plutôt qu’à un débat d’opinions.*
+*Le recadrage a été accepté grâce à des **[preuves d’usage]{dark}** plutôt qu’à un débat d’opinions.*
 
 ---
 

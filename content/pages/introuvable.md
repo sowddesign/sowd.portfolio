@@ -9,6 +9,8 @@ entete_texte: Cette page n’existe pas ou a été déplacée.
 
 # Bouton vers l'accueil
 retour_accueil: Retourner à l’accueil
+# Même bouton sur mobile
+retour_accueil_court: Accueil
 
 # Bouton au centre du logo, une fois la fleur plantée (vers l'éditeur de la page secrète)
 acceder_editeur: Dessiner

@@ -18,13 +18,15 @@ import { RichLines } from "../RichText";
  *     (règle de l'utilisateur).
  *   Deux colonnes égales (gouttière spacing/lg) en desktop ; en mobile empilées : spacing/md quand la rangée est seule
  *   dans son bloc, spacing/xs sinon ; deux colonnes de gros chiffres restent côte à côte (gouttière spacing/md).
- * Éléments : titre body/accentuation, texte captionText/regular, élément numéroté (numéro body/accentuation sur 20 px,
+ * Éléments : titre body/accentuation, texte body/regular (demande de l'utilisateur, au lieu de captionText/regular ;
+ * 71 caractères par ligne au plus, --methode-text-max-width), élément numéroté (numéro body/accentuation sur 20 px,
  * valeur sans variable voulue par l'utilisateur ; Figma : 21), liste à puces (retrait spacing/lg), image bordée
  * border/neutral/black 1 px intérieur et coins corner/xs (image d'un élément numéroté : sans bordure, affichée à la moitié
- * de la taille du fichier, exporté à 2×), légende captionText/small/italic, gros chiffre extra/datavizHugeNumber et son
- * libellé captionText/small/regular. Liens vers un projet : « Voir le projet » au curseur.
+ * de la taille du fichier, exporté à 2×, agrandie de --methode-numbered-image-scale), légende captionText/small/italic,
+ * gros chiffre extra/datavizHugeNumber et son libellé body/regular (demandes de l'utilisateur ; Figma : captionText/small/regular).
+ * Texte ou paragraphe d'élément numéroté en « {petit} texte » : captionText/regular (demande de l'utilisateur). Liens vers un projet : « Voir le projet » au curseur.
  * Repris de la frame Figma « methode 8 » (entretien utilisateur, node 6297:12939) : extrait audio (audioManager) ;
- * titre captionText/accentuation et son texte (« Ce qu'on en retient : »), titre → texte spacing/sm / spacing/xs,
+ * titre body/accentuation (au lieu de captionText/accentuation, demande de l'utilisateur) et son texte (« Ce qu'on en retient : »), titre → texte spacing/sm / spacing/xs,
  * écart au-dessus spacing/lg / spacing/md.
  * Repris de la frame Figma « methode 10 » (triangulation, node 6297:13595) : image sans bordure ni coins
  * (« {sans cadre} »), recadrage propre au mobile et à la tablette petite (« ![texte](desktop | mobile) »), colonne de droite au-dessus
@@ -54,6 +56,8 @@ type Spacing = {
   stack: string;
   number: string;
   note: string;
+  /** Écart texte body → texte caption (« {petit} ») d'un élément numéroté (demande de l'utilisateur). */
+  smallTop: string;
 };
 
 const desktopSpacing: Spacing = {
@@ -67,6 +71,7 @@ const desktopSpacing: Spacing = {
   stack: "gap-md",
   number: "gap-sm",
   note: "gap-xs",
+  smallTop: "mt-xs",
 };
 const mobileSpacing: Spacing = {
   part: "gap-xl",
@@ -79,6 +84,7 @@ const mobileSpacing: Spacing = {
   stack: "gap-md",
   number: "gap-xs",
   note: "gap-xxs",
+  smallTop: "mt-xxs",
 };
 
 export const methodeSpacing = (mobile: boolean) => (mobile ? mobileSpacing : desktopSpacing);
@@ -194,9 +200,11 @@ function ZoomableImage({
       height={numbered ? height / 2 : height}
       unoptimized
       data-lightbox-visual
+      /* Élément numéroté : moitié de la taille du fichier (exporté à 2×), agrandie de --methode-numbered-image-scale. */
+      style={numbered ? { width: `calc(${width / 2 / 16}rem * var(--methode-numbered-image-scale))` } : undefined}
       className={`${
         numbered
-          ? "block max-w-full"
+          ? "block h-auto max-w-full"
           : image.framed
             ? "h-auto w-full rounded-xs border border-border-neutral-black"
             : "h-auto w-full"
@@ -230,14 +238,28 @@ function ZoomableImage({
   );
 }
 
-function Paragraphs({ lines, spacing }: { lines: MdLine[]; spacing: Spacing }) {
+/** Texte courant : body/regular, ou captionText/regular en « {petit} texte » (demande de l'utilisateur). */
+function TextLines({ lines, small = false }: { lines: MdLine[]; small?: boolean }) {
   return (
-    <div className={`flex min-w-0 flex-col ${spacing.line}`}>
-      {lines.map((line, i) => (
-        <p key={i} className="type-caption-regular text-pretty">
-          <RichLines lines={[line]} linkCursorLabel={commun.curseur_voir_projet} />
-        </p>
-      ))}
+    <p className={`${small ? "type-caption-regular" : "type-body-regular"} max-w-(--methode-text-max-width) text-pretty`}>
+      <RichLines lines={lines} size={small ? "caption" : "body"} linkCursorLabel={commun.curseur_voir_projet} />
+    </p>
+  );
+}
+
+function Paragraphs({ lines, small, spacing }: { lines: MdLine[]; small?: number[]; spacing: Spacing }) {
+  return (
+    <div className="flex min-w-0 flex-col">
+      {lines.map((line, i) => {
+        const isSmall = small?.includes(i) ?? false;
+        // Texte body suivi d'un texte caption : écart réduit (smallTop) ; sinon l'écart habituel (lineTop).
+        const top = i === 0 ? "" : isSmall && !small?.includes(i - 1) ? spacing.smallTop : spacing.lineTop;
+        return (
+          <div key={i} className={top}>
+            <TextLines lines={[line]} small={isSmall} />
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -261,11 +283,9 @@ function Element({
         </p>
       );
     case "text":
-      return (
-        <p className="type-caption-regular text-pretty">
-          <RichLines lines={item.lines} linkCursorLabel={commun.curseur_voir_projet} />
-        </p>
-      );
+      return <TextLines lines={item.lines} small={item.small} />;
+    case "paragraphs":
+      return <Paragraphs lines={item.lines} small={item.smallLines} spacing={spacing} />;
     case "caption":
       return (
         <p className="type-caption-small-italic text-pretty whitespace-pre-wrap">
@@ -275,7 +295,7 @@ function Element({
     case "numbered":
       return (
         <ol className={`flex flex-col ${spacing.line}`}>
-          {item.items.map(({ number, image, paragraphs, notes }) => {
+          {item.items.map(({ number, image, paragraphs, smallParagraphs, notes }) => {
             const numberNode = <span className="type-body-accentuation w-(--p-number-20) shrink-0">{number}</span>;
             return image ? (
               <li key={number} className={`flex flex-col ${spacing.line}`}>
@@ -283,13 +303,13 @@ function Element({
                   {numberNode}
                   <ZoomableImage image={image} zoomable={zoomable} mobile={mobile} numbered />
                 </div>
-                {paragraphs.length > 0 && <Paragraphs lines={paragraphs} spacing={spacing} />}
+                {paragraphs.length > 0 && <Paragraphs lines={paragraphs} small={smallParagraphs} spacing={spacing} />}
               </li>
             ) : (
               <li key={number} className={`flex items-start ${spacing.number}`}>
                 {numberNode}
                 <div className={`flex min-w-0 flex-1 flex-col ${spacing.note}`}>
-                  <Paragraphs lines={paragraphs} spacing={spacing} />
+                  <Paragraphs lines={paragraphs} small={smallParagraphs} spacing={spacing} />
                   {notes?.map((line, i) => (
                     <p key={i} className="type-caption-small-italic text-pretty">
                       <RichLines lines={[line]} linkCursorLabel={commun.curseur_voir_projet} />
@@ -303,10 +323,10 @@ function Element({
       );
     case "bullets":
       return (
-        <ul className="type-caption-regular list-disc ps-lg text-pretty">
+        <ul className="type-body-regular list-disc ps-lg text-pretty">
           {item.items.map((line, i) => (
-            <li key={i}>
-              <RichLines lines={[line]} linkCursorLabel={commun.curseur_voir_projet} />
+            <li key={i} className="max-w-(--methode-text-max-width)">
+              <RichLines lines={[line]} size="body" linkCursorLabel={commun.curseur_voir_projet} />
             </li>
           ))}
         </ul>
@@ -314,14 +334,20 @@ function Element({
     case "audio":
       return <AudioManager src={item.src} caption={item.caption} />;
     case "titled":
+      /* Titre suivi d'un texte et de sa caption (« {petit} ») : écart titre → texte réduit (spacing/xs, mobile
+         spacing/xxs, demande de l'utilisateur, Priorisation & backlog) ; sinon l'écart habituel. */
       return (
-        <div className={`flex flex-col ${spacing.line}`}>
-          <p className="type-caption-accentuation text-pretty">
-            <RichLines lines={[item.title]} linkCursorLabel={commun.curseur_voir_projet} />
+        <div className={`flex flex-col ${item.smallLines?.length ? spacing.note : spacing.line}`}>
+          <p className="type-body-accentuation max-w-(--methode-text-max-width) text-pretty">
+            <RichLines lines={[item.title]} size="body" linkCursorLabel={commun.curseur_voir_projet} />
           </p>
-          <p className="type-caption-regular text-pretty">
-            <RichLines lines={item.lines} linkCursorLabel={commun.curseur_voir_projet} />
-          </p>
+          {item.smallLines?.length ? (
+            <Paragraphs lines={item.lines} small={item.smallLines} spacing={spacing} />
+          ) : (
+            <p className="type-body-regular max-w-(--methode-text-max-width) text-pretty">
+              <RichLines lines={item.lines} size="body" linkCursorLabel={commun.curseur_voir_projet} />
+            </p>
+          )}
         </div>
       );
     case "image":
@@ -362,8 +388,8 @@ function Element({
       return (
         <div className={`flex flex-col ${spacing.line}`}>
           <p className="type-extra-dataviz">{item.value}</p>
-          <p className="type-caption-small-regular text-pretty">
-            <RichLines lines={[item.label]} />
+          <p className="type-body-regular max-w-(--methode-text-max-width) text-pretty">
+            <RichLines lines={[item.label]} size="body" />
           </p>
         </div>
       );
@@ -430,7 +456,7 @@ function Row({
   const figures = row.columns.every((column) => column.length > 0 && column.every((item) => item.kind === "figure"));
   /* « || légende en bas » en mobile : colonne de gauche, puis la légende (dernier élément de droite) juste dessous,
      puis le reste de la colonne de droite (choix de l'utilisateur, design system). */
-  if (mobile && !figures && row.captionEnd) {
+  if (mobile && !figures && row.captionEnd && row.columns[1].at(-1)?.kind === "caption") {
     const [left, right] = row.columns;
     const caption = right.slice(-1);
     const rest = right.slice(0, -1);

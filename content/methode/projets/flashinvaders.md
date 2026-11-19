@@ -18,9 +18,9 @@ lien: /projects/flashinvaders
 
 #### Le projet
 
-[Flash Invaders](/projects/flashinvaders) est une application qui permet de « flasher » les mosaïques de Space Invader dans la rue pour gagner des points.
+[Flash Invaders](/projects/flashinvaders) est une application qui permet de « flasher », c’est-à-dire photographier, les mosaïques de l’artiste de rue Invader pour gagner des points.
 
-Ce projet est une proposition de refonte intégrant des changements UX et UI.
+Ce projet est une proposition de refonte : une nouvelle version de l’application, qui revoit l’expérience (UX) et l’interface (UI).
 
 ---
 
@@ -32,7 +32,7 @@ Ce projet est une proposition de refonte intégrant des changements UX et UI.
 
 ||
 
-- Création du prototype
+- Chargé de création du prototype
 
 >>
 

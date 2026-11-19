@@ -247,6 +247,97 @@
   --not-found-shape-loupe-y: 30px;
   --not-found-shape-graine-x: 220px; /* sous le livre, en bas de la page à spacing/lg du bord (demande de l'utilisateur) */
   --not-found-shape-graine-y: 320px;
+  /* Placements portrait (écran plus haut que large), simulés puis validés par l'utilisateur : écran de référence,
+     taille du 404 (et de la tige) par rapport au desktop, décalage vertical du 404 depuis le centre, puis coin haut
+     gauche de chaque forme depuis le centre de l'écran. Mobile : jusqu'à 740 px de large ; tablette : au-delà. */
+  /* Taille des formes cachées (plus grand côté, px à l'écran de référence du placement) ; tige : hauteur à la taille du
+     logo desktop, suit ensuite le logo. Tracées en logos de 4 px à leur taille sur l'écran (shape-sampler). */
+  --not-found-stem-height: 528px;
+  --not-found-size-appareil: 400px;
+  --not-found-size-double-tournesol: 360px;
+  --not-found-size-ecran: 260px;
+  --not-found-size-livre: 240px;
+  --not-found-size-visage: 240px;
+  --not-found-size-arbre: 200px;
+  --not-found-size-entretien: 180px;
+  --not-found-size-souffle: 160px;
+  --not-found-size-loupe: 160px;
+  --not-found-size-briques: 220px;
+  --not-found-size-graine: 110px;
+  --not-found-mobile-size-appareil: 220px;
+  --not-found-mobile-size-double-tournesol: 190px;
+  --not-found-mobile-size-ecran: 155px;
+  --not-found-mobile-size-livre: 140px;
+  --not-found-mobile-size-visage: 140px;
+  --not-found-mobile-size-arbre: 120px;
+  --not-found-mobile-size-entretien: 110px;
+  --not-found-mobile-size-souffle: 85px;
+  --not-found-mobile-size-loupe: 80px;
+  --not-found-mobile-size-briques: 120px; /* agrandi pour garder les traits (demande de l'utilisateur) */
+  --not-found-mobile-size-graine: 60px;
+  --not-found-tablette-size-appareil: 250px;
+  --not-found-tablette-size-double-tournesol: 250px;
+  --not-found-tablette-size-ecran: 182px;
+  --not-found-tablette-size-livre: 170px;
+  --not-found-tablette-size-visage: 170px;
+  --not-found-tablette-size-arbre: 140px;
+  --not-found-tablette-size-entretien: 126px;
+  --not-found-tablette-size-souffle: 110px;
+  --not-found-tablette-size-loupe: 100px;
+  --not-found-tablette-size-briques: 154px;
+  --not-found-tablette-size-graine: 77px;
+  --not-found-mobile-reference-width: 375px;
+  --not-found-mobile-reference-height: 812px;
+  --not-found-mobile-logo-scale: 0.305;
+  --not-found-mobile-row-offset: -76px; /* répartition mobile v6, validée par l'utilisateur */
+  --not-found-mobile-shape-appareil-x: -179.5px;
+  --not-found-mobile-shape-appareil-y: -361px;
+  --not-found-mobile-shape-double-tournesol-x: -9.5px;
+  --not-found-mobile-shape-double-tournesol-y: -386px;
+  --not-found-mobile-shape-arbre-x: 64.5px;
+  --not-found-mobile-shape-arbre-y: -266px;
+  --not-found-mobile-shape-souffle-x: 44.5px; /* entre le logo et le second « 4 », en partie derrière */
+  --not-found-mobile-shape-souffle-y: -106px;
+  --not-found-mobile-shape-livre-x: -179.5px;
+  --not-found-mobile-shape-livre-y: -10px; /* remonté de 24 px (demande de l'utilisateur) */
+  --not-found-mobile-shape-loupe-x: 37.5px;
+  --not-found-mobile-shape-loupe-y: 19px;
+  --not-found-mobile-shape-visage-x: 94.5px;
+  --not-found-mobile-shape-visage-y: -55px; /* remonté de la moitié de l'écart avec le « 4 » de droite (demande de l'utilisateur) */
+  --not-found-mobile-shape-entretien-x: -179.5px;
+  --not-found-mobile-shape-entretien-y: 109px;
+  --not-found-mobile-shape-briques-x: -62.5px;
+  --not-found-mobile-shape-briques-y: 126px; /* remonté de 8 px (demande de l'utilisateur) */
+  --not-found-mobile-shape-ecran-x: 27.5px;
+  --not-found-mobile-shape-ecran-y: 119px;
+  --not-found-mobile-shape-graine-x: 142.5px;
+  --not-found-mobile-shape-graine-y: 224px;
+  --not-found-tablette-reference-width: 768px;
+  --not-found-tablette-reference-height: 1024px;
+  --not-found-tablette-logo-scale: 0.68;
+  --not-found-tablette-row-offset: -182px; /* tige au-dessus du bloc de texte */
+  --not-found-tablette-shape-appareil-x: -360px;
+  --not-found-tablette-shape-appareil-y: -488px;
+  --not-found-tablette-shape-arbre-x: -84px;
+  --not-found-tablette-shape-arbre-y: -488px;
+  --not-found-tablette-shape-double-tournesol-x: 110px;
+  --not-found-tablette-shape-double-tournesol-y: -482px;
+  --not-found-tablette-shape-souffle-x: 256px;
+  --not-found-tablette-shape-souffle-y: -342px;
+  --not-found-tablette-shape-livre-x: -344px;
+  --not-found-tablette-shape-livre-y: 68px;
+  --not-found-tablette-shape-loupe-x: -194px;
+  --not-found-tablette-shape-loupe-y: 178px;
+  --not-found-tablette-shape-entretien-x: 136px;
+  --not-found-tablette-shape-entretien-y: 78px;
+  --not-found-tablette-shape-visage-x: 266px;
+  --not-found-tablette-shape-visage-y: 48px;
+  --not-found-tablette-shape-ecran-x: 116px;
+  --not-found-tablette-shape-ecran-y: 248px;
+  --not-found-tablette-shape-briques-x: -24px;
+  --not-found-tablette-shape-briques-y: 338px;
+  --not-found-tablette-shape-graine-x: 306px;
+  --not-found-tablette-shape-graine-y: 388px;
   --not-found-shape-near-text-gap: var(--spacing-lg); /* briques à côté du bloc de texte, sans le chevaucher (écart d'essai) */
   --not-found-spin-duration: 2200ms; /* le logo tourne pendant toute la séquence (valeur d'essai) */
   --photos-container-loader-size: 30%; /* Contact et headPage Container : boucle du logo pendant le chargement du visuel, en part de la hauteur du conteneur (valeur d'essai) */
@@ -302,6 +393,12 @@
 
   /* methodeContainer — hauteur fixe en desktop et tablette (Figma 830, sans variable, voulue par l'utilisateur). */
   --methode-container-height: 51.875rem; /* 830 */
+  /* Texte courant des pages de la méthode : 71 caractères par ligne au plus (demande de l'utilisateur, sans variable
+     Figma). Largeur moyenne mesurée d'un caractère du texte body : 0,464 × sa taille → 71 × 0,464 ≈ 33. */
+  --methode-text-max-width: calc(33 * var(--typography-size-body));
+  /* Image d'un élément numéroté (graphiques de dataviz) des pages de la méthode : agrandie (demande de l'utilisateur,
+     à l'essai). */
+  --methode-numbered-image-scale: 1.5;
   /* Introduction qui passe à la page 01 dès le premier cran (desktop, demande de l'utilisateur, valeurs à l'essai) :
      part du cran transmise à la petite remontée, durée de cette remontée lente (fausse résistance, comme s'il
      fallait deux crans) avant la glisse vers la page 01. */
@@ -359,7 +456,7 @@
   /* Épaisseur réelle d'un trait (bordure de 1px arrondie au pixel d'écran), mesurée par le layout racine. */
   --divider-width: 1px;
 
-  /* headerImage — tous ses textes (titre posé sur l'image et mots-clés) en 16 px sur tous les appareils
+  /* headerImage — textes de la mise en page mobile (titre posé sur l'image et mots-clés) en 16 px
      (choix de l'utilisateur ; captionSwiss vaut 14 px en mobile). */
   --header-image-text-size: var(--p-number-16);
 

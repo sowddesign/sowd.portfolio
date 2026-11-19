@@ -7,10 +7,10 @@ import { Icon } from "../Icon";
 import { Logomark } from "../LogoButton";
 import { TextualButton } from "../TextualButton";
 import { playPlantSequence } from "./plant-sequence";
-import { HiddenShapes } from "./HiddenShapes";
+import { HiddenShapes, useLayoutShapes } from "./HiddenShapes";
 import { HiddenStem } from "./HiddenStem";
 import { digitFourPath, digitFourViewBox } from "./digit-four";
-import { notFoundScale } from "./token-px";
+import { notFoundLayout, type NotFoundLayout } from "./token-px";
 
 /*
  * Page 404 — Figma « Frame 1000005344 » (fichier portfolio, node 5843:21876), desktop, tests.
@@ -38,10 +38,25 @@ function DigitFour({ ref }: { ref: (el: HTMLSpanElement | null) => void }) {
 }
 
 export function NotFound() {
-  /* Réduction de la page à la taille de l'écran (demande de l'utilisateur) : « 4 », logo, tige et formes cachées. */
-  const [scale, setScale] = useState(1);
+  /* Placement selon l'écran (desktop, tablette ou mobile en portrait) et taille proportionnelle à l'écran
+     (demandes de l'utilisateur) : « 4 », logo, tige et formes cachées. */
+  const [layout, setLayout] = useState<NotFoundLayout | null>(null);
+  const scale = layout?.logoScale ?? 1;
+  const shapes = useLayoutShapes(layout);
   useEffect(() => {
-    const update = () => setScale(notFoundScale());
+    const update = () =>
+      setLayout((old) => {
+        const next = notFoundLayout();
+        return old &&
+          old.name === next.name &&
+          old.scale === next.scale &&
+          old.logoScale === next.logoScale &&
+          old.scaleX === next.scaleX &&
+          old.scaleY === next.scaleY &&
+          old.rowOffset === next.rowOffset
+          ? old
+          : next;
+      });
     update();
     const observer = new ResizeObserver(update);
     observer.observe(document.documentElement);
@@ -55,9 +70,16 @@ export function NotFound() {
   const digitRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const leavesRef = useRef<SVGSVGElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
+  const leftDigitRef = useRef<HTMLSpanElement | null>(null);
   /** Séquence après la graine enfoncée : planted (fondu, feuilles, logo qui tourne), done (fin). */
   const [phase, setPhase] = useState<"play" | "planted" | "done">("play");
   const done = phase === "done";
+  const corner = layout?.name === "mobile" ? "bottom-md left-md" : "bottom-lg left-lg";
+  /* Mobile : « Accueil » seul, sans flèche, bouton à la largeur du texte (demandes de l'utilisateur). */
+  const mobile = layout?.name === "mobile";
+  const homeLabel = mobile ? introuvable.retour_accueil_court : introuvable.retour_accueil;
+  const homeIcon = mobile ? undefined : "ArrowUpRight";
+  const homeWidth = mobile ? "w-fit!" : "w-(--not-found-button-width)!";
   const fade = `transition-opacity duration-(--not-found-fade-duration) ease-(--motion-ease-out) ${
     phase === "play" ? "opacity-100" : "pointer-events-none opacity-0"
   }`;
@@ -78,13 +100,26 @@ export function NotFound() {
   return (
     <div
       style={{ "--not-found-scale": scale } as CSSProperties}
-      className="relative flex min-h-dvh flex-1 flex-col items-center justify-center overflow-hidden bg-(--background-neutral-black) p-lg"
+      /* Écran tactile : appui maintenu et déplacement du doigt pour découvrir (demande de l'utilisateur) ; la page ne
+         défile pas et le doigt ne sélectionne pas de texte, pour que le déplacement soit suivi en continu. */
+      className={`relative flex min-h-dvh flex-1 touch-none flex-col items-center justify-center overflow-hidden bg-(--background-neutral-black) p-lg select-none ${
+        layout ? "" : "invisible"
+      }`}
     >
       {/* Formes cachées tout derrière (demande de l'utilisateur) : le 404 et les textes, positionnés après, passent devant. */}
-      <HiddenShapes textRef={textRef} scale={scale} />
+      {layout && shapes && <HiddenShapes textRef={textRef} digitRef={leftDigitRef} layout={layout} shapes={shapes} />}
       {/* « 404 » décoratif (aria-hidden sur les chiffres et le logo) ; le bouton du centre reste accessible. */}
-      <div className="relative flex w-full items-center justify-center gap-lg">
-        <DigitFour ref={(el) => void (digitRefs.current[0] = el)} />
+      {/* Placements portrait : 404 remonté de --not-found-<placement>-row-offset depuis le centre. */}
+      <div
+        className="relative flex w-full items-center justify-center gap-lg"
+        style={{ transform: layout?.rowOffset ? `translateY(${layout.rowOffset}px)` : undefined }}
+      >
+        <DigitFour
+          ref={(el) => {
+            digitRefs.current[0] = el;
+            leftDigitRef.current = el;
+          }}
+        />
         <div className="relative shrink-0">
           <div
             ref={logoRef}
@@ -111,30 +146,35 @@ export function NotFound() {
                 "active:bg-background-buttons-neutral-black! active:text-text-brand-bright!",
               ].join(" ")}
             >
+              {/* Mobile : pinceau seul (choix de l'utilisateur), le mot reste lu par les lecteurs d'écran. */}
               <span className="flex flex-col items-center gap-xs">
-                {introuvable.acceder_editeur}
+                <span className={layout?.name === "mobile" ? "sr-only" : ""}>{introuvable.acceder_editeur}</span>
                 <Icon name="PaintBrush" size="var(--icon-md)" />
               </span>
             </TextualButton>
           </div>
           {/* Tige cachée hors du logo, pour ne pas tourner avec lui pendant la séquence. */}
-          <HiddenStem
-            onComplete={plant}
-            scale={scale}
-            className="top-[calc(var(--not-found-stem-top)*var(--not-found-scale))] left-1/2"
-          />
+          {layout && shapes?.stem && (
+            <HiddenStem
+              shape={shapes.stem}
+              onComplete={plant}
+              scale={1}
+              className="top-[calc(var(--not-found-stem-top)*var(--not-found-scale))] left-1/2"
+            />
+          )}
         </div>
         <DigitFour ref={(el) => void (digitRefs.current[1] = el)} />
       </div>
 
-      {/* Bloc « Page introuvable » à spacing/lg (24 px) du bord gauche et du bas de l'écran (demande de l'utilisateur). */}
-      <div ref={textRef} className={`absolute bottom-lg left-lg flex flex-col items-start gap-lg ${fade}`}>
+      {/* Bloc « Page introuvable » à spacing/lg (24 px) du bord gauche et du bas de l'écran (demande de l'utilisateur),
+          spacing/md (16 px) en mobile comme les autres pages mobiles. */}
+      <div ref={textRef} className={`absolute flex flex-col items-start gap-lg ${corner} ${fade}`}>
         <div className="flex flex-col items-start gap-sm">
           <h1 className="type-body-accentuation text-text-brand-brand">{introuvable.entete_titre}</h1>
           <p className="type-caption-regular text-text-neutral-white">{introuvable.entete_texte}</p>
         </div>
-        <TextualButton href="/" icon="ArrowUpRight" iconPosition="right" className="w-(--not-found-button-width)!">
-          {introuvable.retour_accueil}
+        <TextualButton href="/" icon={homeIcon} iconPosition="right" className={homeWidth}>
+          {homeLabel}
         </TextualButton>
         {/* Indice à la largeur du bouton (demande de l'utilisateur) : il passe à la ligne au besoin. */}
         <p className="type-caption-small-italic w-(--not-found-button-width) text-faded-white-40">{introuvable.indice}</p>
@@ -142,18 +182,18 @@ export function NotFound() {
 
       {/* Fleur plantée : seul le bouton vers l'accueil reste, en tertiary, à la place du bloc (demande de l'utilisateur). */}
       <div
-        className={`absolute bottom-lg left-lg transition-opacity duration-(--not-found-fade-duration) ease-(--motion-ease-out) ${
+        className={`absolute ${corner} transition-opacity duration-(--not-found-fade-duration) ease-(--motion-ease-out) ${
           done ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
       >
         <TextualButton
           href="/"
           variant="tertiary"
-          icon="ArrowUpRight"
+          icon={homeIcon}
           iconPosition="right"
-          className="w-(--not-found-button-width)!"
+          className={homeWidth}
         >
-          {introuvable.retour_accueil}
+          {homeLabel}
         </TextualButton>
       </div>
 

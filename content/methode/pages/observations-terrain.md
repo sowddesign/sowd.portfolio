@@ -35,9 +35,10 @@ image_textes:
 
 # « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace)
 definition: |
-  Les observations terrain (shadowing, études in situ, etc.) consistent à suivre les utilisateurs dans leur environnement réel pour comprendre leurs pratiques, leurs routines et leurs contraintes.
+  Les observations terrain consistent à suivre les utilisateurs dans leur **[environnement réel]{dark}** pour comprendre leurs pratiques, leurs routines et leurs contraintes.
+  Elles prennent plusieurs formes : le shadowing (suivre une personne pendant qu’elle utilise un produit) ou l’étude in situ (observer sur le lieu même de l’usage).
 
-  Elles révèlent aussi, en direct, les émotions, les interactions et les points de contact liés au contexte d’usage, souvent invisibles dans les données chiffrées.
+  Elles révèlent en direct ce que les données chiffrées ne montrent pas : les émotions, les échanges entre personnes et les moments où l’utilisateur passe d’un outil à un autre.
 
 # Projet cité : nom du fichier dans content/methode/projets/ (introduction au projet et bouton vers le projet)
 projet: flashinvaders
@@ -51,15 +52,15 @@ projet: flashinvaders
 
 ## Objectifs
 
-Lors du projet [Flash Invaders](/projects/flashinvaders), afin de bien comprendre comment les joueurs utilisent l’application, j’ai organisé une balade dans Paris avec des joueurs de niveaux différents.
+Pour comprendre comment les joueurs utilisent l’application, j’ai organisé une **[balade dans Paris]{dark}** avec des joueurs de niveaux différents.
 
 ---
 
-*L’application étant gamifiée, je parle de joueurs plutôt que d’utilisateurs.*
+*L’application fonctionnant comme un jeu, je parle de joueurs plutôt que d’utilisateurs.*
 
 ---
 
-**Intuitions avant le rendez-vous :**
+**Hypothèses avant le rendez-vous :**
 
 <<
 
@@ -81,13 +82,7 @@ Lors du projet [Flash Invaders](/projects/flashinvaders), afin de bien comprendr
 
 ## Organisation
 
-Grâce au questionnaire et aux entretiens utilisateurs, j’ai recruté des joueurs pour une balade dans Paris.
-
----
-
-*Trois personnes ont répondu présent.*
-
-||
+J’ai recruté les participants parmi les répondants au questionnaire et les personnes interrogées en entretien. Trois joueurs ont répondu présent.
 
 ---
 
@@ -100,8 +95,6 @@ Grâce au questionnaire et aux entretiens utilisateurs, j’ai recruté des joue
 3. Le novice : c’est sa première expérience avec l’application.
 
 *Croiser les profils était essentiel : un joueur expérimenté peut s’être habitué à une fonctionnalité qui freine le novice.*
-
-||
 
 ## Déroulé
 
@@ -121,11 +114,11 @@ Brève explication du déroulé aux joueurs.
 
 <<
 
-Aucune interaction de ma part, pour ne pas influencer les joueurs : je me suis contenté de suivre, d’observer et de prendre des notes.
+**[Aucune interaction]{dark}** de ma part, pour ne pas influencer les joueurs : je me suis contenté de les suivre, de les observer et de prendre des notes.
 
 ||
 
-*Objectif : vérifier mes intuitions et repérer des comportements inattendus.*
+*Objectif : vérifier mes hypothèses et repérer des comportements inattendus.*
 
 ---
 
@@ -133,7 +126,7 @@ Aucune interaction de ma part, pour ne pas influencer les joueurs : je me suis c
 
 <<
 
-À mi-parcours, j’ai interrogé chaque joueur individuellement, à l’écart du groupe, pour que les réponses ne s’influencent pas.
+À mi-parcours, j’ai interrogé chaque joueur **[individuellement]{dark}**, à l’écart du groupe, pour que les réponses ne s’influencent pas.
 
 ||
 
@@ -143,15 +136,9 @@ Aucune interaction de ma part, pour ne pas influencer les joueurs : je me suis c
 
 #### Arrivée et remerciements :
 
-<<
-
-À l’arrivée, nous avons fait un bilan collectif : les points forts et les points faibles de l’application et ce que eux aimeraient voir arriver dans l’application.
+À l’arrivée, nous avons fait un bilan collectif : les points forts et les points faibles de l’application, et ce que les joueurs aimeraient y trouver.
 
 Pour finir, j’ai remercié les participants pour leur temps.
-
-||
-
-*Avoir des avis de différents profils était un vrai plus, car un joueur expérimenté peut s’être habitué à une fonctionnalité qui sera un frein pour le novice.*
 
 ---
 
@@ -163,28 +150,30 @@ Pour finir, j’ai remercié les participants pour leur temps.
 
 || bas
 
-> Parcours du 8 mars 2025 (documentation Flash Invaders)
+> Parcours du 8 mars 2025 (documentation Flash Invaders).
 
-## De l’observation à la refonte
+## Ce que cela a apporté
+
+**De l’observation à la refonte :**
 
 1. **Une carte externe**
-L’expérimenté passait sans cesse de Flash Invaders à une carte Google Maps personnalisée.
-*→ Refonte : des marqueurs personnels directement dans l’application.*
+L’expérimenté passait sans cesse de l’application à une carte Google Maps personnalisée. L’hypothèse 1 est confirmée.
+{petit} *→ Refonte : des **[marqueurs personnels]{dark}** directement dans l’application.*
 
 ||
 
 2. **Des détours pour flasher plus**
-Les joueurs ont choisi un itinéraire qui passait par un maximum d’invaders.
-*→ Refonte : des balades guidées par des indices, qui font passer par les invaders sans les révéler, pour garder le plaisir de tomber dessus.*
+Les joueurs ont choisi un itinéraire qui passait par un maximum d’invaders. L’hypothèse 2 est confirmée.
+{petit} *→ Refonte : des balades guidées par des **[indices]{dark}**, qui font passer par les invaders sans les révéler, pour garder le plaisir de tomber dessus.*
 
 ---
 
 3. **L’entraide**
-L’expérimenté a guidé les autres ; sans lui, le novice aurait peut-être abandonné.
-*→ Refonte : des fonctionnalités communautaires pour faire des balades à plusieurs, organiser des rendez-vous et partager ses parcours.*
+L’expérimenté a guidé les autres : sans lui, le novice aurait peut-être abandonné. L’hypothèse 3 est confirmée.
+{petit} *→ Refonte : des fonctionnalités communautaires pour faire des balades **[à plusieurs]{dark}**, organiser des rendez-vous et partager ses parcours.*
 
 ||
 
 4. **Des fonctionnalités délaissées**
-Certaines n’ont pas été utilisées du tout, d’autres ont été mal comprises.
-*→ Refonte : ces écrans ont été repensés côté interface.*
+Certaines fonctionnalités n’ont pas été utilisées du tout, d’autres ont été mal comprises. L’hypothèse 4 est confirmée.
+{petit} *→ Refonte : ces écrans ont été repensés côté interface.*

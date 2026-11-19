@@ -27,7 +27,7 @@ image_textes:
     desktop: { x: 33.1, y: 31.2 }
     mobile: { x: 32.3, y: 28.8 }
   - texte: "d’interaction"
-    desktop: { x: 59.5, y: 22.5 }
+    desktop: { x: 61.2, y: 22.5 }
     mobile: { x: 65.0, y: 21.0 }
 
 # « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace).

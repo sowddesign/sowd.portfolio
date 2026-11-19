@@ -74,31 +74,31 @@ Une préférence déclarée ne dit pas comment les visiteurs se comportent réel
 <<
 
 1. Hypothèse :
-> → la disposition B permet de trouver l’information plus vite et plus facilement.
+{petit} *→ la disposition B permet de trouver l’information plus vite et plus facilement.*
 
 ||
 
 2. Tâche :
-> → retrouver les questions posées lors des entretiens exploratoires.
+{petit} *→ retrouver les questions posées lors des entretiens exploratoires.*
 
 >>
 
 <<
 
 3. Indicateurs :
-> → taux de réussite, temps pour accomplir la tâche, clics à côté.
+{petit} *→ taux de réussite, temps pour accomplir la tâche, clics à côté.*
 
 ||
 
 4. Répartition :
-> → chaque testeur voit aléatoirement la version A ou la version B.
+{petit} *→ chaque testeur voit aléatoirement la version A ou la version B.*
 
 >>
 
 <<
 
 5. Retours :
-> → une question ouverte en fin de test, pour comprendre les résultats.
+{petit} *→ une question ouverte en fin de test, pour comprendre les résultats.*
 
 ||
 

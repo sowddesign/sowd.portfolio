@@ -60,7 +60,7 @@ champs:
 
 # Objet du message (pleine largeur, juste au-dessus du message) : mêmes réglages que les champs
 objet_titre: Objet de ton message
-objet_details: ""
+objet_details: "C'est mieux si tu en mets un, sinon j'en mettrai un dans la réponse."
 objet_obligatoire: non
 objet_icone: ""
 

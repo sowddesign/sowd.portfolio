@@ -31,13 +31,14 @@ showreel_mots_cles:
   - Branding
 
 # Section « Démarche UX » : bloc méthode (la description apparaît au survol, desktop et tablette avec souris)
-demarche_methode: "Méthode :"
+demarche_methode: "Méthode  de  conception :"
 demarche_methode_nom: double diamant
-demarche_description: "Le [Double Diamant]{brand} propose d’alterner entre ouverture pour explorer et convergence pour préciser et décider."
+demarche_description: |
+  Le [Double Diamant]{brand} me permet de partir d’un problème pour mieux comprendre les besoins des utilisateurs, puis de tester plusieurs pistes avant de livrer une solution qui y répond.
 # Copyright sous le schéma (desktop et tablette avec souris)
 demarche_copyright: "© 2026  Tom  Lamy /sowd  —  Création  graphique  originale."
 
 # Section « Méthode : l'appliquer aux projets » (au-dessus des étapes de la méthode)
-appliquer_methode: "Méthode :"
-appliquer_methode_nom: l’appliquer aux projets
+appliquer_methode: "Double diamant :"
+appliquer_methode_nom: ma démarche en pratique
 ---

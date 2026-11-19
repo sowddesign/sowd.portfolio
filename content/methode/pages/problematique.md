@@ -29,8 +29,8 @@ image_textes:
 
 # « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace)
 definition: |
-  La problématique (ou question de recherche) est la formulation claire et délimitée du problème à résoudre. Elle fixe le périmètre de la réflexion : ce que l’on cherche vraiment à comprendre ou à améliorer.
-  Elle guide à la fois la méthodologie à adopter pour explorer le sujet et les choix de design qui en découlent.
+  La problématique, ou question de recherche, formule de manière claire et délimitée le **[problème à résoudre]{dark}**. Elle fixe le cadre de la réflexion : ce que l’on cherche vraiment à comprendre ou à améliorer.
+  Elle guide à la fois la manière de mener la recherche et les choix de design qui en découlent.
 
 # Projet cité : nom du fichier dans content/methode/projets/ (introduction au projet et bouton vers le projet)
 projet: souffle
@@ -58,38 +58,28 @@ projet: souffle
 
 ## Du constat à la problématique
 
-Lors du projet Souffle, nous sommes partis d’un thème large : comment prendre soin des soignants.
-
-Nos recherches ont montré que les infirmiers et infirmières en psychiatrie sont particulièrement exposés au burn-out, souvent à cause de la charge émotionnelle du métier.
+Lors du projet Souffle, nous sommes partis d’un **[thème large]{dark}**, puis nous l’avons resserré étape par étape :
 
 ---
 
-1. Le thème :
-> → le soin des soignants.
+1. **Le thème :**
+{petit} *→ le soin des soignants.*
 
-||
+2. **La cible :**
+{petit} *→ les infirmiers et infirmières en psychiatrie.*
 
-2. La cible :
-> → les infirmiers et les infirmières en psychiatrie.
+3. **Le constat :**
+{petit} *→ ils sont particulièrement exposés au burn-out.*
 
----
+4. **Le problème :**
+{petit} *→ l’épuisement professionnel.*
 
-3. Le constat :
-> → les infirmiers et infirmières en psychiatrie sont particulièrement exposés au burn-out.
-
-||
-
-4. Le problème :
-> → l’épuisement professionnel.
+5. **La cause :**
+{petit} *→ la charge émotionnelle du métier, éprouvante et difficile à gérer.*
 
 ---
 
-5. La cause :
-> → la charge émotionnelle du métier, éprouvante et difficile à gérer.
-
-||
-
-> Chaque étape a resserré le périmètre jusqu’à la problématique.
+*Chaque étape a resserré le cadre jusqu’à la problématique.*
 
 ---
 
@@ -97,13 +87,15 @@ Nos recherches ont montré que les infirmiers et infirmières en psychiatrie son
 
 *« Comment prévenir l’épuisement professionnel des infirmiers et infirmières en psychiatrie face aux difficultés émotionnelles de leur travail ? »*
 
+{petit} *La problématique a été définie en équipe. Mon rôle portait ensuite sur l’interface et le prototype, conçus pour y répondre.*
+
 ## Ce que cela a apporté
 
-La problématique a orienté nos choix : « prévenir » nous a menés vers des exercices à pratiquer au quotidien, plutôt qu’un accompagnement une fois l’épuisement installé.
+La problématique a orienté nos choix. Le verbe « **[prévenir]{dark}** » nous a menés vers des exercices à pratiquer au quotidien, plutôt que vers un accompagnement une fois l’épuisement installé.
 
 ---
 
-Et parce que la cause est émotionnelle, nous nous sommes appuyés sur la méthode ACT, qui apprend à accueillir ses émotions plutôt qu’à les éviter.
+La cause étant émotionnelle, nous nous sommes appuyés sur la méthode ACT, qui apprend à **[accueillir]{dark}** ses émotions plutôt qu’à les éviter.
 
 ---
 
@@ -111,4 +103,4 @@ Et parce que la cause est émotionnelle, nous nous sommes appuyés sur la métho
 
 || bas
 
-> Activité « Jouer avec ses pensées » (application Souffle)
+> Activité « Jouer avec ses pensées » (application Souffle).

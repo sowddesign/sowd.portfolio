@@ -21,22 +21,21 @@ image_fond: brand/400
 # Placement de l'image, repris de Figma (desktop 800 × 218, mobile 376 × 218), en % de la hauteur du cadre :
 # taille = hauteur de l'image, x = écart entre le centre de l'image et le centre du cadre, y = haut de l'image,
 # rotation = inclinaison de l'image en degrés (sens horaire)
-image_desktop: { taille: 233.5, x: -2.2, y: -30.0, rotation: -8.3 }
+image_desktop: { taille: 318.3, x: 0.6, y: -58.5, rotation: -8.3 }
 image_mobile: { taille: 220.3, x: 4.6, y: -21.4, rotation: -8.3 }
 # Textes posés sur l'image, toujours visibles : centre du texte en % de l'image (x : largeur, y : hauteur),
 # rotation en degrés par rapport à l'image, « couleur: blanc » = text/neutral/white
 image_textes:
   - texte: "recherche  quantitative"
-    desktop: { x: 49.7, y: 33.0, rotation: 8.3 }
+    desktop: { x: 49.5, y: 33.3, rotation: 8.3 }
     mobile: { x: 49.4, y: 32.8, rotation: 8.3 }
 
 # « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace).
 # *texte* = italique.
 definition: |
-  La recherche quantitative mesure des comportements, des usages et des opinions à grande échelle, à partir de données chiffrées. Elle répond à « combien ? » et « à quelle fréquence ? ».
-  *On l’oppose à la recherche qualitative, qui explique le « pourquoi ». En réalité, les deux se complètent : les combiner est un vrai atout en recherche UX.*
-
-  Elle s’appuie sur des questionnaires, des sondages ou l’analyse d’études existantes. Ses résultats permettent de valider ou d’invalider des hypothèses et de prioriser les décisions de conception.
+  La recherche quantitative mesure des comportements, des usages et des opinions à grande échelle, à partir de données chiffrées. Elle répond aux questions « **[combien ?]{dark}** » et « **[à quelle fréquence ?]{dark}** ».
+  Elle s’appuie sur des questionnaires, des sondages ou l’analyse d’études existantes. Ses résultats permettent de confirmer ou d’écarter des **[hypothèses]{dark}** (des idées de départ à vérifier) et de prioriser les décisions de conception.
+  *Elle complète la recherche qualitative, qui explique le « pourquoi ».*
 
 # Projet cité : nom du fichier dans content/methode/projets/ (introduction au projet et bouton vers le projet)
 projet: graine
@@ -57,6 +56,7 @@ projet: graine
 #                               sans « >> », les colonnes vont jusqu'à la fin du bloc)
 #   #### Texte               → titre dans un bloc (body/accentuation)
 #   1. texte                 → élément numéroté ; les lignes suivantes sans numéro sont ses paragraphes suivants
+#   {petit} texte            → texte en plus petit (taille caption), seul ou en paragraphe d'un élément numéroté
 #   1. ![description](fichier.png) → élément numéroté avec une image (sans bordure, fichier à 2× la taille affichée),
 #                              les lignes suivantes vont dessous
 #   - texte                  → liste à puces (une ligne par élément)
@@ -70,7 +70,7 @@ projet: graine
 
 ## Objectifs de la recherche
 
-Cette phase de recherche a été articulée autour de deux questions :
+Lors du projet graine, cette phase de recherche partait de deux questions :
 
 <<
 
@@ -78,7 +78,7 @@ Cette phase de recherche a été articulée autour de deux questions :
 
 ||
 
-2. Comment la gamification peut-elle motiver sans tomber dans ses dérives (manipulation, pression, etc.) ?
+2. Comment la gamification peut-elle motiver sans générer de pression ni de manipulation ?
 
 ---
 
@@ -128,26 +128,26 @@ Et deux sur la gamification :
 
 ### Ce que les études ont révélé :
 
-1. L’entretien des plantes est perçu comme une contrainte pour les 18 à 34 ans. L’application doit donc le rendre plus simple et plus engageant.
+1. L’entretien des plantes est perçu comme **[une contrainte]{dark}** pour les 18 à 34 ans. L’application doit donc le rendre plus simple et plus engageant.
 
 ||
 
-2. Près de 9 Français de 18 à 34 ans sur 10 jouent aux jeux vidéo (SELL, 2024). La gamification parle donc naturellement à cette cible.
+2. Près de **[9 Français sur 10]{dark}** âgés de 18 à 34 ans jouent aux jeux vidéo (SELL, 2024). Les mécanismes de jeu sont donc familiers à cette cible.
 
 ---
 
-3. Les classements et les badges motivent, mais peuvent aussi créer de la pression. Pour durer, la motivation doit s’appuyer sur des retours immédiats valorisant les progrès personnels, avec une compétition optionnelle.
-*L’étude Quizizz porte sur des enfants de 8 à 10 ans ; on en retient le mécanisme (compétition contre progression), à vérifier auprès de notre cible.*
+3. Les classements et les badges motivent, mais peuvent aussi générer de la pression. Une motivation durable repose sur des retours immédiats qui valorisent la **[progression personnelle]{dark}**. La compétition reste donc optionnelle.
+{petit} *L’étude Quizizz porte sur des enfants de 8 à 10 ans ; on en retient le mécanisme (compétition contre progression), à vérifier auprès de notre cible.*
 
 ###
 
-Ces données ont fixé notre cible principale, les 18 à 34 ans, et orienté le questionnaire : à qui l’envoyer, quelles questions poser et sur quel ton.
+Ces données ont fixé notre cible principale, **[les 18 à 34 ans]{dark}**, et orienté le questionnaire : à qui l’envoyer, quelles questions poser et quel ton utiliser.
 
 ## Questionnaire
 
 ###
 
-*18 questions (dont 3 facultatives), mêlant échelles de notation et questions ouvertes.*
+*18 questions (dont 3 facultatives), mêlant questions à choix, échelles de notation et questions ouvertes.*
 
 ---
 
@@ -167,7 +167,7 @@ Ce questionnaire a été distribué de deux façons :
 
 ![Extrait du questionnaire du projet graine : réponses](questionnaire-reponses.png)
 
-||
+|| légende en bas
 
 ![Extrait du questionnaire du projet graine : infographie](questionnaire-infographie-1.png)
 
@@ -191,9 +191,8 @@ Ce questionnaire a été distribué de deux façons :
 
 || bas
 
-Pour protéger les répondants, les réponses brutes ne sont pas publiées.
 
-> Seules les infographies de synthèse ont été conservées.
+> Pour protéger les répondants, les réponses brutes ne sont pas publiées et seules les infographies ont été conservées.
 
 ### Ce que le questionnaire a révélé :
 
@@ -211,8 +210,8 @@ Ces données ont validé plusieurs choix de conception :
 
 <<
 
-- des parcours d’entretien dès la plantation d’une graine
+- des parcours d’entretien **[dès la plantation]{dark}** d’une graine
 
 ||
 
-- des missions quotidiennes
+- des **[missions quotidiennes]{dark}**

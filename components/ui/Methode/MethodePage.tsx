@@ -23,7 +23,8 @@ import { isPartRead, savePartRead } from "./reading-store";
  * avec la barre de défilement discrète (8 de large, choix de l'utilisateur).
  *   Traits du haut et du bas ; image d'en-tête (hauteur --header-image-height-desktop : bas aligné sur celui
  *   de la 3e tuile de la liste, demande de l'utilisateur ; mobile : --header-image-height) et trait ;
- *   « En quelques mots » (headings/H4, puis groupes de paragraphes captionText : groupes à spacing/lg,
+ *   « En quelques mots » (headings/H4, puis groupes de paragraphes body/regular, demande de l'utilisateur
+ *   au lieu de captionText, 71 caractères par ligne au plus (--methode-text-max-width) : groupes à spacing/lg,
  *   paragraphes à spacing/sm) ; trait ; « Utilisation dans un projet » (headings/H4, introduction au projet,
  *   parties séparées par un trait) ; trait ; boutons secondary black (projet) et primary brand (étape suivante).
  *   Écarts spacing/xxl entre blocs, marges spacing/lg ; sous les boutons spacing/xxl (sans l'écart de textContainer, demande de l'utilisateur).
@@ -59,7 +60,7 @@ export type MethodePageProps = {
 
 /**
  * « En quelques mots » : groupes de paragraphes, ou liste numérotée (frame Figma « methode03 », node 6297:14105) :
- * titre body/accentuation, éléments numérotés (numéro body/accentuation, texte captionText/regular, écart spacing/sm) ;
+ * titre body/accentuation, éléments numérotés (numéro body/accentuation, texte body/regular, écart spacing/sm) ;
  * desktop : deux colonnes, écarts spacing/lg (titre → liste, rangées, gouttière) ; mobile : une colonne, écarts spacing/md.
  */
 function Definition({ groups, mobile }: { groups: MethodeDefinitionGroup[]; mobile: boolean }) {
@@ -70,8 +71,8 @@ function Definition({ groups, mobile }: { groups: MethodeDefinitionGroup[]; mobi
         group.kind === "text" ? (
           <div key={i} className={`flex flex-col ${spacing.line}`}>
             {group.lines.map((line, j) => (
-              <p key={j} className="type-caption-regular text-pretty">
-                <RichLines lines={[line]} linkCursorLabel={commun.curseur_voir_projet} />
+              <p key={j} className="type-body-regular max-w-(--methode-text-max-width) text-pretty">
+                <RichLines lines={[line]} size="body" linkCursorLabel={commun.curseur_voir_projet} />
               </p>
             ))}
           </div>
@@ -86,8 +87,8 @@ function Definition({ groups, mobile }: { groups: MethodeDefinitionGroup[]; mobi
               {group.items.map(({ number, line }) => (
                 <li key={number} className="flex items-start gap-sm">
                   <span className="type-body-accentuation w-(--p-number-20) shrink-0">{number}</span>
-                  <p className="type-caption-regular min-w-0 flex-1 text-pretty">
-                    <RichLines lines={[line]} linkCursorLabel={commun.curseur_voir_projet} />
+                  <p className="type-body-regular max-w-(--methode-text-max-width) min-w-0 flex-1 text-pretty">
+                    <RichLines lines={[line]} size="body" linkCursorLabel={commun.curseur_voir_projet} />
                   </p>
                 </li>
               ))}
@@ -112,6 +113,7 @@ function elementLength(item: MethodeElement): number {
     case "subtitle":
       return lengthOf([item.line]);
     case "text":
+    case "paragraphs":
     case "caption":
       return lengthOf(item.lines);
     case "numbered":

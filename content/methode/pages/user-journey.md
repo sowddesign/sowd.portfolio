@@ -33,9 +33,9 @@ image_textes:
 # « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace).
 # *texte* = italique.
 definition: |
-  Le user journey (ou parcours utilisateur) est une visualisation de l’ensemble des étapes qu’une personne traverse pour atteindre un objectif avec un produit ou un service.
+  Le user journey, ou parcours utilisateur, représente l’**[ensemble des étapes]{dark}** qu’un utilise traverse pour atteindre un objectif avec un produit ou un service.
 
-  Il réunit généralement les actions, les pensées, les émotions, les points de contact et les points de friction.
+  Il réunit généralement ses actions, ses pensées et ses émotions, les outils qu’elle utilise à chaque étape (les points de contact) et les moments où il hésite ou bloque (les points de friction).
 
 # Projet cité : nom du fichier dans content/methode/projets/ (introduction au projet et bouton vers le projet)
 projet: flashinvaders
@@ -51,11 +51,11 @@ projet: flashinvaders
 
 ## Parcours du persona
 
-Lors du projet [Flash Invaders](/projects/flashinvaders), pour visualiser le parcours d’Élodie, le persona principal, sur l’application actuelle, j’ai construit un user journey.
+Lors du projet [Flash Invaders](/projects/flashinvaders), j’ai construit le user journey d’Élodie sur l’application actuelle. Élodie, 33 ans, est le persona principal : une joueuse très impliquée, qui part chasser les invaders partout en France avec ses amis.
 
 ---
 
-Ce parcours de l’existant m’a permis de repérer les frictions auxquelles la refonte devait répondre.
+Ce parcours m’a permis de repérer les **[frictions]{dark}** auxquelles la refonte devait répondre.
 
 ---
 
@@ -83,7 +83,7 @@ Ce parcours de l’existant m’a permis de repérer les frictions auxquelles la
 
 <<
 
-5. Les apprentissages et points de friction
+5. Les apprentissages et les points de friction
 
 ||
 
@@ -101,13 +101,13 @@ Ce parcours de l’existant m’a permis de repérer les frictions auxquelles la
 
 ||
 
-- Les entretiens et l’observation terrain.
+- Les réponses au questionnaire et leur analyse.
 
 >>
 
 <<
 
-- Les réponses au questionnaire et leur analyse.
+- Les entretiens et l’observation terrain.
 
 ||
 
@@ -117,7 +117,7 @@ Ce parcours de l’existant m’a permis de repérer les frictions auxquelles la
 
 ## La forme
 
-Le user journey se construit souvent en atelier, avec des post-it. J’ai reproduit ce format sur FigJam.
+Le user journey se construit souvent en atelier, avec des post-it. J’ai reproduit ce format sur FigJam, un outil de tableau blanc collaboratif, en ligne.
 
 ---
 
@@ -129,32 +129,36 @@ Le user journey se construit souvent en atelier, avec des post-it. J’ai reprod
 
 ---
 
-*La version complète est disponible sur la page du projet.*
+*La version complète est disponible sur la [page du projet](/projects/flashinvaders).*
 
 ## Ce que cela a apporté
 
-Le parcours d’Élodie montre que presque tout se passe hors de l’application : Instagram pour enquêter, Maps pour placer ses points et tracer son itinéraire, WhatsApp ou Discord pour retrouver ses amis.
+Le parcours d’Élodie montre que presque tout se passe **[hors de l’application]{dark}** : Instagram pour enquêter, Maps pour placer ses points et tracer son itinéraire, WhatsApp ou Discord pour retrouver ses amis.
 
 ---
 
-L’application Flash Invaders n’est ouverte que le temps de flasher. La refonte vise donc à ramener ces usages dans l’application.
+*Flash Invaders* n’est ouverte que le temps de flasher. La refonte vise donc à **[ramener ces usages]{dark}** dans l’application.
 
 ---
 
 1. Enquêter sur Instagram pour localiser un invader manquant.
-> → Refonte : des indices pour le trouver directement dans l’application.
+{petit} *→ Refonte : des indices pour le trouver directement dans l’application.*
 
 ||
 
 2. Placer des points un par un sur Maps, une tâche jugée très fastidieuse.
-> → Refonte : des marqueurs personnels sur la carte de l’application.
+{petit} *→ Refonte : des marqueurs personnels sur la carte de l’application.*
 
 ---
 
 3. Relier ces points à la main pour créer un itinéraire.
-> → Refonte : des itinéraires de balade proposés par l’application.
+{petit} *→ Refonte : des itinéraires de balade proposés par l’application.*
 
 ||
 
 4. S’organiser via des groupes WhatsApp ou Discord.
-> → Refonte : des balades à plusieurs et des rendez-vous dans l’application.
+{petit} *→ Refonte : des balades à plusieurs et des rendez-vous dans l’application.*
+
+---
+
+*Plusieurs de ces frictions recoupent celles repérées lors des observations terrain : le parcours les situe, étape par étape, dans le quotidien d’Élodie.*

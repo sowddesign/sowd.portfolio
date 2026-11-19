@@ -32,11 +32,11 @@ image_textes:
 
 # « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace)
 definition: |
-  La triangulation croise plusieurs méthodes de recherche pour répondre à une même question. Chacune compense les angles morts des autres : ce qu’un utilisateur dit en entretien, on le vérifie en l’observant agir.
+  La triangulation consiste à **[croiser]{dark}** plusieurs méthodes de recherche pour répondre à une même question. Chaque méthode compense les angles morts des autres : ce qu’un utilisateur dit en entretien, on le vérifie en l’observant agir.
 
-  On peut aussi croiser plusieurs sources ou plusieurs regards de chercheurs. Le but : fonder les décisions sur des résultats qui se recoupent.
+  Elle peut aussi croiser plusieurs sources, ou le regard de plusieurs chercheurs. Le but : fonder les décisions sur des résultats qui se **[recoupent]{dark}**.
 
-  Cette étape permet la transition depuis la phase Découvrir vers la phase Définir.
+  *Elle fait le lien entre la phase Découvrir, où l’on explore les besoins, et la phase Définir, où l’on précise le problème à résoudre.*
 
 # Projet cité : nom du fichier dans content/methode/projets/ (introduction au projet et bouton vers le projet)
 projet: c-media
@@ -65,7 +65,7 @@ projet: c-media
 
 ## Objectifs
 
-Lors de mon alternance chez [C-Media](/projects/c-media), j’ai dû travailler sur une fonctionnalité existante et pourtant délaissée.
+Lors de mon alternance chez [C-Media](/projects/c-media), j’ai travaillé sur une fonctionnalité existante, mais **[délaissée]{dark}** par les utilisateurs.
 
 ---
 
@@ -87,7 +87,7 @@ Les utilisateurs la citaient pourtant comme un besoin.
 
 ## Entretiens individuels
 
-J’ai mené 3 entretiens individuels à partir d’un guide construit en amont.
+J’ai mené **[trois entretiens]{dark}** individuels à partir d’un guide préparé en amont (la liste des thèmes et des questions à aborder).
 
 ---
 
@@ -99,7 +99,9 @@ Ils ont permis de recueillir le contexte, les habitudes et les difficultés de c
 
 ## Tests utilisateurs
 
-J’ai ensuite organisé 3 tests sur la fonctionnalité. En observant les utilisateurs réaliser des tâches concrètes, j’ai repéré des points de friction que les entretiens ne révélaient pas.
+J’ai ensuite organisé **[trois tests]{dark}** sur la fonctionnalité : chaque utilisateur réalisait des tâches concrètes pendant que je l’observais.
+
+Ces tests ont révélé des points de friction (les moments où l’utilisateur hésite ou bloque) que les entretiens ne faisaient pas apparaître.
 
 ||
 
@@ -111,33 +113,29 @@ J’ai ensuite organisé 3 tests sur la fonctionnalité. En observant les utilis
 
 || inverse
 
-Enfin, j’ai animé un focus group avec une dizaine d’utilisateurs. Cette session collective a fait émerger des perceptions partagées, des attentes et des désaccords sur le produit.
+Enfin, j’ai animé un focus group, une discussion de groupe autour du produit, avec une **[dizaine d’utilisateurs]{dark}**.
+
+Cette session collective a fait émerger des perceptions partagées, des attentes et des désaccords sur le produit.
 
 ## Croiser les résultats
 
-<<
+J’ai rassemblé les enseignements des trois méthodes pour repérer ce qui se recoupait et ce qui se contredisait.
 
-J’ai rassemblé les enseignements des trois méthodes dans un document UX, pour repérer ce qui se recoupait et ce qui se contredisait.
-
-||
-
-> Les analyses ont été relues avec le lead designer, pour limiter les biais d’un seul regard.
-
->>
+{petit} *Les analyses ont été relues avec le lead designer, pour limiter les biais d’un seul regard.*
 
 ---
 
 **Ce que le croisement a révélé :**
 
-Un autre outil répondait déjà au besoin, et plusieurs fonctionnalités du périmètre étaient défaillantes : les utilisateurs n’avaient aucune raison de changer d’habitude.
+Un **[autre outil]{dark}** répondait déjà au besoin, et plusieurs fonctionnalités concernées ne fonctionnaient pas correctement. Les utilisateurs n’avaient donc aucune raison de changer leurs habitudes.
 
-L’équipe produit s’appuyait sur un recueil des besoins ancien, et d’autres fonctionnalités passaient en priorité : celle-ci n’avait pas évolué avec les usages.
+L’équipe produit s’appuyait sur un recueil des besoins ancien, et d’autres fonctionnalités passaient en priorité. Celle-ci n’avait donc pas évolué avec les usages.
 
-*Les détails du projet restent confidentiels.*
+{petit} *Les détails du projet restent confidentiels.*
 
 ## Ce que cela a apporté
 
-Ces enseignements ont été traduits en maquettes et en prototypes sur Figma, puis validés par les utilisateurs.
+Ces enseignements ont été traduits en maquettes puis en prototypes sur Figma (des versions dessinées puis cliquables de l’interface), et **[validés par les utilisateurs]{dark}**.
 
 ||
 
@@ -145,4 +143,4 @@ Ces enseignements ont été traduits en maquettes et en prototypes sur Figma, pu
 
 ---
 
-*La solution a été mise en production après mon départ : je n’ai donc pas pu en mesurer l’impact.*
+{petit} *La solution a été mise en ligne après mon départ : je n’ai donc pas pu en mesurer l’impact.*

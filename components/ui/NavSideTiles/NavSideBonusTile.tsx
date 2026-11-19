@@ -1,5 +1,6 @@
 "use client";
 
+import { commun } from "@/content/texts";
 import { CursorLabel } from "../CursorLabel";
 import { Icon } from "../Icon";
 import { IconButton } from "../IconButton";
@@ -84,12 +85,12 @@ export function BonusTileContent({
   }
 
   return (
-    <div className={`flex items-center gap-lg py-sm ${layout === "mobile" ? "px-md" : "px-lg"} ${className}`}>
+    <div className={`flex items-center py-sm ${layout === "mobile" ? "gap-lg px-md" : "gap-sm pr-sm pl-lg"} ${className}`}>
       <p
         style={numberWidth !== undefined ? { width: numberWidth } : undefined}
         className={`${colorTransition} ${text} ${
           numberWidth !== undefined
-            ? "shrink-0"
+            ? "min-w-max shrink-0"
             : `min-w-[3ch] shrink ${
                 layout === "mobile"
                   ? "basis-(--nav-side-tile-number-max-mobile)"
@@ -173,12 +174,21 @@ export function NavSideBonusTile({
         reduced ? reducedTileWidth : "w-full"
       }`}
     >
+      {/* Desktop : « Sélectionner » (ou « Fermer », tuile ouverte) au curseur, comme les tuiles des pages
+          (demande de l'utilisateur) ; réduite : Main text ; mobile : sans texte au curseur. */}
       {reduced ? (
         <CursorLabel label={label} className="absolute inset-0">
           {toggle}
         </CursorLabel>
-      ) : (
+      ) : layout === "mobile" ? (
         toggle
+      ) : (
+        <CursorLabel
+          label={selected ? commun.curseur_methode_fermer_page : commun.curseur_methode_selectionner}
+          className="absolute inset-0"
+        >
+          {toggle}
+        </CursorLabel>
       )}
       <BonusTileContent
         layout={layout}

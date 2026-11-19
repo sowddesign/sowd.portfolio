@@ -87,7 +87,7 @@ function CounterContent({
 const counterLayout = (layout: NavSideTileLayout) =>
   layout === "reduced"
     ? `${reducedTileWidth} justify-center`
-    : `w-full gap-lg ${layout === "mobile" ? "px-md" : "px-lg"}`;
+    : `w-full ${layout === "mobile" ? "gap-lg px-md" : "gap-sm pr-sm pl-lg"}`;
 
 function FinishedCounter({
   finished,

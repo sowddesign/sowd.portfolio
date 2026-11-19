@@ -24,10 +24,10 @@ image_mobile: { taille: 125.0, x: 0.0, y: 0.0 }
 # rotation en degrés par rapport à l'image, « couleur: blanc » = text/neutral/white
 image_textes:
   - texte: mid-fi
-    desktop: { x: 80.4, y: 40.8 }
+    desktop: { x: 81.3, y: 40.8 }
     mobile: { x: 79.5, y: 41.3 }
   - texte: wireframes
-    desktop: { x: 35.8, y: 22.0 }
+    desktop: { x: 39.7, y: 22.0 }
     mobile: { x: 36.8, y: 22.8 }
 
 # « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace).

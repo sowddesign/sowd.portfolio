@@ -30,12 +30,11 @@ image_textes:
 # « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace).
 # *texte* = italique.
 definition: |
-  Le persona est une description fictive mais réaliste d’un utilisateur type, fondée sur la recherche.
-  Il incarne un profil représentatif des utilisateurs cibles, avec leurs objectifs, leurs besoins, leurs comportements et leurs contraintes.
+  Le persona est la description fictive, mais réaliste, d’un **[utilisateur type]{dark}**, construite à partir de la recherche. Il représente les utilisateurs cibles : leurs objectifs, leurs besoins, leurs comportements et leurs contraintes.
 
-  De cette façon, chaque idée, chaque décision, chaque choix de design est alors confronté à la question :
+  Chaque idée, chaque décision et chaque choix de design est alors confronté à une question :
   *« Est-ce que cela conviendrait à notre persona ? »*
-  Cette référence commune aide l’équipe à aligner ses choix sur les besoins réels des utilisateurs plutôt que sur des intuitions ou des opinions internes.
+  Cette **[référence commune]{dark}** aide l’équipe à appuyer ses choix sur les besoins réels des utilisateurs, plutôt que sur des intuitions ou des opinions internes.
 
 # Projet cité : nom du fichier dans content/methode/projets/ (introduction au projet et bouton vers le projet)
 projet: graine
@@ -50,18 +49,18 @@ projet: graine
 
 ## De la cible au persona
 
-Lors du projet graine, deux cibles ont été identifiées : une principale et une secondaire, à ne pas négliger.
+Lors du projet graine, nous avons identifié **[deux cibles]{dark}** : une principale, et une secondaire à ne pas négliger.
 
 ---
 
-Nous avons donc réalisé un persona par cible :
+Nous avons réalisé un persona pour chacune :
 
 1. Sara, 24 ans.
 2. Un couple de 35 à 40 ans, avec un enfant d’environ 10 ans.
 
 ---
 
-> Le procédé étant le même pour les deux, je n’en présenterai qu’un.
+{petit} *Le procédé étant le même pour les deux, je n’en présente qu’un ici.*
 
 ## Données utilisateurs
 
@@ -69,27 +68,23 @@ Pour construire le persona principal, Sara, j’ai croisé plusieurs enseignemen
 
 ---
 
-Les 18 à 34 ans sont les plus susceptibles d’être intéressés par notre application.
-
-> → Recherches quantitatives (études)
+Les 18 à 34 ans sont les plus susceptibles d’être intéressés par l’application.
+{petit} *→ Recherche quantitative (études)*
 
 ||
 
-Il y a plus de femmes que d’hommes qui estiment l’entretien des plantes contraignant.
-
-> → Recherches quantitatives (études)
+Les femmes sont plus nombreuses que les hommes à trouver l’entretien des plantes contraignant.
+{petit} *→ Recherche quantitative (études)*
 
 ---
 
-Ils s’informent sur les plantes surtout sur internet et auprès de leurs proches.
-
-> → Recherches quantitatives (questionnaire)
+Les répondants s’informent sur les plantes surtout sur internet et auprès de leurs proches.
+{petit} *→ Recherche quantitative (questionnaire)*
 
 ||
 
-70,2 % des répondants estiment que des missions quotidiennes les aideraient à mieux entretenir leurs plantes.
-
-> → Recherches quantitatives (questionnaire)
+**[70,2 %]{dark}** des répondants estiment que des missions quotidiennes les aideraient à mieux entretenir leurs plantes.
+{petit} *→ Recherche quantitative (questionnaire)*
 
 ## Humaniser ces données
 
@@ -99,10 +94,8 @@ Ils s’informent sur les plantes surtout sur internet et auprès de leurs proch
 
 ## Ce que cela a apporté
 
-Face à chaque choix, nous nous sommes demandé comment Sara aimerait que soit son application.
+Face à chaque choix, nous nous sommes demandé ce que Sara attendrait de son application.
 
 ---
 
-Par exemple :
-
-Sara voudrait des rappels pour ne rien oublier. Les missions quotidiennes transforment ces rappels en objectifs à accomplir chaque jour.
+Par exemple, Sara voudrait des **[rappels]{dark}** pour ne rien oublier. Les missions quotidiennes transforment ces rappels en **[objectifs]{dark}** à accomplir chaque jour.
