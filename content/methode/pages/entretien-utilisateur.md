@@ -32,9 +32,10 @@ image_textes:
 
 # « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace)
 definition: |
-  L’entretien utilisateur s’ancre dans une démarche de recherche qualitative.
+  L’entretien utilisateur est une méthode de **[recherche qualitative]{dark}** : un échange individuel avec un utilisateur pour comprendre ses habitudes, ses besoins et ses difficultés. Il cherche le « pourquoi » derrière les comportements.
 
-  L’analyse porte sur ce qui est dit, mais aussi sur la manière dont c’est dit : le ton, les hésitations, les émotions, le langage non verbal, ainsi que le contexte dans lequel l’expérience se déroule (moment, lieu, outils utilisés, contraintes, etc.).
+  L’analyse porte sur ce qui est dit, mais aussi sur la **[manière]{dark}** dont c’est dit : le ton, les hésitations, les émotions, le langage non verbal (gestes, expressions du visage).
+  Elle tient aussi compte du contexte dans lequel l’expérience se déroule : le moment, le lieu, les outils utilisés et les contraintes.
 
 # Projet cité : nom du fichier dans content/methode/projets/ (introduction au projet et bouton vers le projet)
 projet: scholar
@@ -51,11 +52,13 @@ projet: scholar
 
 ## Démarche
 
-Lors du projet [Scholar](/projects/scholar), j’ai mené un entretien avec Margaux, 21 ans, utilisatrice quotidienne de Duolingo, pour comprendre ses habitudes et ses attentes envers une application d’apprentissage.
+Lors du projet [Scholar](/projects/scholar), j’ai mené un entretien avec Margaux, 21 ans, utilisatrice quotidienne de Duolingo. L’objectif : comprendre ses habitudes et ses attentes envers une application d’apprentissage.
 
 ---
 
-*L’entretien a duré une vingtaine de minutes. Les extraits ci-dessous ont été sélectionnés pour ce qu’ils ont révélé.*
+*Duolingo fait partie des applications étudiées lors du benchmark. L’entretien a duré une vingtaine de minutes. Les extraits ci-dessous ont été sélectionnés pour ce qu’ils ont révélé.*
+
+*Un seul entretien a été mené : il a servi d’entretien exploratoire, pour confronter nos premières idées à un usage réel.*
 
 ## Pourquoi revenir chaque jour ?
 
@@ -65,8 +68,8 @@ Lors du projet [Scholar](/projects/scholar), j’ai mené un entretien avec Marg
 
 *« Ça m’arrive de le faire dix minutes avant minuit. Quand tu as un quotidien à toi, tu oublies facilement. Ce qui est bien dans Duolingo, c’est que t’as beaucoup de rappels. »*
 
-##### Ce qu’on en retient :
-L’apprentissage passe rarement en priorité dans un quotidien chargé. Les rappels sont essentiels pour qu’il ne soit pas oublié.
+##### Ce que j’en retiens :
+L’apprentissage passe rarement en priorité dans un quotidien chargé. Les **[rappels]{dark}** sont essentiels pour qu’il ne soit pas oublié.
 
 ## Dans quelles conditions ?
 
@@ -76,8 +79,8 @@ L’apprentissage passe rarement en priorité dans un quotidien chargé. Les rap
 
 *« Le petit hic, c’est que tu le fais souvent dans les transports… sans ton casque, tu ne peux pas écouter. »*
 
-##### Ce qu’on en retient :
-Le lieu et le moment d’utilisation limitent certaines fonctionnalités. L’application doit s’adapter au contexte, avec par exemple des exercices sans son ou plus de temps quand l’attention est réduite.
+##### Ce que j’en retiens :
+Le lieu et le moment d’utilisation limitent certaines fonctionnalités. L’application doit s’**[adapter au contexte]{dark}** : proposer des exercices sans son, ou laisser plus de temps quand l’attention est réduite.
 
 ## Qu’est-ce qui manque ?
 
@@ -87,15 +90,15 @@ Le lieu et le moment d’utilisation limitent certaines fonctionnalités. L’ap
 
 *« Pourquoi pas des fiches de cours, des explications plus précises sur où était ton erreur et pourquoi ça s’écrit comme ça ? »*
 
-##### Ce qu’on en retient :
-Être corrigé ne suffit pas. L’utilisateur a besoin d’un cours avant d’être testé, puis après le test ; des nouveaux exercices adaptés à ses erreurs.
+##### Ce que j’en retiens :
+Être corrigé ne suffit pas. L’utilisateur a besoin d’un **[cours avant le test]{dark}**, puis d’exercices adaptés à ses erreurs.
 
-## Ce que l’entretien a apporté
+## Ce que cela a apporté
 
 *« On a envie que ça soit rapide, mais il faut que ce soit efficace dans l’apprentissage. »*
 
-> Citation : Margaux, à 20:59 de l’entretien
+> Margaux, à 20:59 de l’entretien
 
 ||
 
-Ces constats ont confirmé notre format de sessions courtes, pensées pour s’intégrer au quotidien, et ont servi de base au persona.
+Ces constats ont conforté notre format de **[sessions courtes]{dark}**, pensées pour s’intégrer au quotidien. Ils ont aussi servi de base au persona.

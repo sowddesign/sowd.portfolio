@@ -18,9 +18,11 @@ lien: /projects/c-media
 
 #### Le projet
 
-[C-Media](/projects/c-media), filiale du groupe Cegedim, conçoit des solutions de communication pour les pharmacies : print, digital, vitrine, in-store et sonore.
+[C-Media](/projects/c-media), filiale du groupe Cegedim, conçoit des solutions de communication pour les pharmacies : supports imprimés, numériques, en vitrine, en magasin et sonores.
 
-J’y ai travaillé une année en alternance durant mon mastère UX. J’ai eu l’occasion de faire de la recherche UX ainsi que de l’UX et de l’UI design sur plusieurs solutions numériques aux côtés d’un lead designer, des PO/PM et des développeurs.
+J’y ai travaillé un an en alternance pendant mon mastère UX. J’ai mené de la recherche UX et conçu l’expérience (UX) et l’interface (UI) de plusieurs solutions numériques.
+
+J’ai travaillé aux côtés d’un lead designer (le designer référent de l’équipe), des PO/PM (qui définissent les priorités du produit) et des développeurs.
 
 ---
 
@@ -33,9 +35,9 @@ J’y ai travaillé une année en alternance durant mon mastère UX. J’ai eu l
 
 ||
 
-- Création de prototypes
-- Documentation
+- Chargé de création des prototypes
+- Chargé de documentation
 
 >>
 
-> Alternance 2025–2026 (Mastère UX Design).
+> Alternance 2025-2026 (Mastère UX Design).

@@ -49,6 +49,9 @@ export type NavSideTilesProps = {
   stickyTop?: string;
   /** Largeur (px) de la copie de mesure, quand elle diffère de la largeur affichée. */
   measureWidth?: number;
+  /** Tuiles mesurées (par défaut steps) : toutes celles de la méthode, pour une colonne du numéro et un passage
+      en réduit identiques d'une étape à l'autre (methodeContainer, demande de l'utilisateur). */
+  measureSteps?: NavSideTilesProps["steps"];
   onLayoutChange?: (layout: NavSideTileLayout) => void;
 };
 
@@ -61,14 +64,20 @@ export function NavSideTiles({
   mobile = false,
   panel,
   measureWidth,
+  measureSteps,
   onLayoutChange,
   stickyTop,
 }: NavSideTilesProps) {
+  const measured = measureSteps ?? steps;
   const touch = useMediaQuery(touchQuery);
   const base = mobile || touch ? "mobile" : "desktop";
   const measureRef = useRef<HTMLDivElement>(null);
   const containers = useRef<(HTMLDivElement | null)[]>([]);
+  /* Copie de mesure avec les noms courts (desktop) : la liste rétrécie passe aux noms courts avant le réduit
+     (demande de l'utilisateur). */
+  const shortContainers = useRef<(HTMLDivElement | null)[]>([]);
   const [overflow, setOverflow] = useState(false);
+  const [shortOverflow, setShortOverflow] = useState(false);
   const [numberWidth, setNumberWidth] = useState<number>();
   const [completions, setCompletions] = useState(0);
 
@@ -81,10 +90,17 @@ export function NavSideTiles({
     const ghost = measureRef.current;
     if (!ghost) return;
     const check = () => {
-      const rows = containers.current.filter((el): el is HTMLDivElement => el !== null);
-      setOverflow(rows.some((el) => el.scrollWidth > el.clientWidth));
-      /* Colonne du numéro commune : la plus étroite après rétrécissement, pour aligner les tuiles. */
-      const widths = rows.map((el) => (el.firstElementChild as HTMLElement).getBoundingClientRect().width);
+      const present = (list: (HTMLDivElement | null)[]) => list.filter((el): el is HTMLDivElement => el !== null);
+      const overflows = (list: HTMLDivElement[]) => list.some((el) => el.scrollWidth > el.clientWidth);
+      const rows = present(containers.current);
+      const shortRows = present(shortContainers.current);
+      const full = overflows(rows);
+      setOverflow(full);
+      setShortOverflow(shortRows.length > 0 ? overflows(shortRows) : full);
+      /* Colonne du numéro commune : la plus étroite après rétrécissement, pour aligner les tuiles
+         (mesurée sur les noms affichés : complets, ou courts quand les complets ne tiennent plus). */
+      const shown = full && shortRows.length > 0 ? shortRows : rows;
+      const widths = shown.map((el) => (el.firstElementChild as HTMLElement).getBoundingClientRect().width);
       setNumberWidth(widths.length ? Math.min(...widths) : undefined);
     };
     const observer = new ResizeObserver(check);
@@ -92,9 +108,10 @@ export function NavSideTiles({
     document.fonts.ready.then(check);
     check();
     return () => observer.disconnect();
-  }, [steps, base, measureWidth]);
+  }, [measured, base, measureWidth]);
 
-  const layout = base === "desktop" && overflow ? "reduced" : base;
+  const layout = base === "desktop" && shortOverflow ? "reduced" : base;
+  const short = base === "desktop" && overflow;
   const reportLayout = useRef(onLayoutChange);
   useEffect(() => {
     reportLayout.current = onLayoutChange;
@@ -112,6 +129,7 @@ export function NavSideTiles({
             {...step}
             progress={next[i]}
             layout={layout}
+            short={short}
             wrap={base === "mobile" && overflow}
             numberWidth={numberWidth}
             selected={selected === i}
@@ -133,7 +151,7 @@ export function NavSideTiles({
         style={measureWidth !== undefined ? { width: measureWidth } : undefined}
         className={`invisible absolute top-0 left-0 flex flex-col ${measureWidth !== undefined ? "" : "right-0"}`}
       >
-        {steps.map((step, i) => (
+        {measured.map((step, i) => (
           <NavSideTile
             key={i}
             {...step}
@@ -144,6 +162,19 @@ export function NavSideTiles({
             }}
           />
         ))}
+        {base === "desktop" &&
+          measured.map((step, i) => (
+            <NavSideTile
+              key={`court-${i}`}
+              {...step}
+              layout={base}
+              short
+              measure
+              containerRef={(el) => {
+                shortContainers.current[i] = el;
+              }}
+            />
+          ))}
       </div>
       {frame
         ? frame(tiles, { layout, finished: next.filter((value) => value >= 1).length, numberWidth, completions })

@@ -24,7 +24,7 @@ image_mobile: { taille: 100.0, x: 0.0, y: 0.0 }
 # rotation en degrés par rapport à l'image, « couleur: blanc » = text/neutral/white
 image_textes:
   - texte: développement IA
-    desktop: { x: 40.1, y: 67.5 }
+    desktop: { x: 44.7, y: 67.5 }
     mobile: { x: 44.9, y: 67.3 }
 
 # « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace).

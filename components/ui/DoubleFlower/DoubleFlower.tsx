@@ -12,7 +12,7 @@ import {
   type ReactNode,
 } from "react";
 import { commun } from "@/content/texts";
-import { parseLine, type MdLine } from "@/lib/markdown";
+import { parseLines, type MdLine } from "@/lib/markdown";
 import { useCursorLabel } from "../CursorLabel";
 import { Icon } from "../Icon";
 import type { IconName } from "../Icon/icon-names";
@@ -57,14 +57,14 @@ const phases: Phase[] = ["probleme", "01", "02", "solution", "03", "04"];
 const fail = (message: string): never => {
   throw new Error(`content/commun.md : ${message}`);
 };
-const stepTexts: Record<"diamonds" | Phase, MdLine> = {
-  diamonds: parseLine(commun.double_texte_diamants, fail),
-  probleme: parseLine(commun.double_texte_probleme, fail),
-  "01": parseLine(commun.double_texte_01, fail),
-  "02": parseLine(commun.double_texte_02, fail),
-  solution: parseLine(commun.double_texte_solution, fail),
-  "03": parseLine(commun.double_texte_03, fail),
-  "04": parseLine(commun.double_texte_04, fail),
+const stepTexts: Record<"diamonds" | Phase, MdLine[]> = {
+  diamonds: parseLines(commun.double_texte_diamants, fail),
+  probleme: parseLines(commun.double_texte_probleme, fail),
+  "01": parseLines(commun.double_texte_01, fail),
+  "02": parseLines(commun.double_texte_02, fail),
+  solution: parseLines(commun.double_texte_solution, fail),
+  "03": parseLines(commun.double_texte_03, fail),
+  "04": parseLines(commun.double_texte_04, fail),
 };
 
 /* ---------- Géométrie relevée dans Figma ---------- */
@@ -912,7 +912,7 @@ export function DoubleFlower({ diamonds = false, className = "" }: DoubleFlowerP
                   className={`col-span-2 row-span-3 flex desktop:row-span-2 min-h-0 flex-col [@media(hover:none)]:hidden ${desktopTextPlace[phase]} ${phase === "02" || phase === "04" || phase === "solution" ? "justify-end" : "justify-start"}`}
                 >
                   <p id={textId(phase)} data-phase-text className="type-caption-regular">
-                    <RichLines lines={[stepTexts[phase]]} />
+                    <RichLines lines={stepTexts[phase]} />
                   </p>
                 </div>
               )}
@@ -990,7 +990,7 @@ export function DoubleFlower({ diamonds = false, className = "" }: DoubleFlowerP
         <span aria-hidden className="block w-full border-t border-shape-neutral-white" />
         <div className="flex flex-col gap-md p-md">
           <p aria-live="polite" className="type-caption-regular empty:hidden">
-            {stepText && <RichLines lines={[stepText]} />}
+            {stepText && <RichLines lines={stepText} />}
           </p>
           {/* État initial : bouton Découvrir (lance le parcours) ; ensuite, indicateur d'étapes (proposition sans Figma). */}
           {step === "default" ? (

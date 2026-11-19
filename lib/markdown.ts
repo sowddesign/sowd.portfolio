@@ -62,6 +62,11 @@ function parseItalics(line: string, fail: (message: string) => never): MdLine {
 
 /** Une seule ligne (couleurs, liens, italique, gras), sans découpe en liste même si elle commence par « 1. ». */
 export function parseLine(line: string, fail: (message: string) => never): MdLine {
+  // Ligne entière en italique contenant du gras (« *texte **[mot]{dark}** texte* ») : gras en italique.
+  const wrapped = line.match(/^\*(?!\*)(.*[^*])\*$/);
+  if (wrapped && wrapped[1].includes("**")) {
+    return parseLine(wrapped[1], fail).map((part) => ({ ...part, italic: true }));
+  }
   const parts: MdLine = [];
   let last = 0;
   for (const match of line.matchAll(BOLD)) {
@@ -71,6 +76,15 @@ export function parseLine(line: string, fail: (message: string) => never): MdLin
   }
   if (last < line.length) parts.push(...parseItalics(line.slice(last), fail));
   return parts;
+}
+
+/** Texte court sur une ou plusieurs lignes : chaque retour à la ligne du .md force un retour à la ligne. */
+export function parseLines(text: string, fail: (message: string) => never): MdLine[] {
+  return text
+    .replace(/\r\n/g, "\n")
+    .trim()
+    .split("\n")
+    .map((line) => parseLine(line.trimEnd(), fail));
 }
 
 function parseParagraph(source: string, fail: (message: string) => never): MdParagraph {

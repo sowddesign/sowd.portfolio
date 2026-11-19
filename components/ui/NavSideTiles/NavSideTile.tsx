@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState, type Ref } from "react";
+import { commun } from "@/content/texts";
 import { CursorLabel } from "../CursorLabel";
 import { Icon } from "../Icon";
 import { IconButton } from "../IconButton";
@@ -35,6 +36,10 @@ export type NavSideTileProps = {
   number: string;
   /** Propriété Figma « tilesText » (Main text). */
   label: string;
+  /** Main text court (desktop), affiché à la place de label quand short est vrai (demande de l'utilisateur). */
+  labelShort?: string;
+  /** Liste rétrécie : labelShort à la place de label. */
+  short?: boolean;
   selected?: boolean;
   /** Progression de lecture de l'étape, de 0 à 1. */
   progress?: number;
@@ -61,6 +66,8 @@ export const reducedTileWidth =
 export function NavSideTile({
   number,
   label,
+  labelShort,
+  short = false,
   selected = false,
   progress = 0,
   layout = "desktop",
@@ -125,28 +132,34 @@ export function NavSideTile({
   ) : (
     <div
       ref={containerRef}
-      className={`flex items-center gap-lg py-sm ${mobile ? "px-md" : "px-lg"} ${measure ? "overflow-hidden" : ""}`}
+      className={`flex items-center ${mobile ? "gap-lg px-md" : "gap-sm pr-sm pl-lg"} py-sm ${measure ? "overflow-hidden" : ""}`}
     >
-      <p
+      {/* Desktop : la flèche (ou la croix) du survol remplace le numéro, sans place réservée à côté du titre
+          (demande de l'utilisateur) ; la colonne garde au moins la largeur de l'icône. */}
+      <div
         style={numberWidth !== undefined ? { width: numberWidth } : undefined}
-        className={`${colorTransition} ${text} ${
+        className={`grid items-center ${
           numberWidth !== undefined
             ? "shrink-0"
-            : `min-w-[3ch] shrink ${
+            : `${mobile ? "min-w-[3ch]" : "min-w-[max(2ch,var(--icon-lg))]"} shrink ${
                 mobile ? "basis-(--nav-side-tile-number-max-mobile)" : "basis-(--nav-side-tile-number-max-desktop)"
               }`
         }`}
       >
-        {number}
-      </p>
+        <p className={`${colorTransition} ${text} [grid-area:1/1] ${mobile || measure ? "" : "group-hover:invisible"}`}>
+          {number}
+        </p>
+        {!mobile && !measure && <span className="[grid-area:1/1]">{hoverIcon}</span>}
+      </div>
       <div
         className={`flex grow items-center gap-sm ${
           wrap ? "min-h-(--button-size-sm) min-w-0 shrink" : "h-(--button-size-sm) shrink-0"
         }`}
       >
         {/* En mobile, pas de flèche ni de croix avant le texte : la croix remplace le Plus à droite (demande de l'utilisateur). */}
-        {!mobile && hoverIcon}
-        <p className={`${colorTransition} ${text} grow ${wrap ? "min-w-0" : "whitespace-nowrap"}`}>{label}</p>
+        <p className={`${colorTransition} ${text} grow ${wrap ? "min-w-0" : "whitespace-nowrap"}`}>
+          {short && labelShort ? labelShort : label}
+        </p>
         {/* Mesure desktop : place du Check réservée sur toutes les tuiles (une étape peut se terminer).
             Pendant l'accomplissement, le Check est en place mais caché jusqu'à l'arrivée de la goutte. */}
         {(finished || (measure && !mobile)) && (
@@ -197,7 +210,8 @@ export function NavSideTile({
         reduced ? `${reducedTileWidth} ${tileHeight}` : "w-full"
       }`}
     >
-      {/* Réduite : bouton et Main text au curseur limités au carré au-dessus de la barre (décision de l'utilisateur). */}
+      {/* Réduite : bouton et Main text au curseur limités au carré au-dessus de la barre (décision de l'utilisateur).
+          Desktop : « Sélectionner » (ou « Fermer », tuile ouverte) au curseur à la place de la main (demande de l'utilisateur). */}
       {!measure &&
         (reduced ? (
           <CursorLabel
@@ -206,8 +220,15 @@ export function NavSideTile({
           >
             {toggle}
           </CursorLabel>
-        ) : (
+        ) : mobile ? (
           toggle
+        ) : (
+          <CursorLabel
+            label={selected ? commun.curseur_methode_fermer_page : commun.curseur_methode_selectionner}
+            className="absolute inset-0"
+          >
+            {toggle}
+          </CursorLabel>
         ))}
       <div className={`pointer-events-none relative flex flex-1 flex-col`}>{content}</div>
       {bar}

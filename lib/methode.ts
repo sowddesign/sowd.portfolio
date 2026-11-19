@@ -50,11 +50,21 @@ export type MethodeImage = {
  * notes facultatives sous les paragraphes (« > texte » sous « 1. texte », captionText/small/italic, frame Figma
  * « methode 11 », problématique).
  */
-export type MethodeNumberedItem = { number: string; image?: MethodeImage; paragraphs: MdLine[]; notes?: MdLine[] };
+export type MethodeNumberedItem = {
+  number: string;
+  image?: MethodeImage;
+  paragraphs: MdLine[];
+  /** Rangs des paragraphes en taille caption (« {petit} texte », demande de l'utilisateur). */
+  smallParagraphs?: number[];
+  notes?: MdLine[];
+};
 
 export type MethodeElement =
   | { kind: "subtitle"; line: MdLine }
-  | { kind: "text"; lines: MdLine[] }
+  /** small : texte en taille caption (« {petit} texte », demande de l'utilisateur). */
+  | { kind: "text"; lines: MdLine[]; small?: boolean }
+  /** Texte body suivi de lignes « {petit} » (caption), comme un élément numéroté sans numéro (demande de l'utilisateur). */
+  | { kind: "paragraphs"; lines: MdLine[]; smallLines: number[] }
   | { kind: "numbered"; items: MethodeNumberedItem[] }
   | { kind: "bullets"; items: MdLine[] }
   | ({ kind: "image" } & MethodeImage)
@@ -65,7 +75,7 @@ export type MethodeElement =
   /** Page intégrée (« @ adresse | titre ») : livre Heyzine, etc. ; titre lu par les lecteurs d'écran. */
   | { kind: "embed"; src: string; title: string }
   /** Titre captionText/accentuation et son texte (« ##### Titre » puis le texte en dessous). */
-  | { kind: "titled"; title: MdLine; lines: MdLine[] };
+  | { kind: "titled"; title: MdLine; lines: MdLine[]; smallLines?: number[] };
 
 /**
  * Rangée d'un bloc : une colonne (pleine largeur) ou deux ; alignEnd cale la colonne de droite en bas ;
@@ -145,6 +155,8 @@ export type MethodePageEntry = {
   number: string;
   /** Nom affiché dans le menu. */
   label: string;
+  /** Nom court, à la place du nom quand la liste rétrécit (desktop). */
+  labelShort?: string;
   content: MethodePageContent | null;
 };
 
@@ -199,11 +211,16 @@ function read(file: string) {
 
 /**
  * Une ligne de texte (lib/markdown) ; un lien vers un projet pas encore accessible (« off » dans
- * content/projects/ordre.yaml) devient du texte regular, sans lien ni italique (demande de l'utilisateur).
+ * content/projects/ordre.yaml) devient du texte regular, sans lien ni italique (demande de l'utilisateur),
+ * sauf dans une ligne entièrement en italique, où il garde l'italique (demande de l'utilisateur).
  */
 function parseMethodeLine(line: string, fail: (message: string) => never): MdLine {
-  return parseLine(line, fail).map((part) =>
-    part.href && !linkAvailable(part.href) ? { text: part.text, ...(part.bold ? { bold: true } : {}) } : part,
+  const parts = parseLine(line, fail);
+  const allItalic = parts.every((part) => part.italic);
+  return parts.map((part) =>
+    part.href && !linkAvailable(part.href)
+      ? { text: part.text, ...(part.bold ? { bold: true } : {}), ...(allItalic ? { italic: true } : {}) }
+      : part,
   );
 }
 
@@ -304,6 +321,9 @@ function image(source: string, folder: string, fail: (message: string) => never)
   };
 }
 
+/** « {petit} texte » : texte en taille caption au lieu de body (demande de l'utilisateur). */
+const SMALL = "{petit} ";
+
 function element(source: string, folder: string, fail: (message: string) => never): MethodeElement {
   const lines = source.split("\n").map((line) => line.trim());
   const [first] = lines;
@@ -312,7 +332,9 @@ function element(source: string, folder: string, fail: (message: string) => neve
     return {
       kind: "titled",
       title: parseMethodeLine(first.slice(6), fail),
-      lines: lines.slice(1).map((line) => parseMethodeLine(line, fail)),
+      /* Lignes « {petit} » : caption collée sous le texte (demande de l'utilisateur). */
+      lines: lines.slice(1).map((line) => parseMethodeLine(line.startsWith(SMALL) ? line.slice(SMALL.length) : line, fail)),
+      smallLines: lines.slice(1).flatMap((line, i) => (line.startsWith(SMALL) ? [i] : [])),
     };
   }
   if (lines.length === 1 && AUDIO.test(first)) return audio(first, folder, fail);
@@ -345,7 +367,9 @@ function element(source: string, folder: string, fail: (message: string) => neve
           (item.notes ??= []).push(parseMethodeLine(line.slice(2), fail));
         } else {
           if (item.notes) fail(`élément « ${item.number} » : les notes « > » se placent après ses paragraphes.`);
-          item.paragraphs.push(parseMethodeLine(line, fail));
+          const small = line.startsWith(SMALL);
+          if (small) (item.smallParagraphs ??= []).push(item.paragraphs.length);
+          item.paragraphs.push(parseMethodeLine(small ? line.slice(SMALL.length) : line, fail));
         }
       }
     }
@@ -356,6 +380,16 @@ function element(source: string, folder: string, fail: (message: string) => neve
   }
   if (lines.every((line) => line.startsWith("> "))) {
     return { kind: "caption", lines: lines.map((line) => parseMethodeLine(line.slice(2), fail)) };
+  }
+  if (lines.every((line) => line.startsWith(SMALL))) {
+    return { kind: "text", small: true, lines: lines.map((line) => parseMethodeLine(line.slice(SMALL.length), fail)) };
+  }
+  if (lines.some((line) => line.startsWith(SMALL))) {
+    return {
+      kind: "paragraphs",
+      lines: lines.map((line) => parseMethodeLine(line.startsWith(SMALL) ? line.slice(SMALL.length) : line, fail)),
+      smallLines: lines.flatMap((line, i) => (line.startsWith(SMALL) ? [i] : [])),
+    };
   }
   return { kind: "text", lines: lines.map((line) => parseMethodeLine(line, fail)) };
 }
@@ -678,14 +712,16 @@ async function loadMethode(version: number): Promise<MethodeStep[]> {
           if (pair.length !== 1 || typeof pair[0][1] !== "string") {
             failOrder(`étape « ${title} », page ${number(j)} : écris « - fichier: Nom affiché ».`);
           }
-          const [slug, label] = pair[0] as [string, string];
+          const [slug, names] = pair[0] as [string, string];
+          /* « Nom | Nom court » : le nom court remplace le nom quand la liste rétrécit (demande de l'utilisateur). */
+          const [label, labelShort] = names.split("|").map((name) => name.trim());
           if (!SLUG.test(slug)) {
             failOrder(`« ${slug} » : le nom de fichier ne prend que des minuscules sans accent, des chiffres et des « - ».`);
           }
           if (seen.has(slug)) failOrder(`la page « ${slug} » est listée deux fois.`);
           seen.add(slug);
           const exists = existsSync(path.join(METHODE_DIR, "pages", `${slug}.md`));
-          return { slug, number: number(j), label, content: exists ? await loadMethodePage(slug, version) : null };
+          return { slug, number: number(j), label, ...(labelShort ? { labelShort } : {}), content: exists ? await loadMethodePage(slug, version) : null };
         }),
       );
 

@@ -48,6 +48,33 @@ import { commun, contact } from "@/content/texts";
  * Cadres Figma : mobile 402 × 311, tablette 410 × 562, desktop 719,5 × 562.
  */
 const SCENE_GROWTH = 0.8;
+
+/*
+ * Visuel (bureau et moniteur), deux versions (demande de l'utilisateur, pour pouvoir revenir en arrière) :
+ *   visuel-halo.webp : halo lumineux autour de la bande et du bouton du PC (tournesol d'origine) ;
+ *   visuel.webp      : image d'origine.
+ */
+const VISUEL = "/photos-container/visuel-halo.webp";
+
+/*
+ * Voile d'assombrissement évidé (demande de l'utilisateur) : ellipse à bord doux autour de la bande lumineuse du PC,
+ * pour que son halo ressorte. Valeurs d'essai, sans token.
+ * Le voile fait 3 fois la scène (-inset-full) : position dans le voile = (100 % + position dans la scène) / 3.
+ * PC : centre 65,9 % × 62,1 % de la scène (repéré dans l'image 4096 × 4096).
+ * Intérieur transparent jusqu'à 45 % du rayon, puis retour progressif au voile.
+ */
+const voileHole = (x: string, y: string, rx: string, ry: string) =>
+  `radial-gradient(${rx} ${ry} at ${x} ${y}, transparent 45%, black 100%)`;
+const VOILE_HOLES = {
+  maskImage: voileHole("55.3%", "54%", "2.5%", "7%"),
+} as const;
+
+/*
+ * Tournesol (demande de l'utilisateur) : détouré à sa forme exacte (visuel-tournesol.webp, même cadrage que le visuel)
+ * et posé au-dessus du voile, à opacité réduite (TOURNESOL_OPACITY, valeur d'essai) : il ressort à moitié du voile,
+ * sans éclaircir le mur autour.
+ */
+const TOURNESOL_OPACITY = 0.5;
 const sceneReference =
   "[--scene:1465.9px] [--ratio-w:3.6465] [--ratio-h:4.7135] " +
   "tablet:[--scene:1448px] tablet:[--ratio-w:3.5317] tablet:[--ratio-h:2.5765] " +
@@ -58,12 +85,20 @@ const sceneReference =
  * scène de hauteur 843/2168 de sa largeur, centrée) atteint le haut du conteneur quand
  * largeur de scène = hauteur du conteneur × 2,1688. Sans effet en mobile et en desktop (--cover-h: 0).
  */
-const sceneCover = "[--cover-h:0] tablet:[--cover-h:2.1688] desktop:[--cover-h:0]";
+const sceneCover =
+  "[--cover-h:0] tablet:[--cover-h:2.1688] desktop:[--cover-h:0]";
 const sceneWidth = `max(calc(var(--scene) * ${1 - SCENE_GROWTH} + min(100cqw * var(--ratio-w), var(--container-h) * var(--ratio-h)) * ${SCENE_GROWTH}), var(--container-h) * var(--cover-h))`;
 /** Décalage du centre de la scène en mobile (12 px, 4,5 px sur 1465,9 × 570), en % de la scène. */
-const sceneOffset = "-translate-x-[49.18%] -translate-y-[49.21%] tablet:-translate-1/2";
+const sceneOffset =
+  "-translate-x-[49.18%] -translate-y-[49.21%] tablet:-translate-1/2";
 
-export function PhotosContainer({ photos, className = "" }: { photos: Photo[]; className?: string }) {
+export function PhotosContainer({
+  photos,
+  className = "",
+}: {
+  photos: Photo[];
+  className?: string;
+}) {
   const root = useRef<HTMLDivElement>(null);
   const { state: scene, progress } = useVisualsLoading(root);
 
@@ -71,7 +106,8 @@ export function PhotosContainer({ photos, className = "" }: { photos: Photo[]; c
   useEffect(() => {
     const element = root.current;
     if (!element) return;
-    const measure = () => element.style.setProperty("--container-h", `${element.clientHeight}px`);
+    const measure = () =>
+      element.style.setProperty("--container-h", `${element.clientHeight}px`);
     measure();
     const observer = new ResizeObserver(measure);
     observer.observe(element);
@@ -95,16 +131,45 @@ export function PhotosContainer({ photos, className = "" }: { photos: Photo[]; c
       >
         {/* Visuel (bureau et moniteur), recadré comme dans visuelBackground. */}
         <div className="absolute top-[-9.29%] left-[24%] h-[133.64%] w-[51.97%]">
-          <Image src="/photos-container/visuel.webp" alt="" fill sizes="(width > 1300px) 80vw, (width > 740px) 95vw, 190vw" className="object-cover" />
+          <Image
+            src={VISUEL}
+            alt=""
+            fill
+            sizes="(width > 1300px) 80vw, (width > 740px) 95vw, 190vw"
+            className="object-cover"
+          />
         </div>
 
         {/* Voile extra/backgroundColor/behindVisual/assombrissement : dans Figma, il couvre tout visuelBackground,
-            au-dessus du visuel et sous l'écran. Étendu au-delà de la scène pour couvrir aussi un conteneur plus haut. */}
-        <div aria-hidden className="pointer-events-none absolute -inset-full bg-extra-assombrissement" />
+            au-dessus du visuel et sous l'écran. Étendu au-delà de la scène pour couvrir aussi un conteneur plus haut.
+            Évidé autour du PC (VOILE_HOLES). */}
+        <div
+          aria-hidden
+          style={VOILE_HOLES}
+          className="pointer-events-none absolute -inset-full bg-extra-assombrissement"
+        />
+
+        {/* Tournesol détouré au-dessus du voile (même cadrage que le visuel). */}
+        <div
+          aria-hidden
+          style={{ opacity: TOURNESOL_OPACITY }}
+          className="pointer-events-none absolute top-[-9.29%] left-[24%] h-[133.64%] w-[51.97%]"
+        >
+          <Image
+            src="/photos-container/visuel-tournesol.webp"
+            alt=""
+            fill
+            sizes="(width > 1300px) 80vw, (width > 740px) 95vw, 190vw"
+            className="object-cover"
+          />
+        </div>
 
         {/* Écran du moniteur : 529 × 304 dans la variante desktop. */}
         <div className="absolute top-[30.84%] left-[36.95%] h-[36.06%] w-[24.40%]">
-          <Photos photos={photos} sizes="(width > 1300px) 20vw, (width > 740px) 25vw, 50vw" />
+          <Photos
+            photos={photos}
+            sizes="(width > 1300px) 20vw, (width > 740px) 25vw, 50vw"
+          />
 
           {/* Texte (choix validé) : spacing/md au-dessus de l'écran ; dépasse de 9 px (valeur sans token)
               à gauche de l'écran en mobile, aligné à gauche, et à droite à partir de la tablette, aligné à droite.

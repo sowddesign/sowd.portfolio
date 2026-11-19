@@ -106,6 +106,9 @@ curseur_methode_etape: "Étape :"
 # Introduction au projet (pages de la méthode) : bouton pour l'ouvrir et pour la fermer
 curseur_methode_intro_ouvrir: Ouvrir
 curseur_methode_intro_fermer: Fermer
+# Méthode, tuiles de la liste des pages (desktop, non réduites) : texte au curseur
+curseur_methode_selectionner: Sélectionner
+curseur_methode_fermer_page: Fermer
 
 # Contrôles de la vidéo : boutons et barres, lus par les lecteurs d'écran
 video_lecture: Lire la vidéo
@@ -134,14 +137,19 @@ double_decouvrir: découvrir
 double_definir: définir
 double_developper: développer
 double_livrer: livrer
-# Textes de chaque étape ; [mot]{brand} met un mot en couleur
-double_texte_diamants: "Le [Double Diamant]{brand} propose d’alterner entre ouverture pour explorer et convergence pour préciser et décider."
-double_texte_probleme: "Le [premier diamant]{brand} consiste à [comprendre le problème]{brand} : explorer largement les besoins puis définir précisément le problème."
-double_texte_01: "1. La phase [découvrir]{brand} permet d’[explorer le contexte]{brand} : observer et écouter  les  utilisateurs  pour  comprendre  leurs  besoins."
-double_texte_02: "2. La phase [définir]{brand} permet de [cadrer le problème]{brand} : synthétiser  et analyser les apprentissages pour formuler clairement le problème."
-double_texte_solution: "Le [deuxième diamant]{brand} consiste à [concevoir la solution]{brand} :  imaginer plusieurs réponses possibles, puis développer, valider et livrer la solution la plus adaptée."
-double_texte_03: "3. La phase [développer]{brand} permet d’[explorer les solutions]{brand} : imaginer, prototyper et tester plusieurs solutions pour trouver celle qui fonctionne le mieux."
-double_texte_04: "4. La phase [livrer]{brand} permet de [valider la solution]{brand} : finaliser, valider et lancer la solution retenue, puis préparer les futures améliorations."
+# Textes de chaque étape ; [mot]{brand} met un mot en couleur ; retour à la ligne : écrire le texte après « | » sur plusieurs lignes (comme double_texte_diamants)
+double_texte_diamants: |
+  Le [Double Diamant]{brand} me permet de partir d’un problème pour mieux comprendre les besoins des utilisateurs, puis de tester plusieurs pistes avant de livrer une solution qui y répond.
+double_texte_probleme: |
+  [Comprendre le problème]{brand} : 
+  Je pars d’une question large. Ce que j’apprends auprès des utilisateur m’aide à préciser le problème."
+double_texte_01: "J’écoute les utilisateurs et je les observe pour comprendre ce qu’ils essaient de faire, ce qui les freine et ce dont ils ont [besoin]{brand}."
+double_texte_02: "Je regarde les problèmes récurrent ou ce qui gêne le plus les utilisateurs. À partir de là, je [précise le problème]{brand} à résoudre en priorité."
+double_texte_solution: |
+  [Concevoir la solution]{brand} : 
+  Je teste plusieurs pistes avant de livrer une solution qui répond aux besoins des utilisateurs.
+double_texte_03: "Je crée des [versions simples]{brand} de mes idées pour que les utilisateurs puissent les essayer. Leurs [retours]{brand} m’aident à retenir la piste la plus utile."
+double_texte_04: "Je finalise la solution retenue et je vérifie qu’elle répond aux [besoins de départ]{brand} avant de la mettre à disposition."
 # Mobile et écran tactile : consigne, boutons et indicateur d’étapes
 double_consigne: appuie sur un tournesol
 double_commencer: Découvrir
@@ -180,4 +188,6 @@ methode_bonus_page_secrete_court: Page secrète
 methode_bonus_page_secrete_lien: /page-secrete
 # Bouton de téléchargement dans l'image (image haute qualité) : texte accessible et texte au curseur
 methode_bonus_telecharger: Télécharger
+# Légende sous l'image, sans lien
+methode_bonus_legende: Réalisé par sowd avec l'éditeur de la page secrète.
 ---

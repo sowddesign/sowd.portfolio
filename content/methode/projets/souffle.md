@@ -18,9 +18,9 @@ lien: /projects/souffle
 
 #### Le projet
 
-[Souffle](/projects/souffle) est une application permettant aux soignants (principalement les infirmiers et infirmières en psychiatrie) de mieux vivre la charge émotionnelle au travail afin de prévenir le burn-out.
+[Souffle](/projects/souffle) est une application qui aide les soignants, principalement les infirmiers et infirmières en psychiatrie, à mieux vivre la **[charge émotionnelle]{dark}** de leur travail, afin de prévenir le burn-out.
 
-L’utilisateur apprend à travers des exercices basés sur la méthode ACT à mieux comprendre et à gérer ses émotions.
+À travers des exercices basés sur la méthode ACT (thérapie d’acceptation et d’engagement), l’utilisateur apprend à mieux comprendre et gérer ses émotions.
 
 ---
 
@@ -32,7 +32,7 @@ L’utilisateur apprend à travers des exercices basés sur la méthode ACT à m
 
 ||
 
-- Création du prototype
+- Chargé de création du prototype
 
 >>
 

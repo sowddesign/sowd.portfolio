@@ -10,32 +10,34 @@
 #
 # Pour changer l'ordre ou déplacer une page dans une autre étape, déplace sa ligne (garde les deux espaces devant « - »).
 # Pour renommer une page dans le menu, change le texte après « : ».
+# Nom court facultatif, après « | » : affiché à la place du nom quand la liste rétrécit (desktop), avant qu'elle passe
+# en réduit (ex. « - priorisation-backlog: Priorisation & backlog | Prio. & Backlog »).
 # Une page dont le fichier n'existe pas encore est listée dans le menu, sans contenu.
 # Les lignes commençant par « # » sont des commentaires.
 
 - titre: Découvrir
-  description: comprendre  le  problème
+  description: explorer les besoins
   intro: decouvrir
   pages:
-    - recherches-quantitatives: Recherches quantitatives
+    - recherches-quantitatives: Recherches quantitatives | Recherches quanti.
     - benchmarks: Benchmarks
-    - entretien-utilisateur: Entretien utilisateur
+    - entretien-utilisateur: Entretien utilisateur | Entretiens utilisat.
     - observations-terrain: Observations terrain
     - triangulation: Triangulation
 
 - titre: Définir
-  description: cadrer  le  problème
+  description: préciser  le  problème
   intro: definir
   pages:
     - problematique: Problématique
-    - personaes: Personaes
+    - personaes: Personas
     - user-journey: User journey
-    - synthese-recherches: Synthèse des recherches
-    - priorisation-backlog: Priorisation & backlog
+    - synthese-recherches: Synthèse des recherches | Synthèse
+    - priorisation-backlog: Priorisation & backlog | Prio. & Backlog
     - aligner-objectifs: Aligner les objectifs
 
 - titre: Développer
-  description: explorer  des  solutions
+  description: imaginer  des  solutions
   intro: developper
   pages:
     - scenarios-usage: Scénarios d'usage
@@ -45,7 +47,7 @@
     - tests-utilisateurs: Tests utilisateurs
 
 - titre: Livrer
-  description: valider  et  industrialiser
+  description: finaliser la solution
   intro: livrer
   pages:
     - design-system: Design system

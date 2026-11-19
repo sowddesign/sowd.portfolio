@@ -96,6 +96,8 @@ export const commun = texts("commun.md", communSource, [
   "curseur_methode_etape",
   "curseur_methode_intro_ouvrir",
   "curseur_methode_intro_fermer",
+  "curseur_methode_selectionner",
+  "curseur_methode_fermer_page",
   "curseur_video_fermer",
   "video_lecture",
   "video_pause",
@@ -147,6 +149,7 @@ export const commun = texts("commun.md", communSource, [
   "methode_bonus_page_secrete_court",
   "methode_bonus_page_secrete_lien",
   "methode_bonus_telecharger",
+  "methode_bonus_legende",
 ]);
 
 export const accueil = texts("pages/accueil.md", accueilSource, [
@@ -178,6 +181,8 @@ export const introuvable = texts("pages/introuvable.md", introuvableSource, [
   "entete_titre",
   "entete_texte",
   "retour_accueil",
+  "retour_accueil_court",
+  "acceder_editeur",
   "indice",
   "graine",
 ]);
@@ -194,6 +199,9 @@ export const contact = texts("pages/contact.md", contactSource, [
   "photos_texte",
   "formulaire_details",
   "formulaire_titre",
+  "obligatoire_legende",
+  "au_moins_un_texte",
+  "au_moins_un_separateur",
   "objet_titre",
   "objet_details",
   "objet_obligatoire",
@@ -203,6 +211,7 @@ export const contact = texts("pages/contact.md", contactSource, [
   "message_obligatoire",
   "message_icone",
   "email_invalide",
+  "telephone_invalide",
   "envoyer",
   "envoye",
   "alerte_envoi",
@@ -212,6 +221,7 @@ export const contact = texts("pages/contact.md", contactSource, [
   "alerte_echec",
   "alerte_echec_details",
   "mail_objet",
+  "mail_objet_debut",
 ]);
 
 /* Champs du formulaire de contact (content/pages/contact.md) : ordre, textes, obligatoire, icône et type. */
@@ -222,11 +232,20 @@ export type ContactField = {
   titre: string;
   /** Vide : pas de texte sous le trait. */
   details: string;
+  /** Astérisque ; vrai aussi pour « au moins un ». */
   obligatoire: boolean;
+  /** « au moins un » : champ du groupe dont il suffit qu'un champ soit rempli correctement. */
+  auMoinsUn: boolean;
   /** Absente : pas d'icône avant le texte. */
   icone?: IconName;
   type: ContactFieldType;
+  /** Autocomplétion du navigateur (absente : aucune). */
+  autocompletion?: ContactAutocomplete;
 };
+
+/* Valeurs d'autocomplétion acceptées dans content/pages/contact.md (attribut HTML autocomplete). */
+const contactAutocompletes = ["given-name", "family-name", "name", "email", "tel", "organization"] as const;
+export type ContactAutocomplete = (typeof contactAutocompletes)[number];
 
 const fieldTypes: readonly ContactFieldType[] = ["texte", "email", "telephone"];
 
@@ -236,19 +255,27 @@ function contactField(where: string, block: Record<string, string | undefined>):
   };
   const titre = block.titre ?? fail("le texte « titre » est manquant.");
   const obligatoire = block.obligatoire ?? "non";
-  if (obligatoire !== "oui" && obligatoire !== "non") fail(`« obligatoire » doit valoir oui ou non (« ${obligatoire} »).`);
+  if (!["oui", "non", "au moins un"].includes(obligatoire)) {
+    fail(`« obligatoire » doit valoir oui, non ou au moins un (« ${obligatoire} »).`);
+  }
   const icone = block.icone ?? "";
   if (icone !== "" && !(iconNames as readonly string[]).includes(icone)) {
     fail(`l'icône « ${icone} » n'existe pas dans public/icons.`);
+  }
+  const autocompletion = block.autocompletion ?? "";
+  if (autocompletion !== "" && !(contactAutocompletes as readonly string[]).includes(autocompletion)) {
+    fail(`« autocompletion » doit valoir ${contactAutocompletes.join(", ")} ou "" (« ${autocompletion} »).`);
   }
   const type = block.type ?? "texte";
   if (!(fieldTypes as readonly string[]).includes(type)) fail(`« type » doit valoir texte, email ou telephone (« ${type} »).`);
   return {
     titre,
     details: block.details ?? "",
-    obligatoire: obligatoire === "oui",
+    obligatoire: obligatoire !== "non",
+    auMoinsUn: obligatoire === "au moins un",
     icone: icone === "" ? undefined : (icone as IconName),
     type: type as ContactFieldType,
+    autocompletion: autocompletion === "" ? undefined : (autocompletion as ContactAutocomplete),
   };
 }
 

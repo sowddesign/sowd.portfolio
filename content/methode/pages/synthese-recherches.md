@@ -25,14 +25,14 @@ image_mobile: { taille: 100.0, x: 0.0, y: 0.0 }
 image_textes:
   - texte: recherches UX
     couleur: blanc
-    desktop: { x: 44.9, y: 22.6 }
+    desktop: { x: 46.1, y: 22.6 }
     mobile: { x: 47.5, y: 22.2 }
 
 # « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace).
 # *texte* = italique.
 definition: |
-  La synthèse des recherches consiste à organiser, regrouper et interpréter les données issues des différentes méthodes, quantitatives et qualitatives, pour les transformer en insights actionnables pour le design.
-  Elle permet de passer d’observations brutes (notes, métriques, verbatims, etc.) à une compréhension structurée des besoins, des frustrations et des opportunités de conception.
+  La synthèse des recherches consiste à organiser, regrouper et interpréter les données issues des différentes méthodes, quantitatives et qualitatives. Elle les transforme en **[enseignements]{dark}** directement utilisables pour le design.
+  Elle permet de passer d’observations brutes (notes, chiffres, citations d’utilisateurs) à une compréhension structurée des besoins, des frustrations et des opportunités de conception.
 
 # Projet cité : nom du fichier dans content/methode/projets/ (introduction au projet et bouton vers le projet)
 projet: graine
@@ -50,11 +50,11 @@ projet: graine
 
 ## Le dossier
 
-Lors du projet [graine](/projects/graine), j’ai réalisé un dossier de recherche, des recherches quantitatives jusqu’au user journey, sur lequel s’est appuyé le design de l’application.
+Lors du projet [graine](/projects/graine), j’ai réalisé le document de design demandé en fin de projet. Ce livrable unique réunit le **[dossier de recherche]{dark}**, de la recherche quantitative jusqu’au user journey, ainsi que toute la partie design.
 
 ---
 
-> Ce document inclut aussi toute la partie design, un livrable unique étant demandé en fin de projet.
+*Cette page présente la partie recherche, sur laquelle s’est appuyé le design de l’application.*
 
 ## Le contenu
 
@@ -74,15 +74,13 @@ Lors du projet [graine](/projects/graine), j’ai réalisé un dossier de recher
 
 ---
 
-5. Un user journey représentatif du problème identifié, auquel devra répondre l’application.
+5. Un user journey représentatif du problème identifié, auquel l’application devait répondre.
 
 ||
 
 ## Le support
 
-La direction artistique devait rappeler le réel et le tangible. J’ai donc choisi le livre numérique, au format horizontal, plus adapté à la lecture sur écran.
-
-||
+La direction artistique devait rappeler le réel et le tangible. J’ai donc choisi le format du **[livre numérique]{dark}**, à l’horizontale, plus adapté à la lecture sur écran.
 
 Le contenu et la mise en page ont été conçus sur Figma, puis exportés en PDF.
 
@@ -94,7 +92,7 @@ Le contenu et la mise en page ont été conçus sur Figma, puis exportés en PDF
 
 ---
 
-Le PDF a ensuite été transformé en livre numérique avec [Heyzine](https://heyzine.com).
+Le PDF a ensuite été transformé en livre numérique à feuilleter avec [Heyzine](https://heyzine.com).
 
 ---
 
@@ -104,8 +102,6 @@ Voir la [documentation graine](https://heyzine.com/flip-book/c3e6f0745c.html)
 
 ## Ce que cela a apporté
 
-Le dossier a servi de référence tout au long de la phase de design : chaque choix pouvait s’appuyer sur un insight, un chiffre ou le parcours du persona.
+Le dossier a servi de **[référence]{dark}** tout au long de la phase de design : chaque choix pouvait s’appuyer sur un enseignement, un chiffre ou le parcours du persona.
 
-||
-
-En fin de projet, il a été présenté au jury comme preuve de concept, de la recherche jusqu’aux maquettes finales.
+{petit} *En fin de projet, il a été présenté au jury comme le **[fil conducteur]{dark}** de la démarche, de la recherche jusqu’aux maquettes finales.*

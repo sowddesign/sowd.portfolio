@@ -36,9 +36,10 @@ image_textes:
 # « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace).
 # *texte* = italique.
 definition: |
-  La priorisation des besoins consiste à ordonner les besoins utilisateurs et enjeux business en fonction de critères comme la valeur, l’ampleur du problème et la faisabilité.
+  La priorisation consiste à classer les besoins des utilisateurs et les enjeux de l’entreprise selon des critères comme la valeur apportée, l’ampleur du problème et la faisabilité.
 
-  Elle guide les itérations de conception et de développement vers les besoins les plus importants. Ses résultats alimentent directement le backlog produit, qui devient une feuille de route partagée.
+  Elle oriente chaque nouvelle version de la conception et du développement vers les besoins les plus importants.
+  Ses résultats alimentent directement le **[backlog]{dark}** produit : la liste ordonnée de tout ce qu’il reste à faire, qui devient une feuille de route partagée par l’équipe.
 
 # Projet cité : nom du fichier dans content/methode/projets/ (introduction au projet et bouton vers le projet)
 projet: graine
@@ -54,9 +55,9 @@ projet: graine
 
 ## Prioriser les besoins
 
-Lors du projet graine, deux besoins revenaient dans toute notre recherche.
+Lors du projet graine, **[deux besoins]{dark}** revenaient dans toute notre recherche.
 
-> On les retrouve dans le persona de Sara : utiliser un scanner, et pouvoir partager ce qu’elle apprend.
+*On les retrouve dans le persona de Sara : utiliser un scanner, et partager ce qu’elle apprend.*
 
 ---
 
@@ -65,22 +66,18 @@ Nous avons construit la première version de graine autour d’eux :
 ---
 
 ##### Comprendre ses plantes
-Le scan des plantes est la fonctionnalité principale de l’application.
-
-> → les autres fonctionnalités ont été priorisées autour de celle-ci.
+Le **[scan]{dark}** des plantes est la fonctionnalité principale de l’application.
+{petit} *→ Les autres fonctionnalités ont été priorisées autour de celle-ci.*
 
 ||
 
 ##### Partager avec la communauté
-L’aspect communautaire traverse toute l’application.
-
-> → chaque fonctionnalité a été pensée pour y répondre.
+L’aspect **[communautaire]{dark}** traverse toute l’application.
+{petit} *→ Chaque fonctionnalité a été pensée pour y répondre.*
 
 ## Prioriser le travail de l’équipe
 
-Pour suivre l’avancement et tenir les échéances, j’ai organisé le projet sur [Monday](https://monday.com/lang/fr), en plusieurs phases :
-
-||
+Pour suivre l’avancement et tenir les échéances, j’ai organisé le projet sur [Monday](https://monday.com/lang/fr), un outil de gestion de projet, en plusieurs phases :
 
 - Gestion de projet
 - UX Research
@@ -100,10 +97,12 @@ Chaque phase était découpée en tâches et sous-tâches, pour voir clairement 
 
 ---
 
-Avec des échéances serrées, il est rarement possible de mener toutes les méthodes prévues : il faut choisir.
+Avec des échéances serrées, il est rarement possible de mener toutes les méthodes prévues : **[il faut choisir]{dark}**.
 
-*Nous avons par exemple abandonné les entretiens guérilla : nous avions assez d’informations pour passer à l’UX puis à l’UI design.*
+*Nous avons par exemple dû renoncer aux entretiens guérilla (des échanges courts avec des passants, dans la rue) : nous avons jugé disposer d'assez d'informations pour passer à l'UX, puis à l'UI design.*
 
 ## Ce que cela a apporté
 
-Ces deux besoins ont servi de boussole pour trier les fonctionnalités, et le backlog pour trier le travail : l’équipe savait à tout moment ce qui comptait le plus et ce qui pouvait attendre.
+Les deux besoins ont servi de **[boussole]{dark}** pour prioriser les fonctionnalités, et le backlog pour organiser le travail. 
+
+*L’équipe savait à tout moment ce qui comptait le plus et ce qui pouvait attendre.*

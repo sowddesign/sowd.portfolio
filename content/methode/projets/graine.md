@@ -20,7 +20,7 @@ lien: /projects/graine
 
 [graine](/projects/graine) est une application mobile permettant d’apprendre à s’occuper de ses plantes en s’amusant.
 
-La gamification est au cœur de l’expérience : elle sert à entretenir la motivation et à installer des habitudes d’entretien.
+Elle repose sur la **[gamification]{dark}** : l’utilisation de mécanismes de jeu (points, badges, défis) pour entretenir la motivation et installer des habitudes d’entretien.
 
 ---
 

@@ -33,11 +33,11 @@ image_textes:
 # « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace).
 # *texte* = italique. Liste numérotée : « #### Titre » (facultatif) puis une ligne « 1. texte » par élément.
 definition: |
-  Le benchmark en UX est une analyse comparative de produits ou d’expériences proposés par des concurrents.
+  Le benchmark en UX est une **[analyse comparative]{dark}** des produits ou des expériences proposés par des concurrents.
 
   #### Objectifs :
   1. Comprendre comment ces produits répondent aux besoins des utilisateurs.
-  2. Repérer leurs manques pour trouver des opportunités de se différencier.
+  2. Repérer leurs manques pour trouver des **[opportunités]{dark}** de se différencier.
   3. S’inspirer des bonnes pratiques et éviter les erreurs déjà commises.
 
 # Projet cité : nom du fichier dans content/methode/projets/ (introduction au projet et bouton vers le projet)
@@ -72,13 +72,13 @@ projet: scholar
 
 ## Démarche
 
-Pour Scholar, nous avons mené un benchmark des applications d’apprentissage en quelques minutes par jour.
+Lors du projet Scholar, nous avons mené un benchmark des applications qui permettent d’apprendre en quelques minutes par jour.
 
 ---
 
-Aucune ne traitait de typographie : nous avons donc étudié des concurrents indirects, qui partagent notre format mais pas notre sujet.
+Aucune ne traitait de typographie. Nous avons donc étudié des **[concurrents indirects]{dark}**, qui partagent notre format mais pas notre sujet.
 
-> Critères comparés : onboarding, personnalisation, types d’exercices, direction artistique…
+{petit} *Critères comparés : l’onboarding (les premiers écrans qui accueillent l’utilisateur), la personnalisation, les types d’exercices et la direction artistique.*
 
 ---
 
@@ -86,19 +86,19 @@ Aucune ne traitait de typographie : nous avons donc étudié des concurrents ind
 
 **Applications retenues :**
 
-1. Brilliant
-2. Duolingo
-3. Sans fautes
+1. [Brilliant](https://brilliant.org)
+2. [Duolingo](https://www.duolingo.com)
+3. [Sans fautes](https://francaissansfautes.fr)
 
-||
+|| bas
 
-> J’ai analysé Brilliant et Sans fautes ; mon binôme s’est chargé de Duolingo. Je présente donc ces deux applications.
+> J’ai analysé Brilliant et Sans fautes, et mon binôme s’est chargé de Duolingo. Je présente donc ces deux applications.
 
 ## Brilliant
 
 Application d’apprentissage interactive qui enseigne les mathématiques, la programmation, les sciences et l’analyse de données.
 
-Elle repose sur des exercices courts, visuels et ludiques, plutôt que sur des cours magistraux.
+Elle repose sur des exercices courts, visuels et ludiques plutôt que sur des cours magistraux.
 
 ---
 
@@ -108,7 +108,7 @@ Elle repose sur des exercices courts, visuels et ludiques, plutôt que sur des c
 
 **Un onboarding basé sur les objectifs :**
 
-L’utilisateur choisit lui-même ses objectifs, et l’application lui propose un contenu en fonction.
+L’utilisateur choisit lui-même ses **[objectifs]{dark}**, et l’application lui propose des contenus adaptés.
 
 ---
 
@@ -118,7 +118,7 @@ L’utilisateur choisit lui-même ses objectifs, et l’application lui propose 
 
 **Un niveau illustré par des exemples :**
 
-Pour évaluer son niveau, chaque option est illustrée par un exemple concret. C’est plus parlant qu’une simple étiquette « Débutant » ou « Intermédiaire ».
+Pour évaluer son niveau, chaque option est illustrée par un **[exemple concret]{dark}**. C’est plus parlant qu’une simple étiquette « Débutant » ou « Intermédiaire ».
 
 ---
 
@@ -128,13 +128,13 @@ Pour évaluer son niveau, chaque option est illustrée par un exemple concret. C
 
 **Des exercices variés et interactifs :**
 
-Les façons de répondre changent d’un exercice à l’autre. J’ai retenu le glisser-déposer : il rend l’exercice plus dynamique et garde l’utilisateur actif.
+La façon de répondre change d’un exercice à l’autre. J’ai retenu le **[glisser-déposer]{dark}** : il rend l’exercice plus dynamique et garde l’utilisateur actif.
 
 ## Sans fautes
 
-Application d’apprentissage qui aide à améliorer l’orthographe, la grammaire et la conjugaison française.
+Application d’apprentissage qui aide à améliorer l’orthographe, la grammaire et la conjugaison en français.
 
-Elle propose des exercices courts, des jeux, des dictées et un parcours personnalisé adapté au niveau de l’utilisateur.
+Elle propose des exercices courts, des jeux, des dictées et un parcours personnalisé selon le niveau de l’utilisateur.
 
 ---
 
@@ -144,7 +144,7 @@ Elle propose des exercices courts, des jeux, des dictées et un parcours personn
 
 **Une direction artistique liée au sujet :**
 
-L’application met en scène des figures de la langue française (Victor Hugo, George Sand, MC Solaar…) : l’univers visuel renforce le thème.
+L’application met en scène des **[figures de la langue française]{dark}** (Victor Hugo, George Sand, MC Solaar…). L’univers visuel renforce le thème.
 
 ---
 
@@ -156,19 +156,21 @@ L’application met en scène des figures de la langue française (Victor Hugo, 
 
 L’application propose de jouer à plusieurs. Ce n’est pas une priorité pour notre sujet, mais c’est une piste à étudier.
 
-## Ce que le benchmark a apporté
+## Ce que cela a apporté
 
 **Ce que nous avons repris pour Scholar :**
 
-1. Un onboarding pour se situer.
-*Comme chez Brilliant, l’utilisateur précise son niveau dès le départ, et l’application adapte les contenus en fonction.*
-2. Un test de niveau.
-*Nous sommes allés plus loin qu’une simple auto-évaluation : un court test permet de situer précisément l’utilisateur.*
-3. Une direction artistique liée au sujet.
-*Comme Sans fautes avec ses figures de la langue française, Scholar s’appuie sur une DA ancrée dans son thème : l’encre, qui rappelle les débuts de la typographie, bien avant l’ordinateur.*
+1. **Un onboarding pour se situer**
+{petit} *Comme Brilliant, l’utilisateur précise son niveau dès le départ, et l’application adapte les contenus.*
+2. **Un test de niveau**
+{petit} *Nous sommes allés plus loin qu’une simple auto-évaluation : un **[court test]{dark}** situe l’utilisateur plus précisément.*
+3. **Une direction artistique liée au sujet**
+{petit} *Comme Sans fautes, Scholar s’appuie sur un univers visuel ancré dans son thème : l’**[encre]{dark}**, qui rappelle les débuts de la typographie, bien avant l’ordinateur.*
+4. **Des exercices interactifs**
+{petit} *Comme Brilliant, certains exercices se font en glisser-déposer : l’utilisateur manipule les éléments au lieu de cocher une réponse, ce qui le garde actif.*
 
 ||
 
 ![Scholar : question du test de niveau](scholar-test-niveau.webp)
 
-> Test de niveau (application Scholar)
+> Test de niveau (application Scholar).

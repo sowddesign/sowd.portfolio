@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 import { commun } from "@/content/texts";
 import type { MethodeIntroContent, MethodePageContent, MethodePageEntry, MethodeStep } from "@/lib/methode";
 import { useCursorLabel } from "../CursorLabel";
@@ -26,12 +26,15 @@ import { readingServerSnapshot, readingSnapshot, saveReading, subscribeReading }
  *   En-tête : à gauche description (captionSwiss/regular) et titre H3 suivi du numéro (captionSwiss/small/regular),
  *   à droite boutons « précédente » et « suivante » (textualButton tertiary black, désactivés aux extrémités),
  *   qui mènent à l'introduction de l'étape voisine (décision de l'utilisateur) ; exception : « suivante » avec une page
- *   ouverte la fait glisser vers la page 01 de l'étape suivante, même mouvement que l'introduction (PageGlide),
+ *   ouverte la fait glisser vers la première page pas encore lue de l'étape suivante (sinon la page 01),
+ *   même mouvement que l'introduction (PageGlide),
  *   comme « Voir la prochaine étape » sur la dernière page d'une étape ;
  *   la liste et l'en-tête changent à l'arrivée (demande de l'utilisateur, à l'essai).
  *   Contenu : liste des pages (navSideMenus), trait, puis introduction (aucune page choisie) ou page choisie.
  *   Desktop : deux moitiés. La colonne de la liste rétrécit avec l'écran (colonne du numéro, puis Main text)
  *   jusqu'au passage en réduit ; la mesure se fait toujours à la largeur d'une moitié pour pouvoir en revenir.
+ *   Avant cela, quand une moitié ne laisse plus à la page sa largeur de lecture (--methode-text-max-width et ses
+ *   marges spacing/lg), la liste rétrécit au profit de la page (demande de l'utilisateur).
  *   Tablette : description au-dessus du titre, liste réduite, la page prend le reste.
  *   Introduction : au premier cran de défilement vers le bas, elle remonte lentement d'un peu (fausse résistance,
  *   sur --methode-pull-delay, comme s'il fallait deux crans) en laissant voir le haut de la page 01,
@@ -135,9 +138,10 @@ function useProgress() {
     pages.map((page) => ({
       number: page.number,
       label: page.label,
+      labelShort: page.labelShort,
       progress: progress[page.slug] ?? 0,
     }));
-  return { update, stepsOf };
+  return { update, stepsOf, progress };
 }
 
 export type MethodeContainerProps = {
@@ -168,18 +172,32 @@ function MethodeContainerDesktop({ steps, className }: MethodeContainerProps) {
     setBonusOpen((open) => !open);
   };
   const [layout, setLayout] = useState<NavSideTileLayout>("desktop");
-  /* Largeur d'une moitié (desktop), pour mesurer la liste même quand elle est réduite. */
-  const bodyRef = useRef<HTMLDivElement>(null);
-  const [half, setHalf] = useState<number>();
+  /* Largeur de la liste (desktop) : une moitié, tant que la page garde sa largeur de lecture
+     (--methode-text-max-width et ses marges spacing/lg) ; en dessous, la liste rétrécit pour la lui laisser,
+     puis passe en réduit quand ses tuiles ne tiennent plus (demande de l'utilisateur). Mesurée même quand la liste
+     est réduite, pour pouvoir en revenir. Ref en état : le bloc n'existe pas au premier rendu, la mesure démarre
+     à son arrivée. */
+  const [body, setBody] = useState<HTMLDivElement | null>(null);
+  const readingRef = useRef<HTMLDivElement>(null);
+  const [listWidth, setListWidth] = useState<number>();
   useEffect(() => {
-    const body = bodyRef.current;
     if (!body) return;
     const divider = body.children[1] as HTMLElement;
-    const observer = new ResizeObserver(() => setHalf((body.clientWidth - divider.offsetWidth) / 2));
+    const observer = new ResizeObserver(() => {
+      const inner = body.clientWidth - divider.offsetWidth;
+      const reading = readingRef.current?.offsetWidth ?? 0;
+      setListWidth(Math.max(0, inner - Math.max(inner / 2, reading)));
+    });
     observer.observe(body);
     return () => observer.disconnect();
-  }, []);
-  const { update, stepsOf } = useProgress();
+  }, [body]);
+  const { update, stepsOf, progress } = useProgress();
+  /* Toutes les tuiles de la méthode, mesurées ensemble : même colonne du numéro et même passage en réduit
+     dans chaque étape (demande de l'utilisateur). */
+  const allTiles = useMemo(
+    () => steps.flatMap((item) => item.pages.map((p) => ({ number: p.number, label: p.label, labelShort: p.labelShort, progress: 0 }))),
+    [steps],
+  );
   /* Arrivée sur la page 01 depuis l'introduction : défilement bloqué jusqu'à cet instant. */
   const pageRef = useRef<HTMLDivElement>(null);
   const lockUntil = useRef(0);
@@ -216,18 +234,25 @@ function MethodeContainerDesktop({ steps, className }: MethodeContainerProps) {
   const nextCursor = useCursorLabel(stepCursor(current + 1));
   const page = selected === null ? null : step.pages[selected];
 
-  /* Étape visée par la glisse de la page ouverte vers la page 01 de l'étape suivante (« suivante »). */
+  /* Étape visée par la glisse de la page ouverte vers l'étape suivante (« suivante »), et la page d'arrivée :
+     la première pas encore lue, sinon la page 01 (demande de l'utilisateur). */
   const [glide, setGlide] = useState<number | null>(null);
+  const firstUnread = (index: number) => {
+    const pages = steps[index].pages;
+    const found = pages.findIndex((entry) => entry.content && (progress[entry.slug] ?? 0) < 1);
+    return found === -1 ? 0 : found;
+  };
+  const glidePage = glide === null ? 0 : firstUnread(glide);
   const goToStep = (index: number) => {
     setGlide(null);
     setCurrent(index);
     setSelected(null);
   };
-  /* « suivante » : page ouverte → glisse vers la page 01 de l'étape suivante ;
+  /* « suivante » : page ouverte → glisse vers la première page pas encore lue de l'étape suivante (sinon la 01) ;
      introduction → introduction de l'étape suivante, sans animation (demande de l'utilisateur). */
   const nextStep = () => {
     if (glide !== null) return;
-    if (page && steps[current + 1].pages[0]?.content) setGlide(current + 1);
+    if (page && steps[current + 1].pages[firstUnread(current + 1)]?.content) setGlide(current + 1);
     else goToStep(current + 1);
   };
   useLinkedPage(steps, (stepIndex, pageIndex) => {
@@ -295,8 +320,11 @@ function MethodeContainerDesktop({ steps, className }: MethodeContainerProps) {
           </div>
         </div>
       </div>
-      <div ref={bodyRef} className="flex min-h-0 w-full flex-1">
-        <div className={`flex min-w-0 flex-col ${tablet ? "shrink-0" : "flex-1"}`}>
+      <div ref={setBody} className="flex min-h-0 w-full flex-1">
+        <div
+          style={!tablet && listWidth !== undefined ? { width: listWidth } : undefined}
+          className={`flex min-w-0 shrink-0 flex-col ${!tablet && listWidth === undefined ? "flex-1" : ""}`}
+        >
           <NavSideMenus
             key={step.number}
             steps={stepsOf(step.pages)}
@@ -305,24 +333,30 @@ function MethodeContainerDesktop({ steps, className }: MethodeContainerProps) {
             bonus={Boolean(step.finish)}
             bonusSelected={bonusOpen}
             onBonusToggle={toggleBonus}
-            measureWidth={half}
+            measureWidth={listWidth}
+            measureSteps={allTiles}
             onLayoutChange={setLayout}
             className="grow"
           />
         </div>
         <span aria-hidden className="block shrink-0 border-l border-shape-neutral-black" />
+        <div
+          ref={readingRef}
+          aria-hidden
+          className="invisible absolute box-content w-(--methode-text-max-width) px-lg"
+        />
         <div ref={pageRef} className="min-w-0 flex-1">
           {bonusOpen && step.finish ? (
             <MethodeFinish content={step.finish} onNext={next} />
           ) : page ? (
             <PageGlide
-              nextPage={glide === null ? null : (steps[glide].pages[0]?.content ?? null)}
+              nextPage={glide === null ? null : (steps[glide].pages[glidePage]?.content ?? null)}
               onLand={() => {
                 if (glide === null) return;
                 lockUntil.current = performance.now() + cssDuration("--methode-pull-lock");
                 setGlide(null);
                 setCurrent(glide);
-                setSelected(0);
+                setSelected(glidePage);
               }}
             >
               {page.content && (

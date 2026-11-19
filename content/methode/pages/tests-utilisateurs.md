@@ -18,13 +18,13 @@ image_fond: brand/500
 # Placement de l'image, repris de Figma (desktop 800 × 218, mobile 376 × 218), en % de la hauteur du cadre :
 # taille = hauteur de l'image, x = écart entre le centre de l'image et le centre du cadre, y = haut de l'image,
 # rotation = inclinaison de l'image en degrés (sens horaire)
-image_desktop: { taille: 131.3, x: 0.0, y: 10.1 }
+image_desktop: { taille: 193.3, x: 0.0, y: -6.0 }
 image_mobile: { taille: 120.0, x: 0.0, y: 0.0 }
 # Textes posés sur l'image, toujours visibles : centre du texte en % de l'image (x : largeur, y : hauteur),
 # rotation en degrés par rapport à l'image, « couleur: blanc » = text/neutral/white
 image_textes:
   - texte: tests utilisateurs
-    desktop: { x: 50.3, y: 20.4, rotation: -4.9 }
+    desktop: { x: 50.3, y: 22.4, rotation: -4.3 }
     mobile: { x: 51.3, y: 21.5, rotation: -4.1 }
   - texte: "✓"
     desktop: { x: 37.4, y: 23.0, rotation: -5.1 }

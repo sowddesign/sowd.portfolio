@@ -24,10 +24,11 @@ import type { HeaderImagePlacement, HeaderImageText } from "./placement";
  * Titre retiré (demande de l'utilisateur) : il est dessiné dans l'image.
  * Placement et textes par page (frames Figma desktop 800 × 218 et mobile 376 × 218, demande de l'utilisateur) :
  *   l'image est placée en % de la hauteur du cadre depuis son centre, les textes (toujours visibles,
- *   captionSwiss/accentuation, text/neutral/black ou white, inclinés au besoin)
- *   en % de l'image ; sans placement, image entière calée en bas.
- * Tous les textes en 16 px sur tous les appareils (--header-image-text-size, choix de l'utilisateur).
- * Mots-clés (captionSwiss/regular), visibles seulement en hovered ; text/neutral/black, ou text/neutral/white
+ *   text/neutral/black ou white, inclinés au besoin) en % de l'image ; sans placement, image entière calée en bas.
+ * Taille des textes (demandes de l'utilisateur) : mise en page desktop en body (titre posé body/accentuation,
+ *   mots-clés body/regular) ; mise en page mobile en captionSwiss (accentuation / regular) à 16 px
+ *   (--header-image-text-size).
+ * Mots-clés, visibles seulement en hovered ; text/neutral/black, ou text/neutral/white
  *   sur les fonds foncés (headerImageDarkBackgrounds, demande de l'utilisateur) :
  *   desktop : en bas à droite, par paires « a  -  b », alignés à droite, écart spacing/xxs ;
  *   mobile  : à gauche, centrés verticalement, un mot par ligne.
@@ -73,6 +74,10 @@ export function HeaderImage({
   const [hovered, setHovered] = useState(false);
 
   /* Mots-clés : blancs sur fond foncé, noirs sinon. */
+  /* Textes : body en desktop, captionSwiss à 16 px en mobile (demandes de l'utilisateur). */
+  const mobile = layout === "mobile";
+  const titleStyle = mobile ? "type-swiss-accentuation text-(length:--header-image-text-size)" : "type-body-accentuation";
+  const keywordStyle = mobile ? "type-swiss-regular text-(length:--header-image-text-size)" : "type-body-regular";
   const keywordColor =
     background && headerImageDarkBackgrounds.has(background) ? "text-text-neutral-white" : "text-text-neutral-black";
   const pairs: string[] = [];
@@ -113,11 +118,10 @@ export function HeaderImage({
             return (
               <p
                 key={item.text}
-                className={`type-swiss-accentuation absolute text-center whitespace-pre ${item.white ? "text-text-neutral-white" : "text-text-neutral-black"}`}
+                className={`${titleStyle} absolute text-center whitespace-pre ${item.white ? "text-text-neutral-white" : "text-text-neutral-black"}`}
                 style={{
                   left: `${x}%`,
                   top: `${y}%`,
-                  fontSize: "var(--header-image-text-size)",
                   transform: `translate(-50%, -50%) rotate(${rotation}deg)`,
                 }}
               >
@@ -141,13 +145,13 @@ export function HeaderImage({
       )}
       {hovered &&
         (touch ? (
-          <div className={`type-swiss-regular text-(length:--header-image-text-size) absolute top-1/2 left-lg flex -translate-y-1/2 flex-col gap-lg whitespace-nowrap ${keywordColor}`}>
+          <div className={`${keywordStyle} absolute top-1/2 left-lg flex -translate-y-1/2 flex-col gap-lg whitespace-nowrap ${keywordColor}`}>
             {keywords.map((keyword) => (
               <p key={keyword}>{keyword}</p>
             ))}
           </div>
         ) : (
-          <div className={`type-swiss-regular text-(length:--header-image-text-size) absolute right-lg bottom-lg flex flex-col items-end gap-xxs text-right whitespace-pre ${keywordColor}`}>
+          <div className={`${keywordStyle} absolute right-lg bottom-lg flex flex-col items-end gap-xxs text-right whitespace-pre ${keywordColor}`}>
             {pairs.map((pair) => (
               <p key={pair}>{pair}</p>
             ))}
