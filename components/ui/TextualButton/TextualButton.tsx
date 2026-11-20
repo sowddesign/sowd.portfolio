@@ -27,6 +27,8 @@ type BaseProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "color" | "disabl
   icon?: IconName;
   /** left : icône avant le texte (iconSide=no) · right : icône poussée à droite (iconSide=yes). */
   iconPosition?: "left" | "right";
+  /** L'icône disparaît quand le texte et l'icône ne tiennent plus sur une ligne (contact de pageHeader). */
+  iconOptional?: boolean;
   /** Destination : rend un lien (next/link) au lieu d'un bouton. */
   href?: string;
   /** Avec href : lien de téléchargement (<a download>) ; une chaîne donne le nom du fichier. */
@@ -53,6 +55,7 @@ export function TextualButton({
   color = "brand",
   icon,
   iconPosition = "left",
+  iconOptional = false,
   disabled = false,
   className = "",
   type = "button",
@@ -89,11 +92,15 @@ export function TextualButton({
           "flex w-full items-center gap-xs",
           variant === "primary" ? "px-sm" : "",
           iconPosition === "right" ? "justify-between" : "",
+          /* Icône facultative : elle passe à la ligne quand la place manque, et cette ligne est masquée. */
+          iconOptional ? "h-6 flex-wrap overflow-hidden" : "",
         ].join(" ")}
       >
         {iconPosition === "left" && iconNode}
         {/* Hauteur fixe 24px (valeur fixe dans Figma, sans variable), texte aligné en haut. */}
-        <span className="type-caption-regular h-6 min-w-0 flex-1 text-left">{children}</span>
+        <span className={`type-caption-regular h-6 flex-1 text-left ${iconOptional ? "whitespace-nowrap" : "min-w-0"}`}>
+          {children}
+        </span>
         {iconPosition === "right" && iconNode}
       </span>
 

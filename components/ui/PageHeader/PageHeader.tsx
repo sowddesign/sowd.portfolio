@@ -16,7 +16,7 @@ import { pageHrefs, useActivePage, type PageKey } from "../navigation";
  * Fixé en haut de l'écran sur tous les appareils. Sa hauteur est publiée dans --page-header-height (sur la racine)
  * pour les éléments collés juste dessous (étapes de methodeContainer en mobile).
  *
- * Menu (mobile et tablette) : panneau plein écran sous l'en-tête, espace automatique entre les deux blocs.
+ * Menu (mobile seulement ; tablette et desktop affichent les pages) : panneau plein écran sous l'en-tête, espace automatique entre les deux blocs.
  * Ouverture : rideau du haut vers le bas (--motion-duration-base), puis les lignes de texte apparaissent
  * une à une à partir de la moitié du rideau (animate-menu-line, décalage --motion-menu-stagger).
  * Fermeture : le rideau remonte sur la même durée et masque le texte.
@@ -85,9 +85,9 @@ export function PageHeader({ activePage, className = "" }: PageHeaderProps) {
       ref={headerRef}
       className={`sticky top-0 z-10 flex w-full flex-col bg-background-neutral-white ${className}`}
     >
-      <div className="grid-layout h-(--button-size-sm) desktop:h-auto">
-        {/* Mobile et tablette : bouton menu (List / X) et contact. */}
-        <div data-intro-hide className="col-span-1 flex items-center desktop:hidden">
+      <div className="grid-layout h-(--button-size-sm) tablet:h-auto">
+        {/* Mobile : bouton menu (List / X) et contact. */}
+        <div data-intro-hide className="col-span-1 flex items-center tablet:hidden">
           <IconButton
             variant="tertiary"
             color="black"
@@ -110,24 +110,15 @@ export function PageHeader({ activePage, className = "" }: PageHeaderProps) {
             {commun.entete_contact}
           </TextualButton>
         </div>
-        <div data-intro-hide className="col-span-2 col-start-7 hidden tablet:block desktop:hidden">
-          <TextualButton
-            variant="secondary"
-            showDivider={false}
-            color={colorFor("contact")}
-            icon="ArrowRight"
-            iconPosition="right"
-            href={pageHrefs.contact}
-          >
-            {commun.entete_contact}
-          </TextualButton>
-        </div>
 
-        {/* Desktop : logo, pages et contact. */}
-        <div className="col-span-2 hidden desktop:block">
+        {/* Tablette et desktop : logo, pages et contact, un bouton par colonne (choix de l'utilisateur : plus de menu
+            dès la tablette). Tablette (8 colonnes) : pages en colonnes 4, 5, 6 et contact en 8, comme le desktop
+            (12 colonnes : 8, 9, 10 et 12). La flèche de contact disparaît quand elle ne tient plus sur la ligne.
+            Libellés toujours sur une ligne, quitte à déborder un peu de leur colonne (demande de l'utilisateur). */}
+        <div className="col-span-2 hidden tablet:block">
           <LogoButton />
         </div>
-        <div data-intro-hide className="col-start-8 hidden desktop:block">
+        <div data-intro-hide className="hidden whitespace-nowrap tablet:col-start-4 tablet:block desktop:col-start-8">
           <TextualButton
             variant="secondary"
             showDivider={false}
@@ -137,7 +128,7 @@ export function PageHeader({ activePage, className = "" }: PageHeaderProps) {
             {commun.entete_accueil}
           </TextualButton>
         </div>
-        <div data-intro-hide className="col-start-9 hidden desktop:block">
+        <div data-intro-hide className="hidden whitespace-nowrap tablet:col-start-5 tablet:block desktop:col-start-9">
           <TextualButton
             variant="secondary"
             showDivider={false}
@@ -147,7 +138,7 @@ export function PageHeader({ activePage, className = "" }: PageHeaderProps) {
             {commun.entete_projets}
           </TextualButton>
         </div>
-        <div data-intro-hide className="col-start-10 hidden desktop:block">
+        <div data-intro-hide className="hidden whitespace-nowrap tablet:col-start-6 tablet:block desktop:col-start-10">
           <TextualButton
             variant="secondary"
             showDivider={false}
@@ -157,13 +148,14 @@ export function PageHeader({ activePage, className = "" }: PageHeaderProps) {
             {commun.entete_a_propos}
           </TextualButton>
         </div>
-        <div data-intro-hide className="col-start-12 hidden desktop:block">
+        <div data-intro-hide className="hidden tablet:col-start-8 tablet:block desktop:col-start-12">
           <TextualButton
             variant="secondary"
             showDivider={false}
             color={colorFor("contact")}
             icon="ArrowRight"
             iconPosition="right"
+            iconOptional
             href={pageHrefs.contact}
           >
             {commun.entete_contact}
@@ -177,13 +169,13 @@ export function PageHeader({ activePage, className = "" }: PageHeaderProps) {
         className="w-full shrink-0 border-t border-shape-neutral-black"
       />
 
-      {/* Menu ouvert (mobile et tablette) : toute la hauteur restante de l'écran sous l'en-tête. */}
+      {/* Menu ouvert (mobile) : toute la hauteur restante de l'écran sous l'en-tête. */}
       <div
         id={menuId}
         ref={menuRef}
         onClick={closeOnLink}
         className={[
-          "absolute top-full left-0 flex h-[calc(100dvh-100%)] w-full flex-col overflow-y-auto bg-background-neutral-white pb-md desktop:hidden",
+          "absolute top-full left-0 flex h-[calc(100dvh-100%)] w-full flex-col overflow-y-auto bg-background-neutral-white pb-md tablet:hidden",
           "transition-[clip-path,visibility] duration-(--motion-duration-base) ease-(--motion-ease-out)",
           open
             ? "visible [clip-path:inset(0)]"

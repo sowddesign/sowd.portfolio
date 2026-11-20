@@ -735,12 +735,13 @@ export function DoubleFlower({ diamonds = false, className = "" }: DoubleFlowerP
           ))}
         </div>
 
-        {/* Toucher des demi-tournesols (états de phase) : forme des demi-tournesols du tournesol affiché. */}
+        {/* Toucher des demi-tournesols (états de phase) : forme des demi-tournesols du tournesol affiché.
+            cursor-pointer (écran tactile) : sans lui, Safari iOS n'envoie pas le clic sur une div. */}
         <MobileStage>
           <div
             ref={mobileStageRef}
             aria-hidden
-            className="absolute inset-0"
+            className="absolute inset-0 [@media(hover:none)]:cursor-pointer"
             onClick={(event) => {
               const stage = mobileStageRef.current;
               if (!stage) return;
@@ -937,7 +938,8 @@ export function DoubleFlower({ diamonds = false, className = "" }: DoubleFlowerP
             <DesktopStage>
               <div
                 ref={stageRef}
-                className="pointer-events-auto absolute inset-0"
+                /* cursor-pointer (écran tactile) : sans lui, Safari iOS (iPad) n'envoie pas le clic sur une div. */
+                className="pointer-events-auto absolute inset-0 [@media(hover:none)]:cursor-pointer"
                 onPointerMove={(event) => {
                   if (event.pointerType === "touch") return;
                   const phase = desktopFlowerAt(event);

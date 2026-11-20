@@ -7,7 +7,10 @@
 
 # Image d'en-tête : mots-clés (au survol ; en desktop, groupés deux par deux « a - b »)
 image_mots_cles:
-  - à compléter
+  - visualiser
+  - retracer
+  - étapes
+  - frictions
 # Fichier de l'image d'en-tête (facultatif : vide = fond blanc)
 # Nom seul = dans le dossier des images de la page ; sinon chemin depuis public (ex. public\pages\photo.png)
 image_fichier: public\pages\whithish_03.webp
@@ -43,7 +46,7 @@ projet: flashinvaders
 
 # « UTILISATION DANS UN PROJET » — texte sous l'en-tête de commentaires (l'introduction au projet vient du projet cité)
 #
-#   Même écriture que content/methode/pages/recherches-quantitatives.md, plus :
+#   Même écriture que content/methode/sections/recherches-quantitatives.md, plus :
 #   ![description](fichier.webp){sans cadre} → image sans bordure ni coins
 #   « << … || … >> » répété dans un même bloc → rangées de deux colonnes rapprochées
 #

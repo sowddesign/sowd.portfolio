@@ -37,7 +37,15 @@ const visibility: Record<GridBarNumber, string> = {
   "12": "hidden tablet:block",
 };
 
-function AnimationGridTile({ number, touched }: { number: GridBarNumber; touched: boolean }) {
+function AnimationGridTile({
+  number,
+  touched,
+  motifCenter,
+}: {
+  number: GridBarNumber;
+  touched: boolean;
+  motifCenter?: string;
+}) {
   const [hovered, setHovered] = useState(false);
   return (
     <div
@@ -46,12 +54,19 @@ function AnimationGridTile({ number, touched }: { number: GridBarNumber; touched
       onPointerEnter={(event) => event.pointerType !== "touch" && setHovered(true)}
       onPointerLeave={() => setHovered(false)}
     >
-      <GridBar number={number} state={hovered || touched ? "hovered" : "default"} />
+      <GridBar number={number} state={hovered || touched ? "hovered" : "default"} motifCenter={motifCenter} />
     </div>
   );
 }
 
-export function AnimationGrid({ className = "" }: { className?: string }) {
+export function AnimationGrid({
+  className = "",
+  motifCenter,
+}: {
+  className?: string;
+  /** Hauteur du centre des motifs des tuiles 01 et 12 (voir GridBar) ; par défaut le milieu des tuiles. */
+  motifCenter?: string;
+}) {
   /* Tuile sous le doigt (toucher seulement). */
   const [touched, setTouched] = useState<GridBarNumber | null>(null);
 
@@ -109,7 +124,7 @@ export function AnimationGrid({ className = "" }: { className?: string }) {
       className={`flex size-full touch-pan-y gap-md px-md select-none [-webkit-touch-callout:none] tablet:gap-lg tablet:px-lg ${className}`}
     >
       {numbers.map((number) => (
-        <AnimationGridTile key={number} number={number} touched={touched === number} />
+        <AnimationGridTile key={number} number={number} touched={touched === number} motifCenter={motifCenter} />
       ))}
     </div>
   );

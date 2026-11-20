@@ -8,7 +8,7 @@
 # Image d'en-tête : mots-clés (au survol ; en desktop, groupés deux par deux « a - b »)
 image_mots_cles:
   - croiser
-  - recouper
+  - vérifier
   - méthodes
   - synthèse
 # Fichier de l'image d'en-tête (facultatif : vide = fond blanc)

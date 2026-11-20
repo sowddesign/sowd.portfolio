@@ -7,7 +7,10 @@
 
 # Image d'en-tête : mots-clés (au survol ; en desktop, groupés deux par deux « a - b »)
 image_mots_cles:
-  - à compléter
+  - piloter
+  - itérer
+  - prompts
+  - skills
 # Fichier de l'image d'en-tête (facultatif : vide = fond blanc)
 # Nom seul = dans le dossier des images de la page ; sinon chemin depuis public (ex. public\pages\photo.png)
 image_fichier: public\pages\bright_06.webp
@@ -30,9 +33,11 @@ image_textes:
 # « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace).
 # *texte* = italique.
 definition: |
-  Pour un designer web ou UX/UI, le développement assisté par l’IA consiste à utiliser une IA générative pour transformer des intentions de conception, des maquettes et des spécifications en code ou en interfaces fonctionnelles.
+  Pour un designer web ou UX/UI, le développement assisté par l’IA consiste à utiliser une IA générative pour transformer des intentions de conception, des maquettes et des spécifications en code, c’est-à-dire en interfaces qui fonctionnent.
 
-  Le designer garde la maîtrise des choix d’expérience : il précise les besoins, guide la génération et évalue les résultats.
+  Le designer garde la **[maîtrise]{dark}** des choix d’expérience : il précise les besoins, guide la génération et évalue les résultats.
+
+  *Cette étape ne fait pas partie du double diamant classique. Je l’y intègre parce qu’elle fait partie de ma propre démarche UX/UI : avec l’IA, les méthodes UX **[évoluent]{dark}** elles aussi.*
 
 # Projet cité : nom du fichier dans content/methode/projets/ (introduction au projet et bouton vers le projet)
 projet: portfolio
@@ -40,7 +45,7 @@ projet: portfolio
 
 # « UTILISATION DANS UN PROJET » — texte sous l'en-tête de commentaires (l'introduction au projet vient du projet cité)
 #
-#   Même écriture que content/methode/pages/recherches-quantitatives.md (images PNG, JPEG, WebP ou GIF).
+#   Même écriture que content/methode/sections/recherches-quantitatives.md (images PNG, JPEG, WebP ou GIF).
 #
 # Mobile (pas de maquette Figma) : texte puis image.
 #
@@ -48,13 +53,13 @@ projet: portfolio
 
 ## Du prototype au site en ligne
 
-Pour ce [Portfolio](/projects/portfolio), j’ai voulu aller plus loin qu’un prototype Figma. Avec [Claude Code](https://claude.com/fr/product/claude-code), j’ai transformé mon prototype haute fidélité en un site hébergé en ligne.
+Pour ce [Portfolio](/projects/portfolio), j’ai voulu aller plus loin qu’un prototype Figma. Avec [Claude Code](https://claude.com/fr/product/claude-code), un outil d’IA qui écrit du code, j’ai transformé mon prototype haute fidélité en un **[site en ligne]{dark}**.
 
-*Pour l’hébergement j’utilise [Netlify](https://www.netlify.com/) connecté à [GitHub](https://github.com/).*
+*Pour l’hébergement, j’utilise [Netlify](https://www.netlify.com/), connecté à [GitHub](https://github.com/).*
 
 ## Poser les bases
 
-Même si l’IA a développé ce site, je voulais garder la main sur le design et les interactions. Je ne lui confiais que le développement, ce que je lui demandais, et rien de plus.
+Même si l’IA a développé ce site, je voulais **[garder la main]{dark}** sur le design et les interactions. Je ne lui ai confié que le développement, dans les limites de ce que je lui demandais.
 
 ---
 
@@ -64,34 +69,34 @@ J’ai donc commencé par créer des skills : des instructions qui encadrent pr�
 
 Pendant le développement, j’ai fait tester le site à différents utilisateurs. Certaines fonctionnalités marchaient bien, mais il manquait aussi des comportements attendus.
 
-J’ai pu les réaliser directement via des prompts plutôt que de repasser par une phase de prototypage, en plus d’être testables en direct localement.
+J’ai pu les ajouter directement par des prompts (les instructions écrites données à l’IA), sans repasser par une phase de prototypage. Chaque correction pouvait en plus être testée tout de suite sur mon ordinateur.
 
-*Par exemple, les utilisateurs essayaient de faire glisser la grille pour l’afficher, alors que le comportement prévu était un clic. J’ai ajouté le glissement.*
+*Par exemple, les utilisateurs essayaient de **[faire glisser]{dark}** la grille pour l’afficher, alors que le comportement prévu était un clic. J’ai ajouté le glissement.*
 
-# À ajouter : la vidéo (en GIF) du glissement de la grille, dans la colonne de droite :
-# ||
-# ![Glissement de la grille …](glissement-grille.gif)
+||
+
+![Version mobile du portfolio : le doigt glisse sur la grille du showreel et allume une à une les colonnes qu’il traverse](glissement-grille.gif)
 
 ## Itérations
 
 La majorité des animations ont été créées directement sur Figma. Pour certaines, comme l’animation de chargement ou les effets liés au curseur, j’ai utilisé l’IA.
 
-*Fidèle à cette idée de l’IA comme outil, je retouchais chaque rendu proposé par des prompts.*
+*Fidèle à cette idée de l’IA comme outil, j’ai retouché chaque proposition par de nouveaux prompts.*
 
 ---
 
-![Animation de chargement du portfolio : un tournesol en noir et blanc sur fond blanc](animation-chargement.webp)
+![Animation de chargement du portfolio : un tournesol noir pousse, sa fleur devient le logo sowd qui rejoint l’en-tête, puis la page d’accueil apparaît](animation-chargement.gif)
 
-*Animation de chargement de Portfolio sowd, entièrement créée avec des prompts (et mes assets).*
+*Animation de chargement du Portfolio sowd, entièrement créée avec des prompts (et mes propres visuels).*
 
 ---
 
 ![Variantes de la barre de chargement proposées par Claude : actuelle, A — Ballottement, B — Ménisque](barre-chargement-variantes.webp)
 
-*Pour l’animation de barre de chargement, Claude a proposé plusieurs variantes. J’ai retenu la variante A, car je souhaitais garder une animation légère et discrète mais qui se voit, les autres étaient trop visibles.*
+*Pour la barre de chargement, Claude a proposé plusieurs variantes. J’ai retenu la variante A : je souhaitais une animation légère et discrète, mais visible. Les autres étaient trop présentes.*
 
-*J’ai ensuite modifié la vitesse à laquelle le liquide s’écoule, le temps avant que le liquide rattrape l’état d’avancement, l’état à l’arrêt, etc.*
+*J’ai ensuite ajusté la vitesse d’écoulement du liquide, le délai avant qu’il rattrape l’état d’avancement et son état à l’arrêt.*
 
 ## Ce que cela a apporté
 
-Le portfolio est passé d’un prototype à un vrai site en ligne, sans perdre les choix de design et d’interaction. L’IA a pris en charge le code, et j’ai gardé la décision sur ce que vit le visiteur.
+Le portfolio est passé d’un prototype à un vrai site en ligne, sans perdre les choix de design et d’interaction. L’IA a pris en charge le code, et j’ai gardé la **[décision]{dark}** de l'expérience vécu par l'utilisateur.

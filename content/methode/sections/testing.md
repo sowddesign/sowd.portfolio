@@ -7,7 +7,10 @@
 
 # Image d'en-tête : mots-clés (au survol ; en desktop, groupés deux par deux « a - b »)
 image_mots_cles:
-  - à compléter
+  - comparer
+  - départager
+  - protocole
+  - indicateurs
 # Fichier de l'image d'en-tête (facultatif : vide = fond blanc)
 # Nom seul = dans le dossier des images de la page ; sinon chemin depuis public (ex. public\pages\photo.png)
 image_fichier: public\pages\bright_04.webp
@@ -30,9 +33,9 @@ image_textes:
 # « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace).
 # *texte* = italique.
 definition: |
-  L’A/B testing compare deux versions d’une interface ou d’un parcours auprès d’utilisateurs réels, répartis aléatoirement entre une version A et une version B. Le but est de mesurer laquelle atteint le mieux un objectif donné.
+  L’A/B testing compare deux versions d’une interface ou d’un parcours auprès d’utilisateurs réels, répartis au hasard entre une version A et une version B. Le but est de **[mesurer]{dark}** laquelle atteint le mieux un objectif donné.
 
-  Sans trafic suffisant pour mesurer, on peut en appliquer le principe de façon qualitative : c’est le test de préférence, où l’on présente plusieurs versions à des participants pour recueillir leur choix et leurs raisons.
+  Sans assez de visiteurs pour mesurer, on peut en appliquer le principe de façon qualitative : c’est le test de préférence. On présente plusieurs versions à des participants pour recueillir leur choix et leurs raisons.
 
 # Projet cité : nom du fichier dans content/methode/projets/ (introduction au projet et bouton vers le projet)
 projet: portfolio
@@ -40,7 +43,7 @@ projet: portfolio
 
 # « UTILISATION DANS UN PROJET » — texte sous l'en-tête de commentaires (l'introduction au projet vient du projet cité)
 #
-#   Même écriture que content/methode/pages/recherches-quantitatives.md.
+#   Même écriture que content/methode/sections/recherches-quantitatives.md.
 #
 # Mobile (pas de maquette Figma, choix de l'utilisateur) : image A/B coupée en deux (A puis B, « {mobile en deux} »),
 # protocole sur une colonne.
@@ -49,25 +52,25 @@ projet: portfolio
 
 ## Un portfolio pour tous
 
-Ce [Portfolio](/projects/portfolio) doit parler à tous : recruteurs, designers, futurs clients et personnes extérieures au métier. Pour le vérifier, je le teste en deux temps : d’abord auprès de participants, puis en ligne, auprès de vrais visiteurs.
+Ce [Portfolio](/projects/portfolio) doit parler à tous : recruteurs, designers, futurs clients et personnes extérieures au métier. Pour le vérifier, je le teste en **[deux temps]{dark}** : d’abord auprès de participants, puis en ligne, auprès de vrais visiteurs.
 
 ## Étape 1 : comparer avec des participants
 
-Pour la page projet de Flash Invaders, j’ai présenté deux dispositions à des participants.
+Pour la page projet de *Flash Invaders*, j’ai présenté deux dispositions à des participants.
 
 ---
 
 ![Page projet Flash Invaders en deux dispositions : A, les exemples de questions sous la photo ; B, dans la colonne de droite](flash-invaders-a-b.webp){mobile en deux}
 
-> Page projet Flash Invaders (Portfolio sowd)
+> Page projet Flash Invaders (Portfolio sowd).
 
 ---
 
-En B, les exemples de questions passent dans la colonne de droite, à côté de la photo. Les participants ont préféré cette disposition, que j’ai retenue.
+En B, les exemples de questions passent dans la colonne de droite, à côté de la photo. Les participants ont **[préféré]{dark}** cette disposition, que j’ai retenue.
 
 ## Étape 2 : l’A/B test en ligne
 
-Une préférence déclarée ne dit pas comment les visiteurs se comportent réellement. J’ai donc confronté les deux dispositions sur Maze, en test non modéré.
+Une préférence déclarée ne dit pas comment les visiteurs **[se comportent réellement]{dark}**. J’ai donc confronté les deux dispositions sur Maze, un outil de test en ligne, en test non modéré : sans animateur, chaque testeur réalise la tâche seul.
 
 ### Le protocole
 
@@ -91,7 +94,7 @@ Une préférence déclarée ne dit pas comment les visiteurs se comportent réel
 ||
 
 4. Répartition :
-{petit} *→ chaque testeur voit aléatoirement la version A ou la version B.*
+{petit} *→ chaque testeur voit au hasard la version A ou la version B.*
 
 >>
 
@@ -104,6 +107,8 @@ Une préférence déclarée ne dit pas comment les visiteurs se comportent réel
 
 >>
 
-## Résultats
+## Ce que cela a apporté
 
-Test en cours. Les résultats seront publiés ici.
+Le test de préférence a déjà orienté la mise en page vers la version B.
+
+*L’A/B test en ligne est en cours : ses résultats diront si cette préférence se confirme dans l’usage.*

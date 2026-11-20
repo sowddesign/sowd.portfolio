@@ -13,12 +13,12 @@ lien: /projects/graine
 ---
 
 # TEXTE DE L'INTRODUCTION — même écriture que « Utilisation dans un projet » des pages
-# (voir content/methode/pages/recherches-quantitatives.md) : blocs « --- », colonnes « << », « || », « >> »,
+# (voir content/methode/sections/recherches-quantitatives.md) : blocs « --- », colonnes « << », « || », « >> »,
 # « #### Titre », listes, légendes « > ».
 
 #### Le projet
 
-[graine](/projects/graine) est une application mobile permettant d’apprendre à s’occuper de ses plantes en s’amusant.
+[graine](/projects/graine) est une application mobile pour apprendre à s’occuper de ses plantes en s’amusant.
 
 Elle repose sur la **[gamification]{dark}** : l’utilisation de mécanismes de jeu (points, badges, défis) pour entretenir la motivation et installer des habitudes d’entretien.
 

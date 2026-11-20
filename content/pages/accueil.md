@@ -40,5 +40,5 @@ demarche_copyright: "© 2026  Tom  Lamy /sowd  —  Création  graphique  origin
 
 # Section « Méthode : l'appliquer aux projets » (au-dessus des étapes de la méthode)
 appliquer_methode: "Double diamant :"
-appliquer_methode_nom: ma démarche en pratique
+appliquer_methode_nom: en pratique
 ---

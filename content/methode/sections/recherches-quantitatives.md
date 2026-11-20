@@ -7,8 +7,8 @@
 
 # Image d'en-tête : mots-clés (au survol ; en desktop, groupés deux par deux « a - b »)
 image_mots_cles:
+  - mesurer
   - questionner
-  - comparer
   - tendances
   - hypothèses
 # Fichier de l'image d'en-tête (facultatif : vide = fond blanc)
@@ -82,15 +82,21 @@ Lors du projet graine, cette phase de recherche partait de deux questions :
 
 ---
 
-Deux méthodes ont été mobilisées pour y répondre :
+Pour y répondre, nous avons utilisé deux méthodes :
 
 <<
 
-- La récolte et l’analyse d’études existantes
+- l’analyse d’études existantes ;
 
 ||
 
-- L’élaboration et l’envoi d’un questionnaire
+- un questionnaire, conçu et diffusé en binôme.
+
+>>
+
+---
+
+*J’ai mené l’**[analyse]{dark}** des études et des réponses au questionnaire.*
 
 ## Analyse d’études
 
@@ -100,7 +106,7 @@ Deux sur les habitudes des Français :
 
 <<
 
-- [« les Français et leur jardin »](https://documents.lesentreprisesdupaysage.fr/pub/documents/DP-Unep-x-Ifop-2025.pdf)
+- [« Les Français et leur jardin »](https://documents.lesentreprisesdupaysage.fr/pub/documents/DP-Unep-x-Ifop-2025.pdf)
 
 ||
 
@@ -124,11 +130,11 @@ Et deux sur la gamification :
 
 || bas
 
-> Adaptation d’un graphique de l’étude SELL 2024 : part de joueurs par tranche d’âge (documentation graine)
+> Adaptation d’un graphique de l’étude SELL 2024 : part de joueurs par tranche d’âge (documentation graine).
 
 ### Ce que les études ont révélé :
 
-1. L’entretien des plantes est perçu comme **[une contrainte]{dark}** pour les 18 à 34 ans. L’application doit donc le rendre plus simple et plus engageant.
+1. Pour les 18-34 ans, l’entretien des plantes est une **[contrainte]{dark}**. L’application doit donc le rendre plus simple et plus engageant.
 
 ||
 
@@ -136,30 +142,30 @@ Et deux sur la gamification :
 
 ---
 
-3. Les classements et les badges motivent, mais peuvent aussi générer de la pression. Une motivation durable repose sur des retours immédiats qui valorisent la **[progression personnelle]{dark}**. La compétition reste donc optionnelle.
-{petit} *L’étude Quizizz porte sur des enfants de 8 à 10 ans ; on en retient le mécanisme (compétition contre progression), à vérifier auprès de notre cible.*
+3. Les classements et les badges motivent, mais peuvent aussi générer de la pression. Une motivation durable repose sur des retours immédiats qui valorisent la **[progression personnelle]{dark}**. La compétition reste optionnelle.
+{petit} *L’étude Quizizz porte sur des enfants de 8 à 10 ans. Nous en avons retenu le mécanisme (se comparer aux autres ou à soi-même), à vérifier auprès de notre cible.*
 
 ###
 
-Ces données ont fixé notre cible principale, **[les 18 à 34 ans]{dark}**, et orienté le questionnaire : à qui l’envoyer, quelles questions poser et quel ton utiliser.
+Ces données ont fixé notre cible principale, les **[18-34 ans]{dark}**. Elles ont aussi orienté le questionnaire : à qui l’envoyer, quelles questions poser et sur quel ton.
 
 ## Questionnaire
 
 ###
 
-*18 questions (dont 3 facultatives), mêlant questions à choix, échelles de notation et questions ouvertes.*
+*18 questions (dont 3 facultatives), avec des notes de 1 à 5 et des questions ouvertes.*
 
 ---
 
-Ce questionnaire a été distribué de deux façons :
+Nous l’avons diffusé de deux façons :
 
 <<
 
-- Sur Reddit et Instagram
+- sur Reddit et Instagram ;
 
 ||
 
-- Auprès de notre entourage, dans la tranche d’âge visée (18 à 34 ans)
+- auprès de notre entourage, dans la tranche d’âge visée (18-34 ans).
 
 ---
 
@@ -175,7 +181,7 @@ Ce questionnaire a été distribué de deux façons :
 
 >>
 
-> Extraits du questionnaire (documentation graine)
+> Extraits du questionnaire (documentation graine).
 
 ### Résultats :
 
@@ -191,8 +197,13 @@ Ce questionnaire a été distribué de deux façons :
 
 || bas
 
+Pour protéger les répondants, les réponses brutes ne sont pas publiées.
 
-> Pour protéger les répondants, les réponses brutes ne sont pas publiées et seules les infographies ont été conservées.
+*Seules les infographies de synthèse ont été conservées.*
+
+---
+
+*Les répondants viennent surtout de notre entourage et de communautés en ligne. Les résultats donnent donc des **[tendances]{dark}**, pas une vérité sur tous les Français.*
 
 ### Ce que le questionnaire a révélé :
 
@@ -204,14 +215,20 @@ Ce questionnaire a été distribué de deux façons :
 2. ![Extrait du projet graine](page-maker-2.png)
 70,2 % estiment que des missions quotidiennes pourraient les aider à mieux entretenir leurs plantes.
 
----
+## Ce que cela a apporté
 
-Ces données ont validé plusieurs choix de conception :
+Ces tendances ont conforté deux choix de conception :
 
 <<
 
-- des parcours d’entretien **[dès la plantation]{dark}** d’une graine
+- un parcours d’entretien qui commence **[dès la plantation]{dark}** de la graine ;
 
 ||
 
-- des **[missions quotidiennes]{dark}**
+- des **[missions quotidiennes]{dark}**, qui transforment l’entretien en petits objectifs.
+
+>>
+
+---
+
+Elles ont aussi servi de base au persona principal, Sara.

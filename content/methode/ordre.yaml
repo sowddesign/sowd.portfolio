@@ -6,7 +6,7 @@
 #   description : petit texte à côté du titre ;
 #   intro       : nom du fichier de sa page d'introduction (content/methode/intros/<intro>.md) ;
 #   pages       : une ligne par page, « - fichier: Nom affiché dans le menu ».
-#                 Le fichier est content/methode/pages/<fichier>.md, ses images dans public/methode/<fichier>/.
+#                 Le fichier est content/methode/sections/<fichier>.md, ses images dans public/methode/<fichier>/.
 #
 # Pour changer l'ordre ou déplacer une page dans une autre étape, déplace sa ligne (garde les deux espaces devant « - »).
 # Pour renommer une page dans le menu, change le texte après « : ».
@@ -19,20 +19,20 @@
   description: explorer les besoins
   intro: decouvrir
   pages:
-    - recherches-quantitatives: Recherches quantitatives | Recherches quanti.
-    - benchmarks: Benchmarks
+    - recherches-quantitatives: Recherche quantitative | Recherche quanti.
+    - benchmarks: Benchmark
     - entretien-utilisateur: Entretien utilisateur | Entretiens utilisat.
     - observations-terrain: Observations terrain
     - triangulation: Triangulation
 
 - titre: Définir
-  description: préciser  le  problème
+  description: préciser  le  problème  à  résoudre
   intro: definir
   pages:
-    - problematique: Problématique
-    - personaes: Personas
-    - user-journey: User journey
     - synthese-recherches: Synthèse des recherches | Synthèse
+    - personaes: Persona
+    - user-journey: User journey
+    - problematique: Problématique
     - priorisation-backlog: Priorisation & backlog | Prio. & Backlog
     - aligner-objectifs: Aligner les objectifs
 
@@ -43,7 +43,7 @@
     - scenarios-usage: Scénarios d'usage
     - arborescence: Arborescence
     - wireframes-papier: Wireframes papier
-    - wireframe-mid-fi: Wireframe mid-fi
+    - wireframe-mid-fi: Wireframes mid-fi
     - tests-utilisateurs: Tests utilisateurs
 
 - titre: Livrer
@@ -52,7 +52,7 @@
   pages:
     - design-system: Design system
     - design-interaction: Design d'interaction
-    - prototype-hi-fi: Prototype hi-fi
-    - testing: AB Testing
+    - prototype-hi-fi: Prototype haute fidélité | Prototype hi-fi
     - specifications-ux-ui: Spécifications UX/UI
     - developpement-ia: Développement IA
+    - testing: A/B testing

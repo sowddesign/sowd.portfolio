@@ -58,7 +58,7 @@ import { readingServerSnapshot, readingSnapshot, saveReading, subscribeReading }
  * Progression de lecture : gardée par page (la plus grande valeur atteinte), affichée dans les tuiles,
  *   et gardée entre les visites (localStorage, demande de l'utilisateur ; pas l'intro, qui reste par visite).
  * Lien vers une page de la méthode depuis une autre page du site : /?methode=<nom de la page>
- *   (nom du fichier dans content/methode/pages/, ex. design-system). L'étape et la page s'ouvrent dès l'arrivée,
+ *   (nom du fichier dans content/methode/sections/, ex. design-system). L'étape et la page s'ouvrent dès l'arrivée,
  *   puis un seul défilement doux mène à la page ouverte (desktop : haut du conteneur sous l'en-tête ; mobile :
  *   tuile choisie sous l'en-tête et la ligne de l'étape), pour un mouvement continu (demande de l'utilisateur).
  *   L'adresse suit la page ouverte (useAddressSync) : rechargement et lien partagé rouvrent cette page.

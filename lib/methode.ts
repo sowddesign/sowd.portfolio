@@ -15,9 +15,9 @@ import { isProjectAvailable, PROJECTS_ORDER_FILE } from "./projects";
  * Étapes et pages, dans l'ordre, dans content/methode/ordre.yaml : l'utilisateur y déplace une page
  * d'une étape à l'autre ou change l'ordre ; les numéros (01, 02…) suivent la position.
  *   intros/<intro>.md : introduction d'une étape (page00, en-tête seul) ;
- *   pages/<fichier>.md : modèle de page (en-tête : image d'en-tête, « En quelques mots », projet cité ;
+ *   sections/<fichier>.md : modèle de page (en-tête : image d'en-tête, « En quelques mots », projet cité ;
  *            texte : « Utilisation dans un projet », découpé en parties, sous-parties, blocs et colonnes,
- *            voir pages/recherches-quantitatives.md), images dans public/methode/<fichier>/ ;
+ *            voir sections/recherches-quantitatives.md), images dans public/methode/<fichier>/ ;
  *   projets/<projet>.md : introduction au projet cité et bouton vers le projet, communs aux pages qui le citent.
  * Un fichier pas encore écrit donne un contenu null (la page reste listée dans le menu).
  * À n'utiliser que côté serveur (lecture du disque).
@@ -66,7 +66,8 @@ export type MethodeElement =
   /** Texte body suivi de lignes « {petit} » (caption), comme un élément numéroté sans numéro (demande de l'utilisateur). */
   | { kind: "paragraphs"; lines: MdLine[]; smallLines: number[] }
   | { kind: "numbered"; items: MethodeNumberedItem[] }
-  | { kind: "bullets"; items: MdLine[] }
+  /** captions : ligne « {petit} » collée sous une puce, par rang de puce (demande de l'utilisateur). */
+  | { kind: "bullets"; items: MdLine[]; captions?: Record<number, MdLine> }
   | ({ kind: "image" } & MethodeImage)
   | { kind: "caption"; lines: MdLine[] }
   | { kind: "figure"; value: string; label: MdLine }
@@ -122,7 +123,7 @@ export type MethodeFinishContent = {
 };
 
 export type MethodePageContent = {
-  /** Nom du fichier (content/methode/pages/<slug>.md). */
+  /** Nom du fichier (content/methode/sections/<slug>.md). */
   slug: string;
   header: {
     keywords: string[];
@@ -149,7 +150,7 @@ const METHODE_IMAGES_DIR = path.join(process.cwd(), "public", "methode");
 const METHODE_FIN_DIR = path.join(process.cwd(), "public", "methode", "fin");
 
 export type MethodePageEntry = {
-  /** Nom du fichier (content/methode/pages/<slug>.md). */
+  /** Nom du fichier (content/methode/sections/<slug>.md). */
   slug: string;
   /** Numéro selon la position dans l'étape, ex. « 01 ». */
   number: string;
@@ -375,8 +376,14 @@ function element(source: string, folder: string, fail: (message: string) => neve
     }
     return { kind: "numbered", items };
   }
-  if (lines.every((line) => line.startsWith("- "))) {
-    return { kind: "bullets", items: lines.map((line) => parseMethodeLine(line.slice(2), fail)) };
+  if (first.startsWith("- ") && lines.every((line) => line.startsWith("- ") || line.startsWith(SMALL))) {
+    const items: MdLine[] = [];
+    const captions: Record<number, MdLine> = {};
+    for (const line of lines) {
+      if (line.startsWith("- ")) items.push(parseMethodeLine(line.slice(2), fail));
+      else captions[items.length - 1] = parseMethodeLine(line.slice(SMALL.length), fail);
+    }
+    return { kind: "bullets", items, ...(Object.keys(captions).length > 0 ? { captions } : {}) };
   }
   if (lines.every((line) => line.startsWith("> "))) {
     return { kind: "caption", lines: lines.map((line) => parseMethodeLine(line.slice(2), fail)) };
@@ -630,7 +637,7 @@ export async function getMethodePage(slug: string): Promise<MethodePageContent> 
 async function loadMethodePage(slug: string, version: number): Promise<MethodePageContent> {
   "use cache";
   void version;
-  const { body, data, text, list, fail } = read(`pages/${slug}.md`);
+  const { body, data, text, list, fail } = read(`sections/${slug}.md`);
   const folder = `methode/${slug}`;
   const placement = { desktop: placementOf(data, "image_desktop", fail), mobile: placementOf(data, "image_mobile", fail) };
   const texts = textsOf(data, fail);
@@ -720,7 +727,7 @@ async function loadMethode(version: number): Promise<MethodeStep[]> {
           }
           if (seen.has(slug)) failOrder(`la page « ${slug} » est listée deux fois.`);
           seen.add(slug);
-          const exists = existsSync(path.join(METHODE_DIR, "pages", `${slug}.md`));
+          const exists = existsSync(path.join(METHODE_DIR, "sections", `${slug}.md`));
           return { slug, number: number(j), label, ...(labelShort ? { labelShort } : {}), content: exists ? await loadMethodePage(slug, version) : null };
         }),
       );

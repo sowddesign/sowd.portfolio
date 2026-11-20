@@ -7,7 +7,10 @@
 
 # Image d'en-tête : mots-clés (au survol ; en desktop, groupés deux par deux « a - b »)
 image_mots_cles:
-  - à compléter
+  - humaniser
+  - décider
+  - cible
+  - besoins
 # Fichier de l'image d'en-tête (facultatif : vide = fond blanc)
 # Nom seul = dans le dossier des images de la page ; sinon chemin depuis public (ex. public\pages\photo.png)
 image_fichier: public\pages\whithish_02.webp
@@ -42,7 +45,7 @@ projet: graine
 
 # « UTILISATION DANS UN PROJET » — texte sous l'en-tête de commentaires (l'introduction au projet vient du projet cité)
 #
-#   Même écriture que content/methode/pages/recherches-quantitatives.md, plus :
+#   Même écriture que content/methode/sections/recherches-quantitatives.md, plus :
 #   ![description](desktop.webp | mobile.webp) → image recadrée autrement en mobile et en tablette petite
 #
 # Les lignes commençant par « # » suivi d'un espace sont des commentaires.
@@ -85,6 +88,11 @@ Les répondants s’informent sur les plantes surtout sur internet et auprès de
 
 **[70,2 %]{dark}** des répondants estiment que des missions quotidiennes les aideraient à mieux entretenir leurs plantes.
 {petit} *→ Recherche quantitative (questionnaire)*
+
+---
+
+Une grande partie de ses attentes et de ses frustrations vient des 30 réponses aux questions ouvertes.
+{petit} *→ Recherche quantitative (questionnaire, réponses ouvertes)*
 
 ## Humaniser ces données
 

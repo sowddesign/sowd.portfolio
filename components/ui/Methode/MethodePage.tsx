@@ -16,7 +16,7 @@ import { isPartRead, savePartRead } from "./reading-store";
 
 /*
  * Méthode, modèle de page — frame Figma « methode 01 » (fichier content, node 6291:11332), desktop et mobile.
- * Textes et images : content/methode/pages/<page>.md et content/methode/projets/<projet>.md.
+ * Textes et images : content/methode/sections/<page>.md et content/methode/projets/<projet>.md.
  * Variantes Figma → props : device → device ; la page choisie → le fichier lu (content).
  *
  * Desktop : remplit son parent (conteneur de 830 de haut en usage) et son contenu défile à l'intérieur,

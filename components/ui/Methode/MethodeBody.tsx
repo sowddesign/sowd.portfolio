@@ -58,6 +58,10 @@ type Spacing = {
   note: string;
   /** Écart texte body → texte caption (« {petit} ») d'un élément numéroté (demande de l'utilisateur). */
   smallTop: string;
+  /** Note « {petit} » sous une puce : écart au-dessus (collée au texte) et en dessous (avant la puce suivante),
+      choix de l'utilisateur. */
+  bulletNoteTop: string;
+  bulletNoteBottom: string;
 };
 
 const desktopSpacing: Spacing = {
@@ -72,6 +76,8 @@ const desktopSpacing: Spacing = {
   number: "gap-sm",
   note: "gap-xs",
   smallTop: "mt-xs",
+  bulletNoteTop: "mt-xxs",
+  bulletNoteBottom: "mb-sm",
 };
 const mobileSpacing: Spacing = {
   part: "gap-xl",
@@ -85,6 +91,8 @@ const mobileSpacing: Spacing = {
   number: "gap-xs",
   note: "gap-xxs",
   smallTop: "mt-xxs",
+  bulletNoteTop: "mt-none",
+  bulletNoteBottom: "mb-xs",
 };
 
 export const methodeSpacing = (mobile: boolean) => (mobile ? mobileSpacing : desktopSpacing);
@@ -325,8 +333,17 @@ function Element({
       return (
         <ul className="type-body-regular list-disc ps-lg text-pretty">
           {item.items.map((line, i) => (
-            <li key={i} className="max-w-(--methode-text-max-width)">
+            <li
+              key={i}
+              className={`max-w-(--methode-text-max-width) ${item.captions?.[i] ? spacing.bulletNoteBottom : ""}`}
+            >
               <RichLines lines={[line]} size="body" linkCursorLabel={commun.curseur_voir_projet} />
+              {/* Caption « {petit} » collée sous la puce, plus loin de la puce suivante (choix de l'utilisateur). */}
+              {item.captions?.[i] && (
+                <div className={spacing.bulletNoteTop}>
+                  <TextLines lines={[item.captions[i]]} small />
+                </div>
+              )}
             </li>
           ))}
         </ul>
