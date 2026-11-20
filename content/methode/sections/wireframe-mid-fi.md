@@ -7,7 +7,10 @@
 
 # Image d'en-tête : mots-clés (au survol ; en desktop, groupés deux par deux « a - b »)
 image_mots_cles:
-  - à compléter
+  - afiner
+  - tester
+  - structure
+  - piste
 # Fichier de l'image d'en-tête (facultatif : vide = fond blanc)
 # Nom seul = dans le dossier des images de la page ; sinon chemin depuis public (ex. public\pages\photo.png)
 image_fichier: public\pages\darker_05.webp
@@ -33,9 +36,9 @@ image_textes:
 # « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace).
 # *texte* = italique.
 definition: |
-  Un wireframe mid-fi (moyenne fidélité) ajoute de la structure et du détail au croquis : des libellés réalistes, une hiérarchie affinée et des composants identifiés. Il reste neutre graphiquement, sans couleurs ni visuels riches.
+  Un wireframe mid-fi, ou de **[moyenne fidélité]{dark}**, ajoute de la structure et du détail au croquis : des libellés réalistes, une hiérarchie affinée et des composants identifiés (les éléments réutilisables comme les boutons ou les menus). Il reste neutre graphiquement, sans couleurs ni visuels riches.
 
-  Il fait le pont entre l’exploration low-fi, comme le wireframe papier, et les maquettes haute fidélité ou les prototypes interactifs.
+  Il fait le lien entre l’exploration en basse fidélité, comme le wireframe papier, et les maquettes haute fidélité (proches du rendu final) ou les prototypes interactifs.
 
 # Projet cité : nom du fichier dans content/methode/projets/ (introduction au projet et bouton vers le projet)
 projet: graine
@@ -43,7 +46,7 @@ projet: graine
 
 # « UTILISATION DANS UN PROJET » — texte sous l'en-tête de commentaires (l'introduction au projet vient du projet cité)
 #
-#   Même écriture que content/methode/pages/recherches-quantitatives.md, plus :
+#   Même écriture que content/methode/sections/recherches-quantitatives.md, plus :
 #   || inverse               → colonne de droite au-dessus en mobile
 #
 # Mobile (pas de maquette Figma, choix de l'utilisateur) : texte avant l'écran (« || inverse »),
@@ -53,9 +56,9 @@ projet: graine
 
 ## Un écran comme terrain d’essai
 
-Lors du projet [graine](/projects/graine), j’ai conçu sur Figma un wireframe de moyenne fidélité de la fiche plante. Il a ensuite servi de base pour tester plusieurs directions artistiques.
+Lors du projet [graine](/projects/graine), j’ai conçu sur Figma un wireframe de moyenne fidélité de la **[fiche plante]{dark}**. Il a ensuite servi de base pour tester plusieurs directions artistiques.
 
-> La fiche plante a été choisie parce qu’elle concentre l’essentiel de l’application : la photo, le niveau de la plante, sa progression et ses besoins d’entretien.
+*La fiche plante a été choisie parce qu’elle concentre l’essentiel de l’application : la photo, le niveau de la plante, sa progression et ses besoins d’entretien.*
 
 ## Niveaux de gris
 
@@ -63,13 +66,13 @@ Lors du projet [graine](/projects/graine), j’ai conçu sur Figma un wireframe 
 
 || inverse
 
-Cet écran central de l’application m’a permis de tester les typographies, les icônes et la hiérarchie des informations.
+Cet écran central m’a permis de tester les typographies, les icônes et la hiérarchie des informations.
 
-Sans couleur, l’attention se porte sur le placement des éléments et sur des détails que la couleur aurait pu masquer.
+**[Sans couleur]{dark}**, l’attention se porte sur le placement des éléments et sur des détails que la couleur aurait pu masquer.
 
 ## Plusieurs pistes de direction artistique
 
-La direction artistique n’était pas encore définie. La même structure m’a permis d’essayer plusieurs pistes sans redessiner l’écran.
+La direction artistique n’était pas encore définie. La **[même structure]{dark}** m’a permis d’essayer plusieurs pistes, posées par-dessus le wireframe, sans redessiner l’écran.
 
 ---
 
@@ -77,18 +80,16 @@ La direction artistique n’était pas encore définie. La même structure m’a
 
 ![Fiche plante de graine dans une piste photographique : capucine, photo de fleur en en-tête](fiche-plante-photo.webp)
 
-Une piste photographique, peu concluante.
+> Une piste photographique brute, peu concluante : nos concurrents montrent déjà tous la plante en photo, telle qu’elle est.
 
 ||
 
 ![Fiche plante de graine dans une piste illustrée : capucine, en-tête orange découpé en formes](fiche-plante-illustree.webp)
 
-Une piste illustrée, plus convaincante.
-
-*Cette version a été déclinée sur le reste de l’application.*
+> Une piste « stickers », plus convaincante : des photos découpées comme des autocollants, pour une direction artistique forte qui nous démarque.
 
 >>
 
 ## Ce que cela a apporté
 
-En figeant la structure en niveaux de gris, j’ai pu comparer les directions artistiques sur une base commune et choisir en connaissance de cause. La piste retenue a ensuite été déclinée sur toute l’application.
+En figeant la structure en niveaux de gris, j’ai pu comparer les directions artistiques sur une **[base commune]{dark}** et choisir en connaissance de cause. La piste stickers a ensuite été déclinée sur toute l’application.

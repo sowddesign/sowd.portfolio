@@ -13,7 +13,7 @@ lien: /projects/portfolio
 ---
 
 # TEXTE DE L'INTRODUCTION — même écriture que « Utilisation dans un projet » des pages
-# (voir content/methode/pages/recherches-quantitatives.md) : blocs « --- », colonnes « << », « || », « >> »,
+# (voir content/methode/sections/recherches-quantitatives.md) : blocs « --- », colonnes « << », « || », « >> »,
 # « #### Titre », listes, légendes « > ».
 
 #### Le projet
@@ -38,4 +38,4 @@ Il a été pensé pour expliquer mon métier à tout le monde, y compris à ceux
 
 >>
 
-> Projet personnel réalisé seul, avec Figma et Claude.AI.
+> Projet personnel réalisé seul, avec Figma et Claude Code.

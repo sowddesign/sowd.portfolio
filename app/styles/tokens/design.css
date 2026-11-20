@@ -475,6 +475,9 @@
    */
   --scroll-bar-discreet-thumb: var(--p-number-4);
   --scroll-bar-discreet-gap: var(--p-number-2);
+  /* Arrondi proportionnel à celui de la grande barre (corner/xs 2 sur un curseur de 8, soit 1 sur 4) : même rendu
+     visuel (demande de l'utilisateur) ; corner/xs sur 4 de large donnerait un bout entièrement rond. */
+  --scroll-bar-discreet-corner: var(--p-number-1);
 
   /*
    * dégradé — style Figma « shadowBehindVisual » : ombre simulée derrière le visuel (colorBackground).

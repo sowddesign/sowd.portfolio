@@ -13,7 +13,7 @@ lien: /projects/flashinvaders
 ---
 
 # TEXTE DE L'INTRODUCTION — même écriture que « Utilisation dans un projet » des pages
-# (voir content/methode/pages/recherches-quantitatives.md) : blocs « --- », colonnes « << », « || », « >> »,
+# (voir content/methode/sections/recherches-quantitatives.md) : blocs « --- », colonnes « << », « || », « >> »,
 # « #### Titre », listes, légendes « > ».
 
 #### Le projet

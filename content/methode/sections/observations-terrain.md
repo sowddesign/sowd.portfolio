@@ -8,9 +8,9 @@
 # Image d'en-tête : mots-clés (au survol ; en desktop, groupés deux par deux « a - b »)
 image_mots_cles:
   - observer
-  - s’immerger
-  - usages
-  - contexte
+  - noter
+  - terrain
+  - comportements
 # Fichier de l'image d'en-tête (facultatif : vide = fond blanc)
 # Nom seul = dans le dossier des images de la page ; sinon chemin depuis public (ex. public\pages\photo.png)
 image_fichier: public\pages\brand_04.webp
@@ -46,13 +46,13 @@ projet: flashinvaders
 
 # « UTILISATION DANS UN PROJET » — texte sous l'en-tête de commentaires
 #
-#   Même écriture que content/methode/pages/recherches-quantitatives.md.
+#   Même écriture que content/methode/sections/recherches-quantitatives.md.
 #
 # Les lignes commençant par « # » suivi d'un espace sont des commentaires.
 
 ## Objectifs
 
-Pour comprendre comment les joueurs utilisent l’application, j’ai organisé une **[balade dans Paris]{dark}** avec des joueurs de niveaux différents.
+Lors du projet [Flash Invaders](/projects/flashinvaders), pour comprendre comment les joueurs utilisent l’application, j’ai organisé une **[balade dans Paris]{dark}** avec des joueurs de niveaux différents.
 
 ---
 
@@ -136,7 +136,7 @@ Brève explication du déroulé aux joueurs.
 
 #### Arrivée et remerciements :
 
-À l’arrivée, nous avons fait un bilan collectif : les points forts et les points faibles de l’application, et ce que les joueurs aimeraient y trouver.
+À l’arrivée, nous avons fait un bilan collectif : les points forts et les points faibles de l’application, et les fonctionnalités que les joueurs aimeraient y trouver.
 
 Pour finir, j’ai remercié les participants pour leur temps.
 
@@ -177,3 +177,7 @@ L’expérimenté a guidé les autres : sans lui, le novice aurait peut-être ab
 4. **Des fonctionnalités délaissées**
 Certaines fonctionnalités n’ont pas été utilisées du tout, d’autres ont été mal comprises. L’hypothèse 4 est confirmée.
 {petit} *→ Refonte : ces écrans ont été repensés côté interface.*
+
+---
+
+*Un comportement inattendu : nous avons croisé un joueur très pressé. Il marchait vite, s’arrêtait devant un invader, le flashait et repartait aussitôt. En le suivant, nous avons compris qu’il suivait un **[plan]{dark}** préparé à l’avance, ce qui confirme le besoin d’itinéraires dans l’application.*

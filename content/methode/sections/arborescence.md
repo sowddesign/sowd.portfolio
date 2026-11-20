@@ -7,7 +7,10 @@
 
 # Image d'en-tête : mots-clés (au survol ; en desktop, groupés deux par deux « a - b »)
 image_mots_cles:
-  - à compléter
+  - classer
+  - relier
+  - pages
+  - fonctionnalités
 # Fichier de l'image d'en-tête (facultatif : vide = fond blanc)
 # Nom seul = dans le dossier des images de la page ; sinon chemin depuis public (ex. public\pages\photo.png)
 image_fichier: public\pages\darker_03.webp
@@ -30,9 +33,10 @@ image_textes:
 # « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace).
 # *texte* = italique.
 definition: |
-  L’arborescence correspond à la structure hiérarchique des contenus et fonctionnalités (information architecture) qui organise la navigation et les chemins d’accès dans une interface.
+  L’arborescence est la **[structure hiérarchique]{dark}** des contenus et des fonctionnalités d’une interface (en anglais, information architecture). Elle organise la navigation et les chemins pour accéder à chaque page.
 
-  Cette structure peut ensuite être validée par un tree testing : on demande à des utilisateurs de retrouver un contenu dans l’arborescence, sans interface, pour vérifier qu’elle est intuitive.
+  Cette structure peut ensuite être validée par un **[tree testing]{dark}** : on demande à des utilisateurs de retrouver un contenu dans l’arborescence, sans interface, pour vérifier qu’elle est intuitive.
+  *Sur graine, nous n’avons pas mené de tree testing à ce stade : la structure a été vérifiée plus tard, lors de tests sur les wireframes mid-fi.*
 
 # Projet cité : nom du fichier dans content/methode/projets/ (introduction au projet et bouton vers le projet)
 projet: graine
@@ -40,7 +44,7 @@ projet: graine
 
 # « UTILISATION DANS UN PROJET » — texte sous l'en-tête de commentaires (l'introduction au projet vient du projet cité)
 #
-#   Même écriture que content/methode/pages/recherches-quantitatives.md, plus :
+#   Même écriture que content/methode/sections/recherches-quantitatives.md, plus :
 #   a. texte                 → élément numéroté par une lettre
 #   ![description](desktop.webp | extrait-1.webp + extrait-2.webp) → en mobile et tablette petite : extraits
 #                              empilés à la place de l'image
@@ -50,7 +54,7 @@ projet: graine
 
 ## Objectif
 
-Lors du projet [graine](/projects/graine), nous devions concevoir une application complète. Avant de maquetter, nous avons dessiné son arborescence générale.
+Lors du projet [graine](/projects/graine), nous devions concevoir une application complète. Avant de dessiner les écrans, nous avons construit son arborescence générale.
 
 *L’objectif : mettre à plat toutes les fonctionnalités et voir comment elles s’articulent entre elles.*
 
@@ -63,48 +67,50 @@ Nous avons classé les pages selon deux critères :
 **Le point d’accès**
 
 1. Accessibles depuis l’en-tête (header)
-2. Accessibles depuis la barre de navigation (nav bar)
+2. Accessibles depuis la barre de navigation (le menu fixé en bas de l’écran)
 
 ---
 
 **Le niveau**
 
-a. Accessible directement (niveau 1)
-b. Accessible depuis au moins une page parente (niveau 2)
+a. Accessibles directement (niveau 1)
+b. Accessibles depuis au moins une page parente (niveau 2)
 
 ---
 
-*Ce double classement nous a permis de réserver la barre de navigation aux pages les plus utilisées, et de savoir combien de clics séparaient l’utilisateur de chaque fonctionnalité.*
+*Ce double classement nous a permis de réserver la barre de navigation aux **[pages les plus utilisées]{dark}**, et de savoir combien de clics (ou appuis, pour une solution mobile) sépareraient l’utilisateur de chaque fonctionnalité.*
 
 ## Décortiquer une page
 
-Pour chaque page, nous avons d’abord listé ses fonctionnalités. Les liens avec les autres pages en découlaient, parfois de façon évidente, parfois moins.
+Pour chaque page, nous avons d’abord listé ses fonctionnalités. Les liens vers les autres pages en découlaient, parfois de façon évidente, parfois moins.
 
 ---
 
-*Prenons l’exemple de la page de niveau 1 – Photo.*
+*Prenons l’exemple de la page de niveau 1 « Photo ».*
 
 ---
 
 **Fonctionnalités :**
 
-- Tout ce qui sert à la prise de vue (zoom, flash, mode paysage, déclencheur). *Ces éléments doivent déjà être prévus à l’écran.*
-- Accès à la pellicule. *Identifié plus tard : il faudra une pop-up qui demande cet accès.*
+- Tout ce qui sert à la prise de vue (zoom, flash, mode paysage, déclencheur).
+{petit} *Ces éléments doivent déjà être prévus à l’écran.*
+- Accès à la pellicule.
+{petit} *Identifié plus tard : il faudra une pop-up qui demande cet accès.*
 - Historique des scans précédents.
 - Aide pour prendre une bonne photo.
 
 ---
 
-**Liens vers les pages identifiés :**
+**Liens identifiés vers d’autres pages :**
 
 - La photo, une fois prise.
-- La page d’historiques.
+- La page d’historique.
 - La pop-up de demande d’accès.
 - La pop-up d’aide à la prise de photo.
 
 ---
 
-*Ce premier bloc sert de modèle : on répète l’exercice pour chaque page de l’application.*
+*Ce premier bloc a servi de **[modèle]{dark}** : nous avons répété l’exercice pour chaque page de l’application.*
 
 ---
 
@@ -112,10 +118,8 @@ Pour chaque page, nous avons d’abord listé ses fonctionnalités. Les liens av
 
 > Extrait de l’arborescence : page « Photo » (documentation graine).
 
-## Ce que l’arborescence a apporté
+## Ce que cela a apporté
 
-Pour chaque page, nous avons d’abord listé ses fonctionnalités. Les liens avec les autres pages en découlaient, parfois de façon évidente, parfois moins.
+L’arborescence a servi de **[plan]{dark}** aux maquettes : chaque écran avait déjà ses fonctionnalités et ses liens définis avant d’être dessiné.
 
----
-
-*Ce double classement nous a permis de réserver la barre de navigation aux pages les plus utilisées, et de savoir combien de clics séparaient l’utilisateur de chaque fonctionnalité.*
+Elle a aussi fait apparaître des éléments **[faciles à oublier]{dark}**, comme la pop-up de demande d’accès à la pellicule.

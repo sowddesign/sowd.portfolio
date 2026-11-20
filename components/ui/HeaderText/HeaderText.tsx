@@ -42,7 +42,7 @@ export function HeaderText({
     color === "black" ? "text-text-neutral-black" : "text-text-neutral-white";
   const space = name.indexOf(" ");
   const words =
-    space === -1 ? [name] : [name.slice(0, space + 1), name.slice(space + 1)];
+    space === -1 ? [name] : [name.slice(0, space), name.slice(space + 1)];
 
   return (
     <div
@@ -58,6 +58,9 @@ export function HeaderText({
           {words.map((word, i) => (
             <span key={i} className="whitespace-pre">
               {word}
+              {/* Espace entre les mots : desktop seulement (ailleurs, l'écart spacing/xs le remplace ;
+                  les deux ensemble faisaient un double espace). */}
+              {i === 0 && words.length > 1 && <span className="hidden desktop:inline"> </span>}
             </span>
           ))}
         </h3>

@@ -12,7 +12,12 @@ import { gridBarMotif01Paths, gridBarMotif12Paths } from "./grid-bar-paths";
 
 export type GridBarNumber = "01" | "02" | "03" | "04" | "05" | "06" | "07" | "08" | "09" | "10" | "11" | "12";
 
-export type GridBarProps = { className?: string } & (
+export type GridBarProps = {
+  className?: string;
+  /** Hauteur du centre du motif (01 et 12) dans la tuile, en valeur CSS ; par défaut le milieu de la tuile.
+      Sert quand la tuile est prolongée au-delà de la zone de la grille Figma (showreel desktop). */
+  motifCenter?: string;
+} & (
   | { state?: "default"; number?: GridBarNumber }
   | { state: "hovered"; number: GridBarNumber }
 );
@@ -61,7 +66,7 @@ const motifs = {
   },
 } as const;
 
-function GridBarMotif({ number }: { number: keyof typeof motifs }) {
+function GridBarMotif({ number, center }: { number: keyof typeof motifs; center?: string }) {
   const uid = useId().replace(/[^a-zA-Z0-9_-]/g, "");
   const gradientId = `grid-bar-motif-${uid}`;
   const motif = motifs[number];
@@ -72,6 +77,7 @@ function GridBarMotif({ number }: { number: keyof typeof motifs }) {
       viewBox={`0 0 ${motif.width} ${motif.height}`}
       fill="none"
       className="absolute top-1/2 left-1/2 -translate-1/2"
+      style={center ? { top: center } : undefined}
     >
       <defs>
         <linearGradient id={gradientId} gradientUnits="userSpaceOnUse" {...motif.gradient}>
@@ -94,7 +100,7 @@ const fade = "transition-opacity duration-(--motion-duration-fast) ease-(--motio
  * Avec un number, le calque hovered reste monté et passe de transparent à opaque en fondu
  * (--motion-duration-fast, --motion-ease-out) quand state change ; sans number, la tuile est l'état default (00).
  */
-export function GridBar({ className = "", state = "default", number }: GridBarProps) {
+export function GridBar({ className = "", state = "default", number, motifCenter }: GridBarProps) {
   return (
     <div aria-hidden className={`pointer-events-none relative size-full overflow-hidden ${className}`}>
       {number && (
@@ -104,7 +110,7 @@ export function GridBar({ className = "", state = "default", number }: GridBarPr
             state === "hovered" ? "opacity-100" : "opacity-0"
           }`}
         >
-          {(number === "01" || number === "12") && <GridBarMotif number={number} />}
+          {(number === "01" || number === "12") && <GridBarMotif number={number} center={motifCenter} />}
         </div>
       )}
     </div>

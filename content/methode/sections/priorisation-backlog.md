@@ -7,7 +7,10 @@
 
 # Image d'en-tête : mots-clés (au survol ; en desktop, groupés deux par deux « a - b »)
 image_mots_cles:
-  - à compléter
+  - trier
+  - planifier
+  - valeur
+  - faisabilité
 # Fichier de l'image d'en-tête (facultatif : vide = fond blanc)
 # Nom seul = dans le dossier des images de la page ; sinon chemin depuis public (ex. public\pages\photo.png)
 image_fichier: public\pages\whithish_05.webp
@@ -47,7 +50,7 @@ projet: graine
 
 # « UTILISATION DANS UN PROJET » — texte sous l'en-tête de commentaires (l'introduction au projet vient du projet cité)
 #
-#   Même écriture que content/methode/pages/recherches-quantitatives.md, plus :
+#   Même écriture que content/methode/sections/recherches-quantitatives.md, plus :
 #   ##### Titre              → titre en captionText/accentuation, suivi de son texte sur les lignes en dessous
 #                              (sans ligne vide)
 #
@@ -87,6 +90,10 @@ Pour suivre l’avancement et tenir les échéances, j’ai organisé le projet 
 
 ---
 
+Chaque fonctionnalité était classée selon trois niveaux de priorité : obligatoire, user friendly ou optionnelle.
+
+---
+
 Chaque phase était découpée en tâches et sous-tâches, pour voir clairement ce qui restait à faire.
 
 ---
@@ -99,7 +106,7 @@ Chaque phase était découpée en tâches et sous-tâches, pour voir clairement 
 
 Avec des échéances serrées, il est rarement possible de mener toutes les méthodes prévues : **[il faut choisir]{dark}**.
 
-*Nous avons par exemple dû renoncer aux entretiens guérilla (des échanges courts avec des passants, dans la rue) : nous avons jugé disposer d'assez d'informations pour passer à l'UX, puis à l'UI design.*
+*Nous avons par exemple dû renoncer aux entretiens guérilla (des échanges courts avec des passants, dans la rue) : nous avons jugé disposer d’assez d’informations pour passer à l’UX, puis à l’UI design.*
 
 ## Ce que cela a apporté
 

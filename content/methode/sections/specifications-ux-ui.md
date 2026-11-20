@@ -7,7 +7,10 @@
 
 # Image d'en-tête : mots-clés (au survol ; en desktop, groupés deux par deux « a - b »)
 image_mots_cles:
-  - à compléter
+  - détailler
+  - valider
+  - passation
+  - référence
 # Fichier de l'image d'en-tête (facultatif : vide = fond blanc)
 # Nom seul = dans le dossier des images de la page ; sinon chemin depuis public (ex. public\pages\photo.png)
 image_fichier: public\pages\bright_05.webp
@@ -31,9 +34,9 @@ image_textes:
 # « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace).
 # *texte* = italique.
 definition: |
-  Les spécifications UX/UI décrivent précisément comment une solution doit être comprise et implémentée. Elles détaillent la structure, les dimensions, les contenus, les composants, les comportements, les interactions, les états, le responsive, l’accessibilité et les règles de validation.
+  Les spécifications UX/UI décrivent précisément comment une solution doit être comprise et développée. Elles détaillent la structure, les composants et leurs comportements, les états (survol, erreur, chargement…), l'adaptation aux tailles d'écran et l'accessibilité.
 
-  Elles transmettent aux développeurs non seulement l’apparence des écrans, mais aussi l’intention d’usage et la logique du parcours. Ainsi, elles assurent une compréhension commune de la solution et limitent les interprétations erronées lors de l’implémentation.
+  Elles transmettent aux développeurs l’apparence des écrans, mais aussi l’intention d’usage et la logique du parcours. Elles assurent ainsi une **[compréhension commune]{dark}** de la solution et limitent les erreurs d’interprétation au moment du développement.
 
 # Projet cité : nom du fichier dans content/methode/projets/ (introduction au projet et bouton vers le projet)
 projet: c-media
@@ -41,7 +44,7 @@ projet: c-media
 
 # « UTILISATION DANS UN PROJET » — texte sous l'en-tête de commentaires (l'introduction au projet vient du projet cité)
 #
-#   Même écriture que content/methode/pages/recherches-quantitatives.md.
+#   Même écriture que content/methode/sections/recherches-quantitatives.md.
 #
 # Mobile (pas de maquette Figma, choix de l'utilisateur) : texte puis illustration.
 #
@@ -49,17 +52,17 @@ projet: c-media
 
 ## Plusieurs équipes, une même méthode
 
-Lors de mon alternance chez C-Media, j’ai travaillé sur plusieurs interfaces, avec plusieurs équipes de développement. Une méthode commune rendait pourtant la passation très simple, en trois étapes.
+Lors de mon alternance chez C-Media, j’ai travaillé sur plusieurs interfaces, avec plusieurs équipes de développement. Une **[méthode commune]{dark}** rendait la transmission très simple, en trois étapes.
 
-*Les détails du projet restent confidentiels : cette fiche présente uniquement la démarche.*
+{petit} *Les détails du projet restent confidentiels : cette fiche présente uniquement la démarche.*
 
 ## 1. Les tickets de cas d’usage
 
-Les cas d’usage (use cases, UC) étaient rédigés principalement par les PO, et parfois par les designers.
+Les cas d’usage (aussi appelés use cases) étaient rédigés principalement par les PO, et parfois par les designers, sous forme de tickets : des fiches de tâche dans l’outil de suivi utilisé par l’équipe (JIRA).
 
 ---
 
-Chaque ticket décrivait précisément les éléments nécessaires pour répondre au besoin, les interactions existantes, ainsi que les données d’entrée et de sortie d’un parcours ou d’une fonctionnalité.
+Chaque ticket décrivait précisément ce qu’il fallait pour répondre au besoin, les interactions existantes, ainsi que les données d’entrée et de sortie d’un parcours ou d’une fonctionnalité.
 
 ## 2. Les maquettes en dev mode
 
@@ -67,11 +70,11 @@ Une fois le besoin analysé et le ticket écrit, nous réalisions les maquettes,
 
 ---
 
-Chaque fonctionnalité avait sa page Figma et sa section en dev mode, sans aucune frame superflue : le développeur savait immédiatement ce qu’il devait développer.
+Chaque fonctionnalité avait sa page Figma et sa section en dev mode, sans aucun écran superflu : le développeur savait **[immédiatement]{dark}** ce qu’il devait développer.
 
 ---
 
-*Le dev mode est une fonctionnalité de Figma permettant d’inspecter les maquettes et d’accéder aux spécifications et ressources nécessaires à leur intégration.*
+*Le dev mode est une fonctionnalité de Figma qui permet d’inspecter les maquettes et d’accéder aux spécifications et aux ressources nécessaires à leur intégration.*
 
 ---
 
@@ -83,7 +86,7 @@ Chaque fonctionnalité avait sa page Figma et sa section en dev mode, sans aucun
 
 Dernière étape : ajouter le lien du dev mode au ticket, pour que le développeur le retrouve facilement.
 
-Une validation avec le développeur et le PO confirmait ensuite que la solution était techniquement faisable.
+Une validation avec le développeur et le PO confirmait ensuite que la solution était **[techniquement faisable]{dark}**.
 
 ||
 
@@ -91,4 +94,4 @@ Une validation avec le développeur et le PO confirmait ensuite que la solution 
 
 ## Ce que cela a apporté
 
-Un ticket, une page Figma, un lien : chaque développeur trouvait au même endroit le besoin, les maquettes et les spécifications, quelle que soit son équipe. La passation était plus rapide et laissait moins de place aux interprétations.
+Un ticket, une page Figma, un lien : chaque développeur trouvait au **[même endroit]{dark}** le besoin, les maquettes et les spécifications, quelle que soit son équipe. La passation était plus rapide et laissait moins de place aux interprétations.

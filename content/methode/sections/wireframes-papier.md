@@ -7,7 +7,10 @@
 
 # Image d'en-tête : mots-clés (au survol ; en desktop, groupés deux par deux « a - b »)
 image_mots_cles:
-  - à compléter
+  - dessiner
+  - explorer
+  - parcours
+  - basse fidélité
 # Fichier de l'image d'en-tête (facultatif : vide = fond blanc)
 # Nom seul = dans le dossier des images de la page ; sinon chemin depuis public (ex. public\pages\photo.png)
 image_fichier: public\pages\darker_04.webp
@@ -33,9 +36,9 @@ image_textes:
 # « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace).
 # *texte* = italique.
 definition: |
-  Le wireframe papier représente une interface en très basse fidélité, dessinée ou assemblée à la main à partir de découpes, sans passer par un logiciel.
+  Le wireframe papier est une esquisse d’interface en **[très basse fidélité]{dark}**, c’est-à-dire volontairement sommaire : dessinée ou assemblée à la main à partir de découpes, sans logiciel.
 
-  Il se concentre sur le « quoi » et le « où » (éléments, navigation, fonctionnalités) plutôt que sur le « look & feel ». On explore ainsi rapidement la structure, la hiérarchie des contenus et les parcours, et on itère très tôt à partir des besoins identifiés pendant la recherche.
+  Il se concentre sur le « quoi » et le « où » (éléments, navigation, fonctionnalités) plutôt que sur l’apparence. Il permet d’explorer rapidement la structure, la hiérarchie des contenus et les parcours, et de les faire évoluer très tôt à partir des besoins identifiés pendant la recherche.
 
 # Projet cité : nom du fichier dans content/methode/projets/ (introduction au projet et bouton vers le projet)
 projet: scholar
@@ -43,19 +46,19 @@ projet: scholar
 
 # « UTILISATION DANS UN PROJET » — texte sous l'en-tête de commentaires (l'introduction au projet vient du projet cité)
 #
-#   Même écriture que content/methode/pages/recherches-quantitatives.md.
+#   Même écriture que content/methode/sections/recherches-quantitatives.md.
 #
 # Les lignes commençant par « # » suivi d'un espace sont des commentaires.
 
 ## Première version papier
 
-Lors du projet [Scholar](/projects/scholar), j’ai préféré itérer sur papier avant d’ouvrir Figma. Grâce au benchmark mené en amont, j’avais déjà beaucoup de matière : des écrans, un parcours, mais aussi des idées d’interactions et d’animations.
+Lors du projet [Scholar](/projects/scholar), j’ai préféré travailler sur papier avant d’ouvrir Figma, l’outil de conception d’interfaces. Grâce au benchmark mené en amont, j’avais déjà beaucoup de matière : des écrans, un parcours, mais aussi des idées d’interactions et d’animations.
 
-> Dessiner à la main m’a permis de poser tout le parcours d’un coup, sans me laisser freiner par l’outil.
+*Dessiner à la main m’a permis de poser tout le parcours **[d’un coup]{dark}**, sans me laisser freiner par l’outil.*
 
 ## D’une interface au parcours complet
 
-En une seule planche, j’ai dessiné l’ensemble de l’onboarding, du premier écran jusqu’au test de niveau.
+En une **[seule planche]{dark}**, j’ai dessiné l’ensemble de l’onboarding (les premiers écrans qui accueillent l’utilisateur), du premier écran jusqu’au test de niveau.
 
 ---
 
@@ -79,10 +82,10 @@ Des questions à choix multiple ou à saisie libre. Après chaque réponse, un �
 
 #### Les premières idées graphiques
 
-Sur l’écran d’accueil, j’ai noté des pistes pour la direction artistique : une illustration à l’encre, la mise en avant de la typographie étudiée, un chargement animé autour des lettres.
+Sur l’écran d’accueil, j’ai noté des pistes pour la direction artistique : une illustration à l’**[encre]{dark}**, la mise en avant de la typographie étudiée, un chargement animé autour des lettres.
 
 La barre de navigation y est aussi dessinée : cours, suivi de progression, collection, communauté et profil.
 
 ## Ce que cela a apporté
 
-Le papier m’a permis de valider l’enchaînement des écrans avant de passer sur Figma. Les maquettes ont ensuite repris cette structure, en se concentrant sur l’interface et la direction artistique.
+Le papier m’a permis de **[valider l’enchaînement]{dark}** des écrans avant de passer sur Figma. Les maquettes ont ensuite repris cette structure, en se concentrant sur l’interface et la direction artistique.

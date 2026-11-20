@@ -13,14 +13,14 @@ lien: /projects/c-media
 ---
 
 # TEXTE DE L'INTRODUCTION — même écriture que « Utilisation dans un projet » des pages
-# (voir content/methode/pages/recherches-quantitatives.md) : blocs « --- », colonnes « << », « || », « >> »,
+# (voir content/methode/sections/recherches-quantitatives.md) : blocs « --- », colonnes « << », « || », « >> »,
 # « #### Titre », listes, légendes « > ».
 
 #### Le projet
 
-[C-Media](/projects/c-media), filiale du groupe Cegedim, conçoit des solutions de communication pour les pharmacies : supports imprimés, numériques, en vitrine, en magasin et sonores.
+[C-Media](/projects/c-media), filiale du groupe Cegedim, conçoit des solutions de communication pour les pharmacies : des supports imprimés et numériques, affichés en vitrine et dans le magasin, ainsi que des diffusions sonores.
 
-J’y ai travaillé un an en alternance pendant mon mastère UX. J’ai mené de la recherche UX et conçu l’expérience (UX) et l’interface (UI) de plusieurs solutions numériques.
+J’y ai travaillé un an en alternance, pendant mon mastère UX. J’ai participé à la conception de plusieurs outils numériques, de la recherche auprès des utilisateurs jusqu’aux maquettes.
 
 J’ai travaillé aux côtés d’un lead designer (le designer référent de l’équipe), des PO/PM (qui définissent les priorités du produit) et des développeurs.
 

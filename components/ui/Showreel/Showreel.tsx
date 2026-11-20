@@ -45,6 +45,10 @@ const firstScreen = "(100svh - var(--page-header-height, 0px))";
 /* Message en bas : son texte finit à spacing/lg du bas de l'écran (le conteneur a déjà spacing/sm de marge). */
 const messageBottom = "calc(var(--spacing-lg) - var(--spacing-sm))";
 
+/* Décalage vers le bas de la photo et de son fondu (mobile : textes trop hauts pour tenir au-dessus de l'écran,
+   voir ShowreelMobile) ; 0 ailleurs. */
+const shift = "var(--showreel-shift, 0px)";
+
 /** Longueur en unités de scène (pixels de la maquette). */
 const u = (value: number) => `calc(${value} * var(--u))`;
 const scene = (unit: string) => ({ "--u": unit }) as CSSProperties;
@@ -75,8 +79,9 @@ function Photo({
   const tablet = useMediaQuery(tabletQuery);
   return (
     <div
+      data-showreel-photo
       className="pointer-events-none absolute aspect-[4096/3389]"
-      style={{ left: `calc(50% - ${u(left)})`, top: u(top), width: u(width) }}
+      style={{ left: `calc(50% - ${u(left)})`, top: `calc(${u(top)} + ${shift})`, width: u(width) }}
     >
       <Image
         src={photo.src}
@@ -239,11 +244,12 @@ function ShowreelInfo() {
   );
 }
 
-function ProjectsInfo({ className = "" }: { className?: string }) {
+function ProjectsInfo({ className = "", fullLine = false }: { className?: string; fullLine?: boolean }) {
   return (
     <div className={`flex flex-col ${className}`}>
       <p className="type-swiss-regular whitespace-pre">{accueil.showreel_metier}</p>
-      <p className="type-swiss-regular whitespace-pre-line">{accueil.showreel_projets}</p>
+      {/* fullLine (mobile) : sans le retour à la ligne du texte, sur toute la largeur. */}
+      <p className={`type-swiss-regular ${fullLine ? "" : "whitespace-pre-line"}`}>{accueil.showreel_projets}</p>
     </div>
   );
 }
@@ -272,7 +278,7 @@ function Fade({ left, top, width, until }: { left: number; top: number; width: n
       ref={ref}
       aria-hidden
       className="pointer-events-none absolute showreel-fade"
-      style={{ left: `calc(50% - ${u(left)})`, top: u(top), width: u(width), height: u(1310) }}
+      style={{ left: `calc(50% - ${u(left)})`, top: `calc(${u(top)} + ${shift})`, width: u(width), height: u(1310) }}
     />
   );
 }
@@ -426,7 +432,9 @@ function ShowreelDesktop({ fadeUntil }: { fadeUntil?: string }) {
             style={{ top: "calc(-100svh)", height: `calc(100svh + ${u(739)})` }}
           >
             <div className="absolute inset-x-0 top-0" style={{ height: `calc(100svh + ${u(796)})` }}>
-              <AnimationGrid />
+              {/* Motifs des tuiles : centrés comme dans la grille Figma (haut à -104, hauteur 900, donc centre à 346),
+                  et non au milieu de la tuile prolongée, qui les remontait hors de l'écran. */}
+              <AnimationGrid motifCenter={`calc(100svh + ${u(346)})`} />
             </div>
           </div>
           <DesktopPhoto />
@@ -438,9 +446,41 @@ function ShowreelDesktop({ fadeUntil }: { fadeUntil?: string }) {
   );
 }
 
+/** Haut de l'écran de l'ordinateur dans la photo mobile, en unités de scène. */
+const mobilePhoto = { left: 874, top: 18.9, width: 1748 };
+const mobileScreenTop =
+  mobilePhoto.top + (parseFloat(screen.top) / 100) * mobilePhoto.width * (photo.height / photo.width);
+
 function ShowreelMobile({ fadeUntil }: { fadeUntil?: string }) {
+  const sceneRef = useRef<HTMLDivElement>(null);
+  const infoRef = useRef<HTMLDivElement>(null);
+
+  /* Textes en lignes pleines sous le logo (choix de l'utilisateur, version A). S'ils descendent plus bas que le haut
+     de l'écran de l'ordinateur (texte du téléphone agrandi), la photo et son fondu descendent d'autant (version B,
+     seulement si besoin). L'écart sous les textes (spacing/md) est compris dans leur bloc. */
+  useEffect(() => {
+    const sceneEl = sceneRef.current;
+    const info = infoRef.current;
+    if (!sceneEl || !info) return;
+    const measure = () => {
+      if (!sceneEl.offsetParent) return;
+      const probe = sceneEl.querySelector<HTMLElement>("[data-showreel-photo]");
+      if (!probe) return;
+      const unitPx = probe.getBoundingClientRect().width / mobilePhoto.width;
+      const sceneTop = sceneEl.getBoundingClientRect().top;
+      const overflow = info.getBoundingClientRect().bottom - sceneTop - mobileScreenTop * unitPx;
+      sceneEl.style.setProperty("--showreel-shift", `${Math.max(0, overflow)}px`);
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(info);
+    observer.observe(sceneEl);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div
+      ref={sceneRef}
       className="relative w-full"
       style={{
         ...scene(`min(100cqw / 402, ${firstScreen} / 634)`),
@@ -452,17 +492,7 @@ function ShowreelMobile({ fadeUntil }: { fadeUntil?: string }) {
           <AnimationGrid />
         </div>
       </div>
-      <Photo left={874} top={18.9} width={1748} scene="mobile" />
-      <div
-        className="absolute flex items-center px-md text-text-neutral-black"
-        style={{ left: `calc(50% - ${u(201)})`, width: u(402), top: u(143.5) }}
-      >
-        <div className="flex-1">
-          <ShowreelInfo />
-        </div>
-        {/* Figma : écart 16 sans variable (= spacing/md). */}
-        <ProjectsInfo className="flex-1 gap-md" />
-      </div>
+      <Photo left={mobilePhoto.left} top={mobilePhoto.top} width={mobilePhoto.width} scene="mobile" />
       <Fade left={1043.75} top={743} width={2087.5} until={fadeUntil} />
       {/* Logo « sowd » et trait. */}
       <div className="absolute inset-x-0 top-0 flex flex-col">
@@ -470,6 +500,11 @@ function ShowreelMobile({ fadeUntil }: { fadeUntil?: string }) {
           <Logotype data-intro-target="type" className="h-(--showreel-logo-height) w-auto" />
         </div>
         <span aria-hidden className="block w-full border-t border-shape-neutral-black" />
+        {/* Textes en lignes pleines, l'un sous l'autre (choix de l'utilisateur). */}
+        <div ref={infoRef} className="flex flex-col gap-xs px-md py-md text-text-neutral-black">
+          <ShowreelInfo />
+          <ProjectsInfo className="gap-xxs" fullLine />
+        </div>
       </div>
       <FadingMessage />
       {/* Bandeau sous le message, écart de la maquette (25). */}

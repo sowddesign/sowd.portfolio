@@ -8,7 +8,7 @@
 # Image d'en-tête : mots-clés (au survol ; en desktop, groupés deux par deux « a - b »)
 image_mots_cles:
   - analyser
-  - confronter
+  - comparer
   - concurrents
   - conventions
 # Fichier de l'image d'en-tête (facultatif : vide = fond blanc)

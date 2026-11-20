@@ -7,7 +7,10 @@
 
 # Image d'en-tête : mots-clés (au survol ; en desktop, groupés deux par deux « a - b »)
 image_mots_cles:
-  - à compléter
+  - trier
+  - synthétiser
+  - données
+  - référence
 # Fichier de l'image d'en-tête (facultatif : vide = fond blanc)
 # Nom seul = dans le dossier des images de la page ; sinon chemin depuis public (ex. public\pages\photo.png)
 image_fichier: public\pages\whithish_04.webp
@@ -40,7 +43,7 @@ projet: graine
 
 # « UTILISATION DANS UN PROJET » — texte sous l'en-tête de commentaires (l'introduction au projet vient du projet cité)
 #
-#   Même écriture que content/methode/pages/recherches-quantitatives.md, plus :
+#   Même écriture que content/methode/sections/recherches-quantitatives.md, plus :
 #   ![description](fichier.webp){mobile en deux} → en mobile et tablette petite : moitié gauche puis moitié droite
 #                              de l'image, l'une sous l'autre
 #   @ adresse | titre        → page intégrée (livre Heyzine…) : 16:9, 4:5 en mobile ; le titre est lu par les
@@ -77,6 +80,10 @@ Lors du projet [graine](/projects/graine), j’ai réalisé le document de desig
 5. Un user journey représentatif du problème identifié, auquel l’application devait répondre.
 
 ||
+
+---
+
+*Les personas, le user journey et la problématique sont détaillés dans les fiches suivantes.*
 
 ## Le support
 

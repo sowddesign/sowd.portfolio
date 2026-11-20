@@ -8,9 +8,9 @@
 # Image d'en-tête : mots-clés (au survol ; en desktop, groupés deux par deux « a - b »)
 image_mots_cles:
   - écouter
-  - interpréter
-  - verbatims
+  - décrypter
   - ressenti
+  - attentes
 # Fichier de l'image d'en-tête (facultatif : vide = fond blanc)
 # Nom seul = dans le dossier des images de la page ; sinon chemin depuis public (ex. public\pages\photo.png)
 image_fichier: public\pages\brand_03.webp
@@ -43,7 +43,7 @@ projet: scholar
 
 # « UTILISATION DANS UN PROJET » — texte sous l'en-tête de commentaires (l'introduction au projet vient du projet cité)
 #
-#   Même écriture que content/methode/pages/recherches-quantitatives.md, plus :
+#   Même écriture que content/methode/sections/recherches-quantitatives.md, plus :
 #   ~ fichier.mp3 | légende  → extrait audio (fichier dans public/methode/entretien-utilisateur/), légende dessous
 #   ##### Titre              → titre en captionText/accentuation, suivi de son texte sur les lignes en dessous
 #                              (sans ligne vide) ; plus d’espace au-dessus

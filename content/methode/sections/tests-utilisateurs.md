@@ -7,7 +7,10 @@
 
 # Image d'en-tête : mots-clés (au survol ; en desktop, groupés deux par deux « a - b »)
 image_mots_cles:
-  - à compléter
+  - observer
+  - corriger
+  - tâches
+  - frictions
 # Fichier de l'image d'en-tête (facultatif : vide = fond blanc)
 # Nom seul = dans le dossier des images de la page ; sinon chemin depuis public (ex. public\pages\photo.png)
 image_fichier: public\pages\darker_06.webp
@@ -33,9 +36,11 @@ image_textes:
 # « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace).
 # *texte* = italique.
 definition: |
-  Les tests utilisateurs consistent à confier des tâches réalistes à des utilisateurs, souvent représentatifs de la cible. Pendant qu’ils les réalisent, l’équipe observe leurs comportements, leurs difficultés et recueille leurs commentaires.
+  Les tests utilisateurs consistent à confier des tâches réalistes à des utilisateurs, si possible représentatifs de la cible. Pendant qu’ils les réalisent, l’équipe observe leurs comportements et leurs difficultés, et recueille leurs commentaires.
 
-  L’objectif n’est pas d’évaluer l’utilisateur, mais de tester l’interface et le concept. Cette démarche permet de découvrir des problèmes concrets et d’identifier des possibilités d’amélioration avant ou pendant le développement.
+  L’objectif n’est pas d’évaluer l’utilisateur, mais de **[tester l’interface]{dark}** et le concept. Cette démarche permet de découvrir des problèmes concrets et d’identifier des améliorations possibles, avant ou pendant le développement.
+
+  *Ils font le lien entre la phase Développer, où l’on imagine des solutions, et la phase Livrer, où l’on finalise la solution.*
 
 # Projet cité : nom du fichier dans content/methode/projets/ (introduction au projet et bouton vers le projet)
 projet: c-media
@@ -43,7 +48,7 @@ projet: c-media
 
 # « UTILISATION DANS UN PROJET » — texte sous l'en-tête de commentaires (l'introduction au projet vient du projet cité)
 #
-#   Même écriture que content/methode/pages/recherches-quantitatives.md, plus :
+#   Même écriture que content/methode/sections/recherches-quantitatives.md, plus :
 #   ![description](fichier.webp){sans cadre} → image sans bordure ni coins
 #   || inverse               → colonne de droite au-dessus en mobile
 #
@@ -53,9 +58,9 @@ projet: c-media
 
 ## Tester avec les promoteurs
 
-Lors de mon alternance chez [C-Media](/projects/c-media), j’ai organisé à plusieurs reprises des tests utilisateurs, principalement sur des prototypes Figma, auprès des promoteurs qui utilisent l’application mobile.
+Lors de mon alternance chez [C-Media](/projects/c-media), j’ai organisé à plusieurs reprises des tests utilisateurs auprès des **[promoteurs]{dark}**, les équipes terrain qui utilisent l’application mobile. Les tests portaient principalement sur des prototypes Figma.
 
-> Les détails du projet restent confidentiels : cette fiche présente uniquement la démarche.
+{petit} *Les détails du projet restent confidentiels : cette fiche présente uniquement la démarche.*
 
 ## Préparation
 
@@ -63,7 +68,7 @@ Lors de mon alternance chez [C-Media](/projects/c-media), j’ai organisé à pl
 
 ||
 
-2. Définir un périmètre : des fonctionnalités, des écrans ou un parcours.
+2. Définir ce qui est testé : des fonctionnalités, des écrans ou un parcours.
 
 ---
 
@@ -71,12 +76,12 @@ Lors de mon alternance chez [C-Media](/projects/c-media), j’ai organisé à pl
 
 ||
 
-4. Préparer les scénarios que l’utilisateur devra réaliser.
+4. Préparer les tâches que l’utilisateur devra réaliser.
 
 ---
 
-5. Définir des critères de réussite : parcours réussi ou non, erreurs, temps, difficulté ressentie.
-6. Réaliser le support de test, wireframe ou prototype selon l’avancement du projet. Ici, des prototypes Figma.
+5. Définir des **[critères de réussite]{dark}** : parcours réussi ou non, erreurs, temps, difficulté ressentie.
+6. Préparer le support de test : wireframe ou prototype selon l’avancement du projet (ici, des prototypes Figma).
 
 ||
 
@@ -84,11 +89,11 @@ Lors de mon alternance chez [C-Media](/projects/c-media), j’ai organisé à pl
 
 ## Pendant le test
 
-Lorsque les participants réalisent le test, je les invite toujours à parler, à expliquer leurs actions et leurs impressions.
+Pendant le test, j’invite toujours les participants à penser à voix haute : expliquer leurs actions et leurs impressions.
 
-J’observe sans guider. Une fois l’application en production, personne ne sera à côté d’eux pour leur expliquer.
+J’observe **[sans guider]{dark}** : une fois l’application en ligne, personne ne sera à côté d’eux pour leur expliquer.
 
-L’objectif est de prendre un maximum de notes, sur les comportements observés comme sur les verbatims.
+*L’objectif est de prendre un maximum de notes, sur les comportements observés comme sur les phrases prononcées.*
 
 ||
 
@@ -100,8 +105,8 @@ L’objectif est de prendre un maximum de notes, sur les comportements observés
 
 || inverse
 
-Une fois les tests terminés, je rédige un compte rendu. Il structure un argumentaire qui oriente et priorise les corrections.
+Une fois les tests terminés, je rédige un compte rendu. Il structure un argumentaire qui oriente et **[priorise les corrections]{dark}**.
 
 ## Ce que cela a apporté
 
-Les tests ont permis de corriger les prototypes avant le développement, et d’appuyer les choix de design sur des observations concrètes plutôt que sur des opinions, notamment face à la direction.
+Les tests ont permis de corriger les prototypes avant le développement, et d’appuyer les choix de design sur des **[observations concrètes]{dark}** plutôt que sur des opinions, notamment face à la direction.

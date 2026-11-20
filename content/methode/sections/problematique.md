@@ -7,7 +7,10 @@
 
 # Image d'en-tête : mots-clés (au survol ; en desktop, groupés deux par deux « a - b »)
 image_mots_cles:
-  - à compléter
+  - délimiter
+  - orienter
+  - constat
+  - cause
 # Fichier de l'image d'en-tête (facultatif : vide = fond blanc)
 # Nom seul = dans le dossier des images de la page ; sinon chemin depuis public (ex. public\pages\photo.png)
 image_fichier: public\pages\whithish_01.webp
@@ -30,7 +33,7 @@ image_textes:
 # « En quelques mots » : une ligne par paragraphe ; ligne vide = nouveau groupe (plus d’espace)
 definition: |
   La problématique, ou question de recherche, formule de manière claire et délimitée le **[problème à résoudre]{dark}**. Elle fixe le cadre de la réflexion : ce que l’on cherche vraiment à comprendre ou à améliorer.
-  Elle guide à la fois la manière de mener la recherche et les choix de design qui en découlent.
+  Elle guide ensuite les choix de design qui en découlent.
 
 # Projet cité : nom du fichier dans content/methode/projets/ (introduction au projet et bouton vers le projet)
 projet: souffle
@@ -87,7 +90,7 @@ Lors du projet Souffle, nous sommes partis d’un **[thème large]{dark}**, puis
 
 *« Comment prévenir l’épuisement professionnel des infirmiers et infirmières en psychiatrie face aux difficultés émotionnelles de leur travail ? »*
 
-{petit} *La problématique a été définie en équipe. Mon rôle portait ensuite sur l’interface et le prototype, conçus pour y répondre.*
+{petit} *J’ai participé à la formulation de la problématique, puis j’ai conçu l’interface et le prototype pour y répondre.*
 
 ## Ce que cela a apporté
 
