@@ -149,7 +149,7 @@ export function NavSideTiles({
         aria-hidden
         inert
         style={measureWidth !== undefined ? { width: measureWidth } : undefined}
-        className={`invisible absolute top-0 left-0 flex flex-col ${measureWidth !== undefined ? "" : "right-0"}`}
+        className={`invisible absolute top-0 left-0 flex h-0 flex-col overflow-hidden ${measureWidth !== undefined ? "" : "right-0"}`}
       >
         {measured.map((step, i) => (
           <NavSideTile
