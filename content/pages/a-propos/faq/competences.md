@@ -1,11 +1,11 @@
 ---
-numero: 2
-question: Quels prestations peuvent êtres réalisées ?
+numero: 3
+question: Quelles **compétences** peuvent être mises à disposition ?
 double: yes
 ---
 
-1. Une enquête UX complète UX, explicitée dans un livrable des résultats.
-2. Un audit UX de votre solution déjà existante.
-3. Une proposition de solution (design d’une application mobile, d’un site web ou encore d’une expérience phygitale).
-4. Une mise en place d’un design system documenté, via l’outil Figma.
-5. Et bien d’autres choses encore.
+1. Mener une enquête UX complète, restituée dans un livrable de résultats.
+2. Auditer l'UX d'une solution existante.
+3. Concevoir une solution : application mobile, site web ou expérience phygitale
+4. Créer et documenter un design system dans Figma, puis le déployer avec les développeurs.
+5. Gamifier une expérience, quand c'est pertinent.

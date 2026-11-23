@@ -35,7 +35,8 @@ export type InfosContentProps = {
   /** heading : ligne de titre (« N° », « Question : », « Réponse : ») ; default : question et réponse. */
   type?: "heading" | "default";
   questionN?: string;
-  questionText?: string;
+  /** Texte de la question ; peut contenir du gras (ex. lignes de RichLines). */
+  questionText?: ReactNode;
   /** Question sur plusieurs lignes en mobile : numéro et question alignés en haut au lieu d'être centrés. */
   double?: boolean;
   /** Réponse (slot Figma « Answer ») : un élément par ligne, ex. des <p className="type-caption-regular">. */

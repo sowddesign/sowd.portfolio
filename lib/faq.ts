@@ -1,7 +1,7 @@
 import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { parse } from "yaml";
-import { parseMarkdown, type MdBlock } from "./markdown";
+import { parseLine, parseMarkdown, type MdBlock, type MdLine } from "./markdown";
 
 /*
  * Questions de la FAQ (page À propos) : un fichier par question dans content/pages/a-propos/faq/,
@@ -24,7 +24,8 @@ export type FaqItem = {
   /** Numéro affiché sur deux chiffres, ex. « 01 ». */
   number: string;
   order: number;
-  question: string;
+  /** Question en markdown simplifié d'une ligne (**gras**, *italique*). */
+  question: MdLine;
   double: boolean;
   answer: MdBlock[];
 };
@@ -54,7 +55,7 @@ function readItem(file: string): FaqItem {
     slug: file.replace(/\.md$/, ""),
     number: String(numero).padStart(2, "0"),
     order: numero,
-    question: question.trim(),
+    question: parseLine(question.trim(), (message) => fail(file, message)),
     double: isDouble,
     answer,
   };

@@ -30,7 +30,7 @@ function Answer({ blocks }: { blocks: FaqBlock[] }) {
           <p key={j}>
             <RichLines lines={paragraph.lines} />
           </p>
-        ) : (
+        ) : paragraph.kind === "list" ? (
           <ol key={j} className="flex flex-col gap-sm">
             {paragraph.items.map((item) => (
               <li key={item.number} className="flex gap-sm">
@@ -44,7 +44,7 @@ function Answer({ blocks }: { blocks: FaqBlock[] }) {
               </li>
             ))}
           </ol>
-        ),
+        ) : null,
       )}
     </div>
   ));
@@ -68,7 +68,7 @@ export function FaqContainer({ title, items, className = "" }: FaqContainerProps
           <InfosContent type="heading" />
           <InfosContentGroup>
             {items.map((item) => (
-              <InfosContent key={item.slug} questionN={item.number} questionText={item.question} double={item.double}>
+              <InfosContent key={item.slug} questionN={item.number} questionText={<RichLines lines={[item.question]} />} double={item.double}>
                 <Answer blocks={item.answer} />
               </InfosContent>
             ))}
