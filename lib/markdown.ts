@@ -6,6 +6,8 @@
  *   ligne vide             → nouveau paragraphe dans le bloc
  *   retour à la ligne      → retour à la ligne dans le paragraphe
  *   « 1. texte » par ligne → liste numérotée
+ *   « - texte » par ligne  → liste à puces (option bullets)
+ *   ligne « *** »          → trait de séparation, dans son propre bloc (option divider)
  *   [texte](https://…)     → lien (style hyperlien)
  *   [texte]{brand}         → texte en couleur : un token text/* du projet (voir TEXT_COLORS)
  *   *texte*                → italique
@@ -22,7 +24,9 @@ export type MdInline = { text: string; href?: string; color?: TextColor; italic?
 export type MdLine = MdInline[];
 export type MdParagraph =
   | { kind: "text"; lines: MdLine[] }
-  | { kind: "list"; items: { number: string; lines: MdLine[] }[] };
+  | { kind: "list"; items: { number: string; lines: MdLine[] }[] }
+  | { kind: "bullets"; items: MdLine[] }
+  | { kind: "divider" };
 export type MdBlock = MdParagraph[];
 
 /** [texte](lien) ou [texte]{couleur}. */
@@ -30,6 +34,10 @@ const BRACKET = /\[([^\]]+)\](?:\(([^)\s]+)\)|\{([^}\s]+)\})/g;
 const ITALIC = /\*([^*]+)\*/g;
 const BOLD = /\*\*([^*]+)\*\*/g;
 const LIST_ITEM = /^(\d+)\.\s+(.*)$/;
+const BULLET_ITEM = /^-\s+(.*)$/;
+
+/** Syntaxes réservées à certains textes : puces « - » et trait « *** ». */
+export type MarkdownOptions = { bullets?: boolean; divider?: boolean };
 
 function parseBrackets(text: string, italic: boolean, fail: (message: string) => never): MdLine {
   const parts: MdLine = [];
@@ -87,8 +95,11 @@ export function parseLines(text: string, fail: (message: string) => never): MdLi
     .map((line) => parseLine(line.trimEnd(), fail));
 }
 
-function parseParagraph(source: string, fail: (message: string) => never): MdParagraph {
+function parseParagraph(source: string, fail: (message: string) => never, options: MarkdownOptions): MdParagraph {
   const lines = source.split("\n").map((line) => line.trimEnd());
+  if (options.bullets && lines.every((line) => BULLET_ITEM.test(line))) {
+    return { kind: "bullets", items: lines.map((line) => parseLine(line.match(BULLET_ITEM)![1], fail)) };
+  }
   if (lines.every((line) => LIST_ITEM.test(line))) {
     return {
       kind: "list",
@@ -101,17 +112,19 @@ function parseParagraph(source: string, fail: (message: string) => never): MdPar
   return { kind: "text", lines: lines.map((line) => parseLine(line, fail)) };
 }
 
-/** Découpe un texte en blocs (« --- ») puis en paragraphes (ligne vide). */
-export function parseMarkdown(source: string, fail: (message: string) => never): MdBlock[] {
+/** Découpe un texte en blocs (« --- » ; « *** » forme un bloc trait) puis en paragraphes (ligne vide). */
+export function parseMarkdown(source: string, fail: (message: string) => never, options: MarkdownOptions = {}): MdBlock[] {
   return source
     .replace(/\r\n/g, "\n")
-    .split(/^---\s*$/m)
-    .map((block) =>
-      block
+    .split(options.divider ? /^(?:---|(\*\*\*))\s*$/m : /^---\s*$/m)
+    .map((block): MdBlock => {
+      if (block === undefined) return [];
+      if (block === "***") return [{ kind: "divider" }];
+      return block
         .split(/\n\s*\n/)
         .map((paragraph) => paragraph.trim())
         .filter(Boolean)
-        .map((paragraph) => parseParagraph(paragraph, fail)),
-    )
+        .map((paragraph) => parseParagraph(paragraph, fail, options));
+    })
     .filter((block) => block.length > 0);
 }

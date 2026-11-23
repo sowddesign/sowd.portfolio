@@ -18,7 +18,7 @@ export function getPresentation(): MdBlock[] {
   const source = readFileSync(FILE, "utf8");
   const match = source.match(/^---\r?\n[\s\S]*?\r?\n---\r?\n?([\s\S]*)$/);
   if (!match) fail("le texte doit suivre un en-tête entouré de deux lignes « --- ».");
-  const blocks = parseMarkdown(match[1], fail);
+  const blocks = parseMarkdown(match[1], fail, { bullets: true, divider: true });
   if (blocks.length === 0) fail("le texte est vide.");
   return blocks;
 }
