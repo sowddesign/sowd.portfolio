@@ -9,6 +9,8 @@ import { RichLines } from "../RichText";
  * Mobile : marges spacing/md, haut et bas spacing/lg ; blocs et paragraphes séparés de spacing/sm.
  * Tablette : grille de 8 colonnes, texte sur les colonnes 3 à 6. Desktop : grille de 12, colonnes 5 à 8.
  * Tablette et desktop : haut et bas spacing/xxl, blocs séparés de spacing/xxl, paragraphes de 24px (spacing/lg).
+ * Puces (« - ») : retrait spacing/lg comme les pages méthode (Figma : 30px sans variable), puces séparées de spacing/sm.
+ * Trait (« *** ») : shape/brand/brand, dans son propre bloc.
  */
 
 export type AboutContentProps = {
@@ -33,6 +35,16 @@ export function AboutContent({ blocks, className = "" }: AboutContentProps) {
                 <p key={j}>
                   <RichLines lines={paragraph.lines} size="body" />
                 </p>
+              ) : paragraph.kind === "divider" ? (
+                <span key={j} aria-hidden className="block w-full border-t border-shape-brand-brand" />
+              ) : paragraph.kind === "bullets" ? (
+                <ul key={j} className="flex list-disc flex-col gap-sm ps-lg">
+                  {paragraph.items.map((line, k) => (
+                    <li key={k}>
+                      <RichLines lines={[line]} size="body" />
+                    </li>
+                  ))}
+                </ul>
               ) : (
                 <ol key={j} className="flex flex-col gap-sm">
                   {paragraph.items.map((item) => (

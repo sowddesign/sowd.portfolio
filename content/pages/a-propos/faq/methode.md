@@ -1,9 +1,9 @@
 ---
-numero: 7
-question: Quelle méthode de travail est utilisée ?
-double: no
+numero: 2
+question: Quelle **méthode de travail** est utilisée ?
+double: yes
 ---
 
-La méthode double diamant, tout en y ajoutant de la co-conception.
+Le **double diamant**, enrichi de co-conception. Chaque étape est détaillée méthode par méthode dans la partie [Démarche UX](/#ux-process).
 
-De par mon parcours, si une gamification est pertinente, je n’hésite pas à en ajouter.
+*Mon passé de game designer me permet aussi d'ajouter de la gamification quand elle est pertinente.*

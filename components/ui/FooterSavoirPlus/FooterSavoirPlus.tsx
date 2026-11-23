@@ -1,3 +1,6 @@
+"use client";
+
+import { usePathname } from "next/navigation";
 import { commun } from "@/content/texts";
 import { TextualButton } from "../TextualButton";
 import { pageHrefs } from "../pages";
@@ -7,6 +10,7 @@ import { pageHrefs } from "../pages";
  * (fichier portfolio, node 4966:24084).
  * La variante Figma « device » passe par les breakpoints, pas par une prop.
  * Mobile : pas de trait en bas du bloc (un visuel suit).
+ * « Voir ma démarche UX » : flèche vers le haut sur l'accueil (la section est plus haut), vers la droite ailleurs.
  */
 
 export type FooterSavoirPlusProps = {
@@ -14,6 +18,7 @@ export type FooterSavoirPlusProps = {
 };
 
 export function FooterSavoirPlus({ className = "" }: FooterSavoirPlusProps) {
+  const onHome = usePathname() === "/";
   return (
     <div className={`flex w-full flex-col bg-background-neutral-black ${className}`}>
       {/* Contact prompt heading */}
@@ -38,7 +43,7 @@ export function FooterSavoirPlus({ className = "" }: FooterSavoirPlusProps) {
         >
           {commun.savoir_plus_cv}
         </TextualButton>
-        <TextualButton variant="secondary" color="white" icon="ArrowUp" iconPosition="right" href="/#ux-process">
+        <TextualButton variant="secondary" color="white" icon={onHome ? "ArrowUp" : "ArrowRight"} iconPosition="right" href="/#ux-process">
           {commun.savoir_plus_demarche_ux}
         </TextualButton>
         <TextualButton variant="tertiary" color="white" icon="ArrowRight" iconPosition="right" href={pageHrefs.contact}>
