@@ -31,6 +31,22 @@ editeur_gomme: Gomme
 editeur_taille_gomme: Taille de la gomme
 editeur_remplir: Remplir
 editeur_couleur: Couleur
+# Fenêtre « Mon dessin » (après « Valider le dessin ») : titres, champs de la carte, réglages, bouton, fichier
+carte_titre: Ton dessin
+carte_fermer: Fermer
+carte_signature: Signature
+carte_nom: Nomme ton dessin
+carte_qr: QR code vers le portfolio
+carte_parametres: Personnaliser
+carte_appliquer_signature: Appliquer ma signature
+carte_couleur_fond: "Couleur du fond :"
+carte_couleur_signature: "Couleur de la signature :"
+carte_couleur_nom: "Couleur du nom :"
+carte_couleur_qr: "Couleur du QR code :"
+carte_telecharger: Télécharger mon souvenir
+# Nom du fichier de la carte : « {nom} » = nom du dessin, ou le texte suivant s'il est vide
+carte_fichier: "sowd - {nom}.png"
+carte_fichier_sans_nom: souvenir
 # Aides : bouton « ? » (nom lu et texte du curseur), croix qui les ferme, touches
 editeur_aides: Aides
 editeur_aides_fermer: Fermer

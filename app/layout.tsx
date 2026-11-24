@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Merriweather_Sans, Plus_Jakarta_Sans } from "next/font/google";
+import { Merriweather_Sans, Mrs_Saint_Delafield, Plus_Jakarta_Sans } from "next/font/google";
 import { InlineScript } from "@/components/ui/InlineScript/InlineScript";
 import { commun } from "@/content/texts";
 import "./globals.css";
@@ -13,6 +13,13 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 const merriweatherSans = Merriweather_Sans({
   variable: "--font-merriweather-sans",
   subsets: ["latin"],
+});
+
+/* Signature de la carte « Mon dessin » (éditeur de dessin de la 404, Figma 5937:35431). */
+const mrsSaintDelafield = Mrs_Saint_Delafield({
+  variable: "--font-mrs-saint-delafield",
+  subsets: ["latin"],
+  weight: "400",
 });
 
 /*
@@ -37,7 +44,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       data-scroll-behavior="smooth"
       // data-intro (layout du site) et --divider-width (ci-dessous) sont posés par des scripts en ligne avant l'hydratation.
       suppressHydrationWarning
-      className={`${plusJakartaSans.variable} ${merriweatherSans.variable} h-full antialiased`}
+      className={`${plusJakartaSans.variable} ${merriweatherSans.variable} ${mrsSaintDelafield.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <InlineScript html={dividerScript} />

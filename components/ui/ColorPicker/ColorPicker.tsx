@@ -57,12 +57,15 @@ export function HexField({
   label,
   value,
   onChange,
+  theme = "dark",
   className = "",
 }: {
   label: string;
   /** Couleur « #rrggbb ». */
   value: string;
   onChange: (hex: string) => void;
+  /** Thème du TextField (light : fenêtre « Mon dessin »). */
+  theme?: "dark" | "light";
   className?: string;
 }) {
   // Saisie en cours (incomplète) ; remise à la couleur dès qu'elle change.
@@ -75,6 +78,7 @@ export function HexField({
   return (
     <TextField
       label={label}
+      theme={theme}
       icon="Hash"
       iconAfter={false}
       value={text ?? value.slice(1).toUpperCase()}

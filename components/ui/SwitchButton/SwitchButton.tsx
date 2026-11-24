@@ -30,9 +30,19 @@ export type SwitchButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "o
   checked: boolean;
   onChange: (checked: boolean) => void;
   children: ReactNode;
+  /** Fond : dark (texte tertiary white, par défaut) ou light (texte tertiary black, rail éteint noir pour rester
+   *  visible : fenêtre « Mon dessin » de l'éditeur, proposition à valider). */
+  theme?: "dark" | "light";
 };
 
-export function SwitchButton({ checked, onChange, children, className = "", ...rest }: SwitchButtonProps) {
+export function SwitchButton({
+  checked,
+  onChange,
+  children,
+  theme = "dark",
+  className = "",
+  ...rest
+}: SwitchButtonProps) {
   const goo = `switch-goo-${useId().replace(/:/g, "")}`;
   // Rond et gouttelette : même couleur, mêmes états.
   const color = checked
@@ -50,7 +60,7 @@ export function SwitchButton({ checked, onChange, children, className = "", ...r
       className={[
         "group flex h-(--button-size-sm) cursor-pointer items-center gap-md",
         colorTransition,
-        buttonTones.tertiary.white.root,
+        buttonTones.tertiary[theme === "light" ? "black" : "white"].root,
         className,
       ].join(" ")}
       {...rest}
@@ -60,7 +70,11 @@ export function SwitchButton({ checked, onChange, children, className = "", ...r
         aria-hidden
         className={[
           `relative h-(--switch-height) w-(--switch-width) shrink-0 rounded-xl transition-colors ${colorMotion}`,
-          checked ? "bg-background-buttons-brand-bright" : "bg-background-buttons-neutral-white",
+          checked
+            ? "bg-background-buttons-brand-bright"
+            : theme === "light"
+              ? "bg-background-buttons-neutral-black"
+              : "bg-background-buttons-neutral-white",
         ].join(" ")}
       >
         <svg className="absolute size-0">

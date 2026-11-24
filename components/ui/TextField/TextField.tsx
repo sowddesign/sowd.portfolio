@@ -63,6 +63,9 @@ export type TextFieldProps = {
   /** Valeur imposée par le parent (champ contrôlé, ex. code Hex mis à jour pendant le réglage d'une couleur). */
   value?: string;
   onValueChange?: (value: string) => void;
+  /** Fond du champ : dark (blanc sur fond sombre, par défaut) ou light (noir sur fond clair : fenêtre « Mon dessin »
+   *  de l'éditeur, demande de l'utilisateur). */
+  theme?: "dark" | "light";
   /** Saisie validée : champ quitté ou Entrée (textField). Pas une propriété Figma. */
   onCommit?: (value: string) => void;
   /** Filtre de la saisie : les caractères qu'il retire ne s'écrivent pas (ex. lettres dans un téléphone). Pas une propriété Figma. */
@@ -87,6 +90,7 @@ export function TextField({
   value: controlled,
   onValueChange,
   onCommit,
+  theme = "dark",
   sanitize,
   className = "",
 }: TextFieldProps) {
@@ -101,6 +105,24 @@ export function TextField({
   const [flagged, setFlagged] = useState(false);
   const error = invalid && (flagged || !focused);
   if (flagged && !invalid) setFlagged(false);
+
+  /* Couleurs du thème : texte, icône et trait blancs (dark) ou noirs (light). */
+  const ink =
+    theme === "light"
+      ? {
+          text: "text-text-neutral-black",
+          caret: "caret-text-neutral-black",
+          fill: "autofill:[-webkit-text-fill-color:var(--color-text-neutral-black)]",
+          icon: "text-shape-neutral-black",
+          line: "border-shape-neutral-black",
+        }
+      : {
+          text: "text-text-neutral-white",
+          caret: "caret-text-neutral-white",
+          fill: "autofill:[-webkit-text-fill-color:var(--color-text-neutral-white)]",
+          icon: "text-shape-neutral-white",
+          line: "border-shape-neutral-white",
+        };
 
   const fieldRef = useRef<HTMLInputElement & HTMLTextAreaElement>(null);
 
@@ -137,16 +159,14 @@ export function TextField({
       if (invalid) setFlagged(true);
     },
     className: [
-      "type-body-regular caret-text-neutral-white bg-transparent outline-none",
-      error ? "text-text-brand-dark" : "text-text-neutral-white",
+      `type-body-regular ${ink.caret} bg-transparent outline-none`,
+      error ? "text-text-brand-dark" : ink.text,
       raised ? "w-full" : "absolute inset-0 opacity-0",
       "resize-none [field-sizing:content]",
       // Rempli par l'autocomplétion du navigateur : même aspect qu'un champ rempli à la main (demande de l'utilisateur).
       // Texte : couleur du champ écrite en dur (le navigateur impose sa propre couleur, currentColor ne suffit pas).
       // Fond : celui du navigateur (forcé par lui) est retardé indéfiniment par une transition très longue.
-      error
-        ? "autofill:[-webkit-text-fill-color:var(--color-text-brand-dark)]"
-        : "autofill:[-webkit-text-fill-color:var(--color-text-neutral-white)]",
+      error ? "autofill:[-webkit-text-fill-color:var(--color-text-brand-dark)]" : ink.fill,
       "autofill:[transition:background-color_100000s_step-end]",
       type === "textArea" ? "grow" : "",
     ].join(" "),
@@ -181,7 +201,7 @@ export function TextField({
       <span
         aria-hidden
         className={[
-          "type-caption-small-accentuation -mt-[1rem] -mb-[calc(var(--typography-line-height-caption)_-_1rem)] text-left text-text-neutral-white",
+          `type-caption-small-accentuation -mt-[1rem] -mb-[calc(var(--typography-line-height-caption)_-_1rem)] text-left ${ink.text}`,
           titleMotion,
           raised ? titleIn : `${titleOut} translate-y-(--motion-menu-offset)`,
         ].join(" ")}
@@ -206,7 +226,7 @@ export function TextField({
                 <Icon
                   name={error ? "ExclamationMark" : icon}
                   size="var(--icon-md)"
-                  className={error ? "text-shape-brand-darkest" : "text-shape-neutral-white"}
+                  className={error ? "text-shape-brand-darkest" : ink.icon}
                 />
               </span>
             )}
@@ -219,7 +239,7 @@ export function TextField({
               <span
                 aria-hidden
                 className={[
-                  "type-body-regular text-left text-text-neutral-white",
+                  `type-body-regular text-left ${ink.text}`,
                   titleMotion,
                   raised ? `${titleOut} pt-xs -translate-y-(--motion-menu-offset)` : titleIn,
                 ].join(" ")}
@@ -244,7 +264,7 @@ export function TextField({
         </div>
 
         {/* dividerBar */}
-        <span aria-hidden className="w-full shrink-0 border-t border-shape-neutral-white" />
+        <span aria-hidden className={`w-full shrink-0 border-t ${ink.line}`} />
 
         {error && errorDetails ? (
           <p className="type-caption-small-italic text-left whitespace-pre-line text-text-brand-dark">
@@ -260,7 +280,7 @@ export function TextField({
             )}
           </p>
         ) : (
-          details && <p className="type-caption-small-italic text-left text-text-neutral-white">{details}</p>
+          details && <p className={`type-caption-small-italic text-left ${ink.text}`}>{details}</p>
         )}
       </div>
     </div>

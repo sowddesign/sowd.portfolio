@@ -6,6 +6,7 @@ import { commun } from "@/content/texts";
 import type { MethodeFinishContent } from "@/lib/methode";
 import { IconButton } from "../IconButton";
 import { TextualButton } from "../TextualButton";
+import { FloatingScrollBar } from "../FloatingScrollBar";
 
 /*
  * Méthode, page « Bonus » — composant Figma « methode » (fichier portfolio, node 5851:29682),
@@ -261,18 +262,19 @@ export function MethodeFinish({
   }
 
   return (
-    <div className="flex size-full flex-col bg-background-neutral-white text-text-neutral-black">
+    <div className="relative flex size-full flex-col bg-background-neutral-white text-text-neutral-black">
       <span aria-hidden className="block w-full shrink-0 border-t border-shape-neutral-black" />
       {/* Défile quand le contenu dépasse la hauteur du conteneur (écrans larges, demande de l'utilisateur),
           comme les pages de la méthode ; le trait du haut reste fixe. */}
       <div
         ref={scrollRef}
-        className={`scroll-bar-discreet flex min-h-0 flex-1 flex-col overflow-x-clip overflow-y-auto py-sm ${
+        className={`scroll-bar-none flex min-h-0 flex-1 flex-col overflow-x-clip overflow-y-auto py-sm ${
           overflows ? "overscroll-contain" : ""
         }`}
       >
         {body}
       </div>
+      <FloatingScrollBar target={scrollRef} />
     </div>
   );
 }

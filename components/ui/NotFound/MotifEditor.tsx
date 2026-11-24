@@ -12,6 +12,7 @@ import { Slider } from "../Slider";
 import { SwitchButton } from "../SwitchButton";
 import { TextualButton } from "../TextualButton";
 import { tokenDuration } from "../token-duration";
+import { MotifCard } from "./MotifCard";
 import { MotifShortcuts } from "./MotifShortcuts";
 import { decodeMotif, encodeMotif, sharedCodeOf, sharedLink, shareUrl } from "./motif-share";
 import { tokenPx } from "./token-px";
@@ -98,7 +99,7 @@ const readCustom = (): string[] => {
 };
 
 /** Couleur résolue « rgb(r, g, b) » → « #rrggbb ». */
-const toHex = (rgb: string) =>
+export const toHex = (rgb: string) =>
   `#${(rgb.match(/\d+/g) ?? ["0", "0", "0"])
     .slice(0, 3)
     .map((c) => Number(c).toString(16).padStart(2, "0"))
@@ -116,14 +117,14 @@ const isDark = (hex: string) => {
 };
 
 /** Couleur claire : icône noire dessus (luminance relative au-dessus de la moitié). */
-const isLight = (hex: string) => {
+export const isLight = (hex: string) => {
   const n = parseInt(hex.slice(1), 16);
   const [r, g, b] = [(n >> 16) & 255, (n >> 8) & 255, n & 255];
   return (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255 > 0.5;
 };
 
 /** Couleur résolue par le navigateur (token « --… » ou valeur CSS ; les tokens peuvent être des color-mix). */
-function resolveColor(token: string) {
+export function resolveColor(token: string) {
   const probe = document.createElement("span");
   probe.style.color = token.startsWith("--") ? `var(${token})` : token;
   document.body.append(probe);
@@ -239,7 +240,13 @@ function useOptions(onClose: (which: Exclude<Options, null>) => void) {
     inside.current = false;
     scheduleClose();
   };
-  return { open, show, peek, row };
+  /** Fermeture immédiate (fenêtre « Mon dessin » ouverte). */
+  const close = () => {
+    clearTimeout(timer.current);
+    inside.current = false;
+    set(null);
+  };
+  return { open, show, peek, close, row };
 }
 
 /** Pastille choisie : contour blanc décalé, posé sur le fond (visible sur toute couleur). */
@@ -299,6 +306,31 @@ export function MotifEditor() {
   /** Couleur du fond du dessin (« #rrggbb ») : noir au départ (shape/neutral/black), modificateur de couleur ouvert. */
   const [canvasBg, setCanvasBg] = useState(() => toHex(resolveColor("--shape-neutral-black")));
   const [canvasPicker, setCanvasPicker] = useState(false);
+  /** Fenêtre « Mon dessin » (après « Valider le dessin ») : image du dessin recadré, sans fond (data URL). */
+  const [card, setCard] = useState<string | null>(null);
+  const cardOpen = useRef(false);
+  useEffect(() => {
+    cardOpen.current = card !== null;
+  }, [card]);
+  const openCard = async () => {
+    const blob = await engine.current?.exportPng({
+      background: null,
+      crop: { margin: tokenPx("--not-found-editor-export-margin") },
+    });
+    if (!blob) return;
+    options.close();
+    // Image en data URL (pas de blob) : reprise telle quelle par l'export de la carte (html-to-image).
+    const reader = new FileReader();
+    reader.onload = () => setCard(reader.result as string);
+    reader.readAsDataURL(blob);
+  };
+  const closeCard = () => setCard(null);
+  /** Fenêtre « Mon dessin » ouverte : actions de l'en-tête masquées en fondu, seul le logo reste (demande de
+   *  l'utilisateur : la fenêtre porte la seule action). */
+  const headerActions = [
+    "transition-opacity duration-(--motion-duration-base) ease-(--motion-ease-out) motion-reduce:transition-none",
+    card ? "pointer-events-none opacity-0" : "",
+  ].join(" ");
   /** Couleur du fond du PNG (« #rrggbb ») : celle du fond du dessin par défaut ; changée dans la pop-up d'export, elle
    *  prévaut jusqu'au prochain changement du fond du dessin (demande de l'utilisateur). */
   const [background, setBackground] = useState(canvasBg);
@@ -346,7 +378,7 @@ export function MotifEditor() {
   const wheelRef = useRef<(event: WheelEvent) => void>(() => undefined);
   useEffect(() => {
     wheelRef.current = (event: WheelEvent) => {
-      if (!spaceRef.current) return;
+      if (!spaceRef.current || cardOpen.current) return;
       event.preventDefault();
       const step = parseFloat(
         getComputedStyle(document.documentElement).getPropertyValue("--not-found-editor-eraser-wheel-step"),
@@ -370,6 +402,9 @@ export function MotifEditor() {
   useEffect(() => {
     const key = (event: KeyboardEvent) => {
       setCtrl(event.ctrlKey);
+      // Saisie dans un champ (code Hex, nom, signature) ou fenêtre « Mon dessin » ouverte : pas de raccourci.
+      const target = event.target as HTMLElement | null;
+      if (target?.closest("input, textarea, [contenteditable]") || cardOpen.current) return;
       // Contrôle (ou Commande sur Mac) + Z : annuler ; + Y ou + Maj + Z : refaire (lettre tapée, quelle que soit la disposition).
       if (event.type === "keydown" && (event.ctrlKey || event.metaKey)) {
         const letter = event.key.toLowerCase();
@@ -666,7 +701,7 @@ export function MotifEditor() {
       {/* En-tête, au-dessus de la zone de dessin (le panneau d’export déborde dessus). */}
       <div className="grid-layout relative z-3 h-(--button-size-sm) shrink-0">
         <LogoButton color="white" className="col-span-2 col-start-1" />
-        <div className="col-start-3 flex items-center gap-xxs">
+        <div className={`col-start-3 flex items-center gap-xxs ${headerActions}`}>
           <IconButton
             icon="ArrowCounterClockwise"
             label={introuvable.editeur_annuler}
@@ -689,7 +724,9 @@ export function MotifEditor() {
         {/* « Copier le lien » (colonnes 7-8, collé à droite, Figma 5923:33239) ; séparateur vertical à spacing/lg de
             chaque côté, entre lui et « Télécharger en PNG » : au bord droit de la case, l'écart de la grille (spacing/lg)
             le sépare du bouton suivant. */}
-        <div className="relative col-span-2 col-start-7 flex justify-end pr-[calc(var(--spacing-lg)+var(--divider-width))]">
+        <div
+          className={`relative col-span-2 col-start-7 flex justify-end pr-[calc(var(--spacing-lg)+var(--divider-width))] ${headerActions}`}
+        >
           <IconButton
             icon="Share"
             label={introuvable.editeur_copier_lien}
@@ -705,7 +742,7 @@ export function MotifEditor() {
         </div>
         {/* « Télécharger en PNG » : sa propre pop-up des réglages de l'export, au survol seulement ; le clic télécharge
             (demande de l'utilisateur). */}
-        <div {...options.row("download", hasDrawing)} className="relative col-span-2 col-start-9">
+        <div {...options.row("download", hasDrawing)} className={`relative col-span-2 col-start-9 ${headerActions}`}>
           <TextualButton
             variant="tertiary"
             color="white"
@@ -718,12 +755,13 @@ export function MotifEditor() {
           </TextualButton>
           {exportPanel("download")}
         </div>
-        {/* Fenêtre de réglages à venir (design Figma de l'utilisateur). */}
+        {/* Ouvre la fenêtre « Mon dessin » (MotifCard). */}
         <TextualButton
           {...(hasDrawing ? { color: "brand" as const } : { disabled: true as const, color: "white" as const })}
           icon="ArrowRight"
           iconPosition="right"
-          className="col-span-2 col-start-11"
+          onClick={openCard}
+          className={`col-span-2 col-start-11 ${headerActions}`}
         >
           {introuvable.editeur_valider}
         </TextualButton>
@@ -1011,6 +1049,19 @@ export function MotifEditor() {
           )}
         </div>
       </div>
+      {card && (
+        <MotifCard
+          drawing={card}
+          canvasBg={canvasBg}
+          colors={{
+            signature: toHex(resolveColor("--shape-neutral-white")),
+            name: toHex(resolveColor("--shape-brand-darkest")),
+            qr: toHex(resolveColor("--shape-brand-darkest")),
+          }}
+          custom={custom}
+          onClose={closeCard}
+        />
+      )}
     </div>
   );
 }

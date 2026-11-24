@@ -53,6 +53,7 @@
   /* typography/font — familles chargées par next/font dans app/layout.tsx */
   --typography-font-h1: var(--font-plus-jakarta-sans), sans-serif;
   --typography-font-h2h4: var(--font-merriweather-sans), sans-serif;
+  --typography-font-signature: var(--font-mrs-saint-delafield), cursive; /* signature de la carte « Mon dessin » (Figma) */
   --typography-font-h3: var(--font-plus-jakarta-sans), sans-serif;
   --typography-font-body: var(--font-plus-jakarta-sans), sans-serif;
   --typography-font-caption: var(--font-plus-jakarta-sans), sans-serif;
@@ -252,6 +253,11 @@
   --not-found-editor-pinch-grace: 250ms; /* éditeur : trait annulé si le second doigt arrive avant ce délai (valeur d'essai) */
   --not-found-editor-header-divider-height: var(--p-number-32); /* éditeur : séparateur vertical de l'en-tête (Figma 5923:33255, en dur) */
   --not-found-editor-zoom-step: 1.25; /* éditeur : facteur de zoom des boutons − / + (valeur d'essai) */
+  --not-found-editor-card-width: 46.5rem; /* éditeur : fenêtre « Mon dessin », 744 (Figma 5937:35424, en dur) */
+  --not-found-editor-card-stroke: var(--p-number-2); /* contour du dessin de la carte : 2 (pas de variable de trait, primitive) */
+  --not-found-editor-card-qr-size: calc(var(--typography-line-height-sub-heading) + var(--spacing-xxs) + var(--typography-line-height-caption)); /* QR code : carré à la hauteur du nom et de l'adresse (66, Figma) */
+  --not-found-editor-card-signature-size: var(--p-number-24); /* signature de la carte : 24 à l'essai (Figma 40, demande de l'utilisateur) */
+  --not-found-editor-card-separator: var(--p-number-3); /* trait sous le dessin de la carte : 3 (Figma, en dur) */
   --not-found-editor-shortcuts-interval: 15s; /* éditeur : raccourcis, changement des 3 lignes (demande de l'utilisateur) */
   --not-found-editor-eraser-wheel-step: 1.15; /* éditeur : Espace + molette, facteur de taille de la gomme par cran (valeur d'essai) */
   --not-found-editor-brush-medium: 3; /* éditeur : pinceau dotMedium, diamètre en logos (« 3 logos », à ajuster) */
@@ -527,6 +533,9 @@
   /* Arrondi proportionnel à celui de la grande barre (corner/xs 2 sur un curseur de 8, soit 1 sur 4) : même rendu
      visuel (demande de l'utilisateur) ; corner/xs sur 4 de large donnerait un bout entièrement rond. */
   --scroll-bar-discreet-corner: var(--p-number-1);
+  /* Petite barre flottante (FloatingScrollBar, sans piste, demande de l'utilisateur) : valeurs d'essai. */
+  --scroll-bar-float-min: var(--p-number-24); /* hauteur minimale du curseur */
+  --scroll-bar-float-hide-delay: 1s; /* masquée ce délai après le dernier défilement (hors survol) */
 
   /*
    * dégradé — style Figma « shadowBehindVisual » : ombre simulée derrière le visuel (colorBackground).

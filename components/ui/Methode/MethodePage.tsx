@@ -13,6 +13,7 @@ import { ProjectLink } from "../ProjetHubContainer/ProjectLink";
 import { MethodePartView, methodeDivider as divider, methodeSpacing } from "./MethodeBody";
 import { MethodeProjectIntro } from "./MethodeProjectIntro";
 import { isPartRead, savePartRead } from "./reading-store";
+import { FloatingScrollBar } from "../FloatingScrollBar";
 
 /*
  * Méthode, modèle de page — frame Figma « methode 01 » (fichier content, node 6291:11332), desktop et mobile.
@@ -452,12 +453,12 @@ export function MethodePage({
   }
 
   return (
-    <div className={`flex size-full flex-col text-text-neutral-black ${className}`}>
+    <div className={`relative flex size-full flex-col text-text-neutral-black ${className}`}>
       {divider}
       <div
         ref={scrollRef}
         tabIndex={0}
-        className="scroll-bar-discreet min-h-0 flex-1 overflow-x-clip overflow-y-auto overscroll-contain outline-none"
+        className="scroll-bar-none min-h-0 flex-1 overflow-x-clip overflow-y-auto overscroll-contain outline-none"
       >
         <div className="flex flex-col gap-xxl pb-xxl">
           {header}
@@ -477,6 +478,7 @@ export function MethodePage({
           </div>
         </div>
       </div>
+      <FloatingScrollBar target={scrollRef} />
       {divider}
     </div>
   );
