@@ -33,7 +33,7 @@ export function AboutContent({ blocks, className = "" }: AboutContentProps) {
             {block.map((paragraph, j) =>
               paragraph.kind === "text" ? (
                 <p key={j}>
-                  <RichLines lines={paragraph.lines} size="body" />
+                  <RichLines lines={paragraph.lines} size="body" background="dark" />
                 </p>
               ) : paragraph.kind === "divider" ? (
                 <span key={j} aria-hidden className="block w-full border-t border-shape-brand-brand" />
@@ -41,7 +41,7 @@ export function AboutContent({ blocks, className = "" }: AboutContentProps) {
                 <ul key={j} className="flex list-disc flex-col gap-sm ps-lg">
                   {paragraph.items.map((line, k) => (
                     <li key={k}>
-                      <RichLines lines={[line]} size="body" />
+                      <RichLines lines={[line]} size="body" background="dark" />
                     </li>
                   ))}
                 </ul>
@@ -51,7 +51,7 @@ export function AboutContent({ blocks, className = "" }: AboutContentProps) {
                     <li key={item.number} className="flex gap-sm">
                       <span className="shrink-0">{item.number}</span>
                       <span className="flex-1">
-                        <RichLines lines={item.lines} size="body" />
+                        <RichLines lines={item.lines} size="body" background="dark" />
                       </span>
                     </li>
                   ))}

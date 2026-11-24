@@ -60,7 +60,11 @@ export type TextFieldProps = {
   /** Autocomplétion du navigateur (attribut HTML autocomplete : given-name, family-name, email, tel…). */
   autoComplete?: string;
   defaultValue?: string;
+  /** Valeur imposée par le parent (champ contrôlé, ex. code Hex mis à jour pendant le réglage d'une couleur). */
+  value?: string;
   onValueChange?: (value: string) => void;
+  /** Saisie validée : champ quitté ou Entrée (textField). Pas une propriété Figma. */
+  onCommit?: (value: string) => void;
   /** Filtre de la saisie : les caractères qu'il retire ne s'écrivent pas (ex. lettres dans un téléphone). Pas une propriété Figma. */
   sanitize?: (value: string) => string;
   className?: string;
@@ -80,12 +84,15 @@ export function TextField({
   name,
   autoComplete,
   defaultValue = "",
+  value: controlled,
   onValueChange,
+  onCommit,
   sanitize,
   className = "",
 }: TextFieldProps) {
   const id = useId();
-  const [value, setValue] = useState(defaultValue);
+  const [inner, setValue] = useState(defaultValue);
+  const value = controlled ?? inner;
   const [focused, setFocused] = useState(false);
   const raised = focused || value !== "";
   const invalid = value !== "" && isValid !== undefined && !isValid(value);
@@ -126,6 +133,7 @@ export function TextField({
     rows: 1,
     onBlur: () => {
       setFocused(false);
+      onCommit?.(value);
       if (invalid) setFlagged(true);
     },
     className: [
@@ -151,6 +159,7 @@ export function TextField({
     onKeyDown: (event: KeyboardEvent<HTMLTextAreaElement>) => {
       if (event.key !== "Enter") return;
       event.preventDefault();
+      onCommit?.(value);
       event.currentTarget.form?.requestSubmit();
     },
     onChange: (event: { target: { value: string } }) => update(event.target.value.replace(/[\r\n]+/g, " ")),

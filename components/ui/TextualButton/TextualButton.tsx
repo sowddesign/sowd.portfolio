@@ -37,6 +37,8 @@ type BaseProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "color" | "disabl
   newTab?: boolean;
   /** Secondary : affiche le trait du bas. Masqué dans pageHeader, où seule la barre de survol apparaît. */
   showDivider?: boolean;
+  /** Alignement du texte : center pour un bouton carré avec seulement des chiffres (tailles de l'éditeur de dessin). */
+  align?: "left" | "center";
 };
 
 export type TextualButtonProps = BaseProps &
@@ -63,6 +65,7 @@ export function TextualButton({
   download,
   newTab = false,
   showDivider = true,
+  align = "left",
   ...rest
 }: TextualButtonProps) {
   const tone = disabled
@@ -98,7 +101,7 @@ export function TextualButton({
       >
         {iconPosition === "left" && iconNode}
         {/* Hauteur fixe 24px (valeur fixe dans Figma, sans variable), texte aligné en haut. */}
-        <span className={`type-caption-regular h-6 flex-1 text-left ${iconOptional ? "whitespace-nowrap" : "min-w-0"}`}>
+        <span className={`type-caption-regular h-6 flex-1 ${align === "center" ? "text-center" : "text-left"} ${iconOptional ? "whitespace-nowrap" : "min-w-0"}`}>
           {children}
         </span>
         {iconPosition === "right" && iconNode}

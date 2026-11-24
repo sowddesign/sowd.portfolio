@@ -10,17 +10,20 @@ import { Logotype } from "./Logotype";
  */
 
 export type LogoButtonProps = {
+  /** Couleur au repos : black (par défaut), white sur fond sombre (éditeur de dessin, décision de l'utilisateur). */
+  color?: "black" | "white";
   className?: string;
 };
 
-export function LogoButton({ className = "" }: LogoButtonProps) {
+export function LogoButton({ color = "black", className = "" }: LogoButtonProps) {
   return (
     <Link
       href="/"
       aria-label="sowd design — accueil"
       className={[
         "flex h-(--button-size-sm) w-full cursor-pointer items-center gap-sm p-none",
-        "text-shape-neutral-black hover:text-shape-brand-somber active:text-shape-brand-bright",
+        color === "white" ? "text-shape-neutral-white" : "text-shape-neutral-black",
+        "hover:text-shape-brand-somber active:text-shape-brand-bright",
         colorTransition,
         className,
       ].join(" ")}

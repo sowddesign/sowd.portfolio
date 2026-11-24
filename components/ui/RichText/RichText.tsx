@@ -22,12 +22,14 @@ export type RichLinesProps = {
   size?: "caption" | "body";
   /** Texte au curseur des liens internes (ex. « Voir le projet »). */
   linkCursorLabel?: string;
+  /** Fond sous le texte : adapte l'état « déjà visité » des liens. */
+  background?: "light" | "dark";
 };
 
 /** Gras : graisse typography/weight/paragraph/accentuation. */
 const bold = "[font-weight:var(--typography-weight-paragraph-accentuation)]";
 
-export function RichLines({ lines, size = "caption", linkCursorLabel }: RichLinesProps) {
+export function RichLines({ lines, size = "caption", linkCursorLabel, background = "light" }: RichLinesProps) {
   const italic = size === "caption" ? "type-caption-italic" : "type-body-italic";
 
   return lines.map((line, i) => (
@@ -39,6 +41,7 @@ export function RichLines({ lines, size = "caption", linkCursorLabel }: RichLine
             key={j}
             href={href}
             size={size}
+            background={background}
             cursorLabel={/^https?:\/\//.test(href) ? undefined : linkCursorLabel}
           >
             {text}

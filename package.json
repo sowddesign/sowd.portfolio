@@ -10,6 +10,7 @@
     "icons": "node scripts/generate-icon-names.mjs"
   },
   "dependencies": {
+    "@netlify/blobs": "^11.1.11",
     "next": "^16.4.6",
     "react": "19.3.0",
     "react-dom": "19.3.0",
