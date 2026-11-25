@@ -37,9 +37,9 @@ import { reducedMotionQuery, touchQuery, useMediaQuery } from "../use-media-quer
  *   bouton Découvrir vers diamonds). Toucher une zone affiche son état et son texte (sous la scène) ; la toucher à
  *   nouveau revient à diamonds. Zones mobiles : libellés (problème, solution, découvrir, définir, développer, livrer)
  *   et demi-tournesols 01 à 04 (états de phase) ; à default et diamonds, tournesol entier (gauche : problème, droite :
- *   solution). Tablette tactile : titres et demi-tournesols de la scène desktop.
+ *   solution) ; hors default et diamonds, la bande de l'autre tournesol (derrière) ouvre celui-ci. Tablette tactile : titres et demi-tournesols de la scène desktop.
  *   À diamonds : consigne animée « appuie sur un tournesol » (appui rapide) à la place du copyright, relancée à
- *   chaque retour. Hors default : indicateur d'étapes (6 repères en deux groupes, précédent / suivant ; précédent
+ *   chaque retour. Hors default : indicateur d'étapes (6 pastilles en deux groupes, précédent / suivant ; précédent
  *   ramène de diamonds à default, suivant ramène de 04 à default et le bouton devient Re-découvrir) et croix au-dessus de solution (retour à default).
  *
  * Chaque état est un calque superposé ; le changement d'état est un fondu d'opacité (dissolve Figma).
@@ -148,14 +148,15 @@ const flowerPhases: FlowerPhase[] = ["01", "02", "03", "04"];
 /** Masque de transparence d'un demi-tournesol, à l'échelle de sa boîte (1 px = 1 px de maquette). */
 type Mask = { data: Uint8ClampedArray; width: number; height: number };
 
-type Masks = Partial<Record<FlowerPhase, Mask>>;
+type Masks<K extends string = FlowerPhase> = Partial<Record<K, Mask>>;
 
-/** Masques des demi-tournesols 01 à 04, chargés depuis leurs images (cadrage « cover » ou « crop » comme à l'affichage). */
-function useFlowerMasks(visuals: Record<FlowerPhase, Visual>) {
-  const masks = useRef<Masks>({});
+/** Masques de transparence de visuels (demi-tournesols 01 à 04, tournesols entiers mobiles), chargés depuis leurs images
+ *  (cadrage « cover » ou « crop » comme à l'affichage). */
+function useFlowerMasks<K extends string>(visuals: Record<K, Visual>) {
+  const masks = useRef<Masks<K>>({});
   useEffect(() => {
     let cancelled = false;
-    for (const phase of flowerPhases) {
+    for (const phase of Object.keys(visuals) as K[]) {
       if (masks.current[phase]) continue;
       const { image, box, crop } = visuals[phase];
       const [, , boxWidth, boxHeight] = box;
@@ -310,6 +311,26 @@ const mobileFlowerCandidates = (view: View): FlowerPhase[] =>
     : view === "solution" || view === "03" || view === "04"
       ? ["03", "04"]
       : [];
+
+/** Tournesols entiers mobiles d'un état de phase : celui affiché (front) et l'autre, derrière, dont une bande dépasse
+ *  sur le côté (back). Toucher cette bande ouvre l'autre tournesol (demande de l'utilisateur). */
+const mobileWholeVisuals = {
+  problemeBack: mobileVisuals.probleme[0],
+  problemeFront: mobileVisuals.probleme[1],
+  solutionBack: mobileVisuals.solution[0],
+  solutionFront: mobileVisuals.solution[1],
+};
+type WholeFlower = keyof typeof mobileWholeVisuals;
+
+/** Point (x, y) de la scène sur une partie opaque du visuel. */
+function opaqueIn<K extends string>(masks: Masks<K>, visuals: Record<K, Visual>, key: K, x: number, y: number) {
+  const mask = masks[key];
+  const [left, top] = visuals[key].box;
+  const mx = Math.floor(x - left);
+  const my = Math.floor(y - top);
+  if (!mask || mx < 0 || my < 0 || mx >= mask.width || my >= mask.height) return false;
+  return mask.data[(my * mask.width + mx) * 4 + 3] > 128;
+}
 
 /** dividerBar vertical de la variante mobile (shape/neutral/white), sous les visuels. */
 const mobileDivider: Box = [200, 0, 1, 504.39];
@@ -650,6 +671,7 @@ export function DoubleFlower({ diamonds = false, className = "" }: DoubleFlowerP
   /* Survol des tournesols : point de la scène (px de maquette) sur une partie opaque d'un demi-tournesol. */
   const masks = useFlowerMasks(desktopVisuals);
   const mobileMasks = useFlowerMasks(mobileFlowerVisuals);
+  const wholeMasks = useFlowerMasks<WholeFlower>(mobileWholeVisuals);
   const desktopSceneRef = useLabelsAvoidText();
   const stageRef = useRef<HTMLDivElement>(null);
   const mobileStageRef = useRef<HTMLDivElement>(null);
@@ -753,7 +775,18 @@ export function DoubleFlower({ diamonds = false, className = "" }: DoubleFlowerP
               }
               const candidates = mobileFlowerCandidates(mobileView);
               const phase = flowerAt(mobileMasks.current, mobileFlowerVisuals, candidates, mobileFrame.width, x, y);
-              if (phase) toggle(phase);
+              if (phase) {
+                toggle(phase);
+                return;
+              }
+              /* Bande de l'autre tournesol, hors du tournesol affiché : ouvre l'autre tournesol (problème ↔ solution). */
+              const side = candidates[0] === "01" ? "probleme" : "solution";
+              const masks = wholeMasks.current;
+              if (
+                opaqueIn(masks, mobileWholeVisuals, `${side}Back`, x, y) &&
+                !opaqueIn(masks, mobileWholeVisuals, `${side}Front`, x, y)
+              )
+                navigate(side === "probleme" ? "solution" : "probleme");
             }}
           />
         </MobileStage>
@@ -1012,9 +1045,11 @@ export function DoubleFlower({ diamonds = false, className = "" }: DoubleFlowerP
                   navigate(phaseIndex < 0 ? "default" : phaseIndex === 0 ? "diamonds" : phases[phaseIndex - 1])
                 }
               />
-              <div className="flex flex-1 gap-sm">
+              {/* Repères en pastilles (choix de l'utilisateur, comme le guide de l'éditeur), centrés entre précédent et
+                  suivant ; zone d'appui de la taille d'une icône. */}
+              <div className="flex flex-1 justify-center gap-sm">
                 {[phases.slice(0, 3), phases.slice(3)].map((group, g) => (
-                  <div key={g} className="flex flex-1 gap-xxs">
+                  <div key={g} className="flex">
                     {group.map((phase) => (
                       <button
                         key={phase}
@@ -1022,11 +1057,11 @@ export function DoubleFlower({ diamonds = false, className = "" }: DoubleFlowerP
                         aria-label={zoneLabel[phase]}
                         aria-current={step === phase ? "step" : undefined}
                         onClick={() => toggle(phase)}
-                        className="flex h-(--icon-lg) flex-1 cursor-pointer items-center"
+                        className="flex size-(--icon-lg) cursor-pointer items-center justify-center"
                       >
                         <span
                           aria-hidden
-                          className={`w-full border-t-2 ${colorTransition} ${step === phase ? "border-shape-brand-bright" : "border-faded-white-40"}`}
+                          className={`size-(--double-flower-step-dot) rounded-full ${colorTransition} ${step === phase ? "bg-shape-brand-bright" : "bg-faded-white-40"}`}
                         />
                       </button>
                     ))}

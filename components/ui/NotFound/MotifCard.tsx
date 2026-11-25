@@ -28,6 +28,9 @@ import { isLight } from "./MotifEditor";
  *    couleur de la signature, trait, couleurs du nom et du QR code (champ Hex et tuile comme la pop-up du PNG), trait,
  *    « Télécharger mon souvenir » (primary brand, DownloadSimple) : PNG de la carte complète. Le bouton de gauche est
  *    à définir (demande de l'utilisateur).
+ * Cadre du dessin (demande de l'utilisateur) : exactement à la forme du dessin recadré sans marge, sans bornes ; le PNG
+ * de la carte suit. Mobile : réglages sur une colonne ; marges spacing/md (16, comme les côtés du site) au lieu de
+ * spacing/lg, écarts comme les pages méthode en mobile (lg → md, sm → xs ; demande de l'utilisateur).
  * Couleurs de départ : signature shape/neutral/white, nom et QR code shape/brand/darkest (valeurs de Figma).
  */
 
@@ -69,6 +72,13 @@ export function MotifCard({
   const [picker, setPicker] = useState<Field | null>(null);
   const [qr, setQr] = useState("");
   const [url] = useState(() => `${location.origin}/`);
+  /** Ratio du cadre (largeur / hauteur) : celui du dessin ; 3:2 le temps du chargement de l'image. Le ratio compte le
+   *  contour du cadre, l'image est posée dedans : remplie (cover), sans bande de fond qui épaissirait le contour en haut
+   *  et en bas (l'écart de ratio du contour, moins d'un pixel, est coupé). */
+  const [ratio, setRatio] = useState(1.5);
+  const fitFrame = (img: HTMLImageElement) => {
+    if (img.naturalWidth && img.naturalHeight) setRatio(img.naturalWidth / img.naturalHeight);
+  };
 
   // QR code vers le portfolio, à la couleur choisie, sans fond.
   useEffect(() => {
@@ -101,8 +111,8 @@ export function MotifCard({
 
   /** Couleur réglable : champ Hex (titre au-dessus) et tuile, modificateur de couleur au clic sur la tuile. */
   const colorField = (field: Field, label: string) => (
-    <div className="flex flex-col gap-sm">
-      <div className="flex items-end gap-sm pt-[1rem]">
+    <div className="flex flex-col gap-xs tablet:gap-sm">
+      <div className="flex items-end gap-xs pt-[1rem] tablet:gap-sm">
         <HexField
           theme="light"
           label={label}
@@ -125,7 +135,7 @@ export function MotifCard({
         </button>
       </div>
       {picker === field && custom.length > 0 && (
-        <div role="group" aria-label={introuvable.editeur_couleurs_perso} className="flex gap-sm">
+        <div role="group" aria-label={introuvable.editeur_couleurs_perso} className="flex gap-xs tablet:gap-sm">
           {custom.map((hex, i) => (
             <button
               key={i}
@@ -155,7 +165,7 @@ export function MotifCard({
     </div>
   );
 
-  const divider = <div aria-hidden className="col-span-2 h-(--divider-width) bg-shape-neutral-black" />;
+  const divider = <div aria-hidden className="h-(--divider-width) bg-shape-neutral-black tablet:col-span-2" />;
 
   return (
     // Tout l'éditeur derrière est bloqué (en-tête compris) ; un clic en dehors de la fenêtre la ferme.
@@ -165,7 +175,7 @@ export function MotifCard({
         className="pointer-events-none absolute inset-x-0 top-[calc(var(--button-size-sm)+var(--divider-width))] bottom-0 bg-[radial-gradient(var(--shape-neutral-black),var(--faded-black-60))]"
       />
       <div
-        className="absolute inset-x-0 top-[calc(var(--button-size-sm)+var(--divider-width))] bottom-0 flex justify-center p-lg"
+        className="absolute inset-x-0 top-[calc(var(--button-size-sm)+var(--divider-width))] bottom-0 flex justify-center p-(--grid-spacing) tablet:p-lg"
         onClick={(event) => event.target === event.currentTarget && onClose()}
       >
         <div
@@ -187,23 +197,28 @@ export function MotifCard({
           <div ref={scrollRef} className="scroll-bar-none flex min-h-0 flex-col overflow-y-auto">
             {/* pageHead H3 */}
             <div className="flex flex-col">
-              <h2 className="type-h3 px-lg py-sm">{introuvable.carte_titre}</h2>
+              <h2 className="type-h3 px-md py-sm tablet:px-lg">{introuvable.carte_titre}</h2>
               <div aria-hidden className="h-(--divider-width) bg-shape-neutral-black" />
             </div>
 
             {/* Carte */}
-            <div className="p-lg">
+            <div className="p-md tablet:p-lg">
               <div
                 ref={cardRef}
                 className="flex flex-col bg-background-buttons-neutral-white shadow-(--dropshadow-low)"
               >
-                <div className="p-lg">
+                <div className="p-md tablet:p-lg">
                   <div
-                    className="relative flex aspect-[3/2] w-full items-end justify-end overflow-hidden rounded-md border-(length:--not-found-editor-card-stroke) border-border-neutral-black px-lg py-exs"
-                    style={{ background: transparent ? undefined : colors.background }}
+                    className="relative flex w-full items-end justify-end overflow-hidden rounded-md border-(length:--not-found-editor-card-stroke) border-border-neutral-black px-lg py-exs"
+                    style={{ aspectRatio: ratio, background: transparent ? undefined : colors.background }}
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element -- image locale (blob), pas d'optimisation */}
-                    <img alt="" src={drawing} className="absolute inset-0 size-full object-contain" />
+                    <img
+                      alt=""
+                      src={drawing}
+                      onLoad={(event) => fitFrame(event.currentTarget)}
+                      className="absolute inset-0 size-full object-cover"
+                    />
                     {/* Largeur au texte (copie invisible du texte dans la même cellule, tous navigateurs), marge de 0,5 em
                         pour les jambages de l'écriture : la signature n'est jamais coupée. */}
                     {signed && (
@@ -233,7 +248,7 @@ export function MotifCard({
                   </div>
                 </div>
                 <div aria-hidden className="h-(--not-found-editor-card-separator) bg-shape-neutral-black" />
-                <div className="flex gap-lg p-lg">
+                <div className="flex gap-md p-md tablet:gap-lg tablet:p-lg">
                   <div className="flex min-w-0 flex-1 flex-col gap-xxs">
                     <input
                       value={name}
@@ -261,10 +276,10 @@ export function MotifCard({
             {/* Personnaliser (pageHead H4), sous un trait qui le sépare de la carte (demande de l'utilisateur) */}
             <div aria-hidden className="h-(--divider-width) shrink-0 bg-shape-neutral-black" />
             <div className="flex flex-col">
-              <h3 className="type-h4 px-lg py-sm">{introuvable.carte_parametres}</h3>
+              <h3 className="type-h4 px-md py-sm tablet:px-lg">{introuvable.carte_parametres}</h3>
               <div aria-hidden className="h-(--divider-width) bg-shape-neutral-black" />
             </div>
-            <div className="grid grid-cols-2 items-start gap-lg p-lg">
+            <div className="grid grid-cols-1 items-start gap-md p-md tablet:grid-cols-2 tablet:gap-lg tablet:p-lg">
               {/* Interrupteurs alignés en haut, sur la ligne du champ voisin (demande de l'utilisateur). */}
               <div className="flex h-[calc(1rem+var(--spacing-sm)*2+var(--icon-md)+var(--divider-width))] items-end">
                 <SwitchButton
@@ -276,7 +291,11 @@ export function MotifCard({
                   {introuvable.editeur_fond_transparent}
                 </SwitchButton>
               </div>
-              {transparent ? <div /> : colorField("background", introuvable.carte_couleur_fond)}
+              {transparent ? (
+                <div className="hidden tablet:block" />
+              ) : (
+                colorField("background", introuvable.carte_couleur_fond)
+              )}
               {divider}
               <div className="flex h-[calc(1rem+var(--spacing-sm)*2+var(--icon-md)+var(--divider-width))] items-end">
                 <SwitchButton theme="light" checked={signed} onChange={setSigned} className="w-full justify-between">
@@ -287,18 +306,25 @@ export function MotifCard({
               {divider}
               {colorField("name", introuvable.carte_couleur_nom)}
               {colorField("qr", introuvable.carte_couleur_qr)}
-              {divider}
+            </div>
+          </div>
+          {/* « Télécharger mon souvenir » dans une bande fixe en bas de la fenêtre, hors du défilement (demande de
+              l'utilisateur) : trait au-dessus et blanc autour du bouton, comme la barre « Voir la prochaine étape » des
+              pages méthode ; mobile : pleine largeur, marges spacing/md ; tablette et desktop : colonne de droite de la
+              grille des réglages, marges spacing/lg. */}
+          <div className="flex shrink-0 flex-col bg-background-buttons-neutral-white">
+            <div aria-hidden className="h-(--divider-width) bg-shape-neutral-black" />
+            <div className="grid grid-cols-1 p-md tablet:grid-cols-2 tablet:gap-x-lg tablet:p-lg">
               <TextualButton
                 color="brand"
                 icon="DownloadSimple"
                 iconPosition="right"
                 onClick={download}
-                className="col-start-2"
+                className="w-full! tablet:col-start-2"
               >
                 {introuvable.carte_telecharger}
               </TextualButton>
             </div>
-            <div aria-hidden className="h-(--divider-width) shrink-0 bg-shape-neutral-black" />
           </div>
           <FloatingScrollBar target={scrollRef} />
         </div>

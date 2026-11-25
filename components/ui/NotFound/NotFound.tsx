@@ -16,7 +16,7 @@ import { HiddenShapes, useLayoutShapes } from "./HiddenShapes";
 import { HiddenStem } from "./HiddenStem";
 import { digitFourPath, digitFourViewBox } from "./digit-four";
 import { notFoundLayout, type NotFoundLayout } from "./token-px";
-import { sharedLink } from "./motif-share";
+import { editorRequested, sharedLink } from "./motif-share";
 
 const subscribeHash = (onChange: () => void) => {
   window.addEventListener("hashchange", onChange);
@@ -89,8 +89,9 @@ export function NotFound() {
   const leftDigitRef = useRef<HTMLSpanElement | null>(null);
   /** Séquence après la graine enfoncée : planted (fondu, feuilles, logo qui tourne), done (fin), editor (éditeur). */
   const [phase, setPhase] = useState<"play" | "planted" | "done" | "editor">("play");
-  /* Lien de partage d'un dessin (#dessin=…, demande de l'utilisateur) : l'éditeur s'ouvre directement, sans la 404. */
-  const shared = useSyncExternalStore(subscribeHash, () => !!sharedLink(), () => false);
+  /* Lien de partage d'un dessin (#dessin=…, #d=…) ou #editeur (fin de la méthode) : l'éditeur s'ouvre directement,
+     sans la 404 (demandes de l'utilisateur). */
+  const shared = useSyncExternalStore(subscribeHash, () => !!sharedLink() || editorRequested(), () => false);
   const done = phase === "done";
   const editor = phase === "editor" || shared;
   /* Bouton rond vers l'éditeur : « Éditeur sowd » au curseur (demande de l'utilisateur). */

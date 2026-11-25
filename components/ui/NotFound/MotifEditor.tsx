@@ -1,5 +1,7 @@
 "use client";
 
+import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
 import { introuvable } from "@/content/texts";
 import { AlertMessage } from "../AlertMessage";
@@ -12,7 +14,11 @@ import { Slider } from "../Slider";
 import { SwitchButton } from "../SwitchButton";
 import { TextualButton } from "../TextualButton";
 import { tokenDuration } from "../token-duration";
+import { tabletQuery, touchQuery, useMediaQuery } from "../use-media-query";
+import { PageHeader } from "../PageHeader";
 import { MotifCard } from "./MotifCard";
+import { MotifGuide } from "./MotifGuide";
+import { MotifLeave } from "./MotifLeave";
 import { MotifShortcuts } from "./MotifShortcuts";
 import { decodeMotif, encodeMotif, sharedCodeOf, sharedLink, shareUrl } from "./motif-share";
 import { tokenPx } from "./token-px";
@@ -29,9 +35,14 @@ import {
  * Design de test Figma 5912:32154, variante 1 (choix de l'utilisateur), desktop :
  *  - en-tête (grille 12 colonnes) : logo vers l'accueil (col. 1-2), annuler / refaire (col. 3), « Télécharger en PNG »
  *    tertiary (col. 9-10), « Valider le dessin » brand primary (col. 11-12), puis séparateur ;
- *  - colonne d'outils (spacing/lg, alignée en haut, demande de l'utilisateur) : Main, Pinceau, Gomme, Remplir, séparateur, Couleur, Taille ;
+ *  - colonne d'outils (spacing/lg, alignée en haut, demande de l'utilisateur) : Main, Pinceau, Remplir, Gomme (ordre de l'utilisateur), séparateur, Couleur, Taille ;
  *    outil actif en secondary active avec son icône pleine (fill, demande de l'utilisateur), les autres en secondary white ; Tout effacer (tertiary) en bas ;
  *  - zone de dessin, et sous elle le zoom : − , zoom en %, +.
+ * Mobile (≤ 740px, choix de l'utilisateur) : en-tête du site (menu burger) avec « Terminer » (pop-up : copier le lien,
+ * télécharger, valider), barre d'outils en bas, défilante horizontalement, options qui montent au-dessus de la barre ;
+ * annuler et refaire dans l'en-tête, zoom dans la barre (bouton loupe) ; aides masquées ; guide de découverte comme
+ * desktop. Tablette : comme desktop. Écran tactile
+ * (tablette et mobile) : aides (raccourcis clavier et bouton « ? ») masquées.
  * Options à droite d'un bouton (points du pinceau, curseur de la gomme, tailles 4 / 12 / 24) : affichées au survol du
  * bouton ou après l'appui, masquées --not-found-editor-options-delay après la sortie du pointeur (demande de
  * l'utilisateur). Option choisie en primary active (comme la taille 4 dans Figma), les autres en primary white.
@@ -67,11 +78,19 @@ import {
  * expiré : alerte d'erreur « Ce dessin n'est plus disponible ».
  * Aides (bouton « ? » au-dessus de Tout effacer, MotifShortcuts) : raccourcis en bas à gauche de la zone de dessin,
  * ouverts à la première visite.
+ * Guide de découverte (MotifGuide, aperçu C choisi par l'utilisateur) : à la première ouverture, en 3 étapes ; les
+ * éléments présentés portent data-guide. Les raccourcis attendent la fin du guide.
  * Annuler / Refaire : désactivés sans action à annuler / à refaire (demande de l'utilisateur).
  * Mobile et tablette : à concevoir en code avec l'utilisateur (même mise en page pour l'instant).
  */
 
-type Options = "canvas" | "brush" | "eraser" | "color" | "size" | "download" | null;
+type Options = "canvas" | "brush" | "eraser" | "color" | "size" | "zoom" | "download" | "finish" | null;
+
+/* Formes 1 à 5 de l'ancien éditeur : en local seulement (demande de l'utilisateur), retirées du site publié. */
+const MotifDevShapes =
+  process.env.NODE_ENV === "development"
+    ? dynamic(() => import("./MotifDevShapes").then((m) => m.MotifDevShapes), { ssr: false })
+    : null;
 
 /* Couleurs du portfolio (rangée 1 de l'outil Couleur, Figma 5929:33921). */
 const palette = [
@@ -87,6 +106,8 @@ const CUSTOM_MAX = 5;
 const CUSTOM_KEY = "motif-editeur-couleurs";
 /** Aides affichées ou non (clé du navigateur). */
 const HELPS_KEY = "motif-editeur-aides";
+/** Guide de découverte déjà vu (clé du navigateur). */
+const GUIDE_KEY = "motif-editeur-guide";
 const readCustom = (): string[] => {
   try {
     const list: unknown = JSON.parse(localStorage.getItem(CUSTOM_KEY) ?? "[]");
@@ -191,13 +212,22 @@ function useOptions(onClose: (which: Exclude<Options, null>) => void) {
     // Toucher ailleurs que dans la rangée ouverte : fermeture après le délai.
     const down = (event: PointerEvent) => {
       if (rows.current.get(open)?.contains(event.target as Node)) return;
+      // Tactile : fermeture immédiate au tap en dehors (demande de l'utilisateur).
+      if (event.pointerType !== "mouse") {
+        clearTimeout(timer.current);
+        inside.current = false;
+        set(null);
+        return;
+      }
       inside.current = false;
       scheduleClose();
     };
     // Pointeur sorti de la fenêtre (ex. ouverture du PNG téléchargé) ou fenêtre quittée : pas de sortie de la rangée
     // détectée, fermeture après le délai comme à la sortie du pointeur.
+    // Tactile : le doigt levé « sort » toujours sans cible (relatedTarget null) ; seul le pointeur de la souris compte,
+    // sinon les options (et le modificateur de couleur) se fermaient d'elles-mêmes après chaque appui.
     const out = (event: PointerEvent) => {
-      if (event.relatedTarget) return;
+      if (event.relatedTarget || event.pointerType !== "mouse") return;
       inside.current = false;
       scheduleClose();
     };
@@ -249,6 +279,10 @@ function useOptions(onClose: (which: Exclude<Options, null>) => void) {
   return { open, show, peek, close, row };
 }
 
+/** Séparateur de la colonne d'outils : horizontal en colonne (tablette, desktop), vertical dans la barre mobile. */
+const toolDivider =
+  "w-(--divider-width) self-stretch bg-shape-neutral-white tablet:h-(--divider-width) tablet:w-full tablet:self-auto";
+
 /** Pastille choisie : contour blanc décalé, posé sur le fond (visible sur toute couleur). */
 const swatchChosen =
   "outline-(length:--divider-width) outline-border-neutral-white outline-offset-(--not-found-editor-swatch-outline-offset)";
@@ -282,6 +316,11 @@ export function MotifEditor() {
     open: boolean;
   } | null>(null);
   const zoomRef = useRef<HTMLDivElement>(null);
+  /** Tablette et desktop : boutons textuels de l'en-tête ; mobile : icônes seules (choix de l'utilisateur). */
+  const wide = useMediaQuery(tabletQuery);
+  /** Écran tactile et mobile : aides (raccourcis clavier, bouton « ? ») masquées (choix de l'utilisateur). */
+  const touch = useMediaQuery(touchQuery);
+  const noHelps = touch || !wide;
   const engine = useRef<Engine | null>(null);
   const [size, setSize] = useState<EditorSize>(12);
   const [tool, setTool] = useState<EditorTool>("paint");
@@ -301,6 +340,35 @@ export function MotifEditor() {
   const [zoom, setZoom] = useState(1);
   /** Dessin vide : « Télécharger en PNG » et « Valider le dessin » désactivés (demande de l'utilisateur). */
   const [hasDrawing, setHasDrawing] = useState(false);
+  /** Dessin en cours et départ demandé (demande de l'utilisateur) : lien du site cliqué → pop-up « Quitter l'éditeur ? »
+   *  (MotifLeave) avec l'adresse visée ; fermer l'onglet ou recharger → fenêtre native du navigateur. */
+  const router = useRouter();
+  const [leaveTo, setLeaveTo] = useState<string | null>(null);
+  useEffect(() => {
+    if (!hasDrawing) return;
+    const unload = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = "";
+    };
+    // Phase de capture : avant le lien (next/link ignore un clic déjà empêché) ; le menu se referme quand même.
+    const click = (event: MouseEvent) => {
+      if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)
+        return;
+      const link = (event.target as Element | null)?.closest?.("a[href]");
+      if (!(link instanceof HTMLAnchorElement) || link.target === "_blank" || link.hasAttribute("download")) return;
+      const url = new URL(link.href, location.href);
+      if (url.origin !== location.origin || (url.pathname === location.pathname && url.search === location.search))
+        return;
+      event.preventDefault();
+      setLeaveTo(url.pathname + url.search + url.hash);
+    };
+    window.addEventListener("beforeunload", unload);
+    document.addEventListener("click", click, true);
+    return () => {
+      window.removeEventListener("beforeunload", unload);
+      document.removeEventListener("click", click, true);
+    };
+  }, [hasDrawing]);
   /** Réglages de l'export : fond transparent (éteint au départ), couleur du fond, recadrage (éteint au départ). */
   const [transparent, setTransparent] = useState(false);
   /** Couleur du fond du dessin (« #rrggbb ») : noir au départ (shape/neutral/black), modificateur de couleur ouvert. */
@@ -313,10 +381,8 @@ export function MotifEditor() {
     cardOpen.current = card !== null;
   }, [card]);
   const openCard = async () => {
-    const blob = await engine.current?.exportPng({
-      background: null,
-      crop: { margin: tokenPx("--not-found-editor-export-margin") },
-    });
+    // Carte : dessin recadré au plus près, sans marge (demande de l'utilisateur), le cadre en prend la forme.
+    const blob = await engine.current?.exportPng({ background: null, crop: { margin: 0 } });
     if (!blob) return;
     options.close();
     // Image en data URL (pas de blob) : reprise telle quelle par l'export de la carte (html-to-image).
@@ -360,6 +426,22 @@ export function MotifEditor() {
       localStorage.setItem(HELPS_KEY, on ? "1" : "0");
     } catch {
       // Stockage refusé : réglage gardé pour cette visite.
+    }
+  };
+  /** Guide de découverte : ouvert à la première ouverture de l'éditeur, puis plus (navigateur). */
+  const [guide, setGuide] = useState(() => {
+    try {
+      return localStorage.getItem(GUIDE_KEY) !== "1";
+    } catch {
+      return true;
+    }
+  });
+  const closeGuide = () => {
+    setGuide(false);
+    try {
+      localStorage.setItem(GUIDE_KEY, "1");
+    } catch {
+      // Stockage refusé : guide fermé pour cette visite.
     }
   };
   /** Modificateur de couleur ouvert (pastille personnalisée choisie). */
@@ -459,7 +541,12 @@ export function MotifEditor() {
           // Lien court expiré (30 jours) ou inconnu : alerte d'erreur (demande de l'utilisateur).
           if (code === "missing") {
             if (alive)
-              setAlert({ type: "error", icon: "LinkBreak", text: introuvable.editeur_dessin_indisponible, open: true });
+              setAlert({
+                type: "error",
+                icon: "LinkBreak",
+                text: introuvable.editeur_dessin_indisponible,
+                open: true,
+              });
             return null;
           }
           return code ? decodeMotif(code) : null;
@@ -578,7 +665,12 @@ export function MotifEditor() {
     a.click();
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
     // Validation du téléchargement (demande de l'utilisateur) : alerte validate minutée.
-    setAlert({ type: "validate", icon: "Check", text: introuvable.editeur_telecharge, open: true });
+    setAlert({
+      type: "validate",
+      icon: "Check",
+      text: introuvable.editeur_telecharge,
+      open: true,
+    });
   };
 
   /** Bouton d'outil : icône pleine (fill) quand l'outil est actif ou activé par sa touche (feedback). */
@@ -607,18 +699,34 @@ export function MotifEditor() {
   const withOptions = (which: Exclude<Options, null>, button: ReactNode, content: ReactNode) => {
     const open = options.open === which;
     return (
-      <div {...options.row(which)} className="relative">
-        {button}
+      <div {...options.row(which)} className="tablet:relative">
+        {/* Tactile : options ouvertes, le bouton devient une croix qui les ferme (demande de l'utilisateur). */}
+        {touch && open ? (
+          <IconButton
+            icon="X"
+            label={introuvable.editeur_options_fermer}
+            cursorLabel={introuvable.editeur_options_fermer}
+            variant="secondary"
+            color="white"
+            onClick={options.close}
+          />
+        ) : (
+          button
+        )}
         {/* Découpe à gauche seulement, au bord droit du séparateur : les options sortent de dessous. Zone sans pointeur,
             options fermées comprises (inert) : le survol ne s'ouvre que par le bouton, puis reste tant que le pointeur
             est sur le bouton ou les options ouvertes (demande de l'utilisateur). Fermées, elles reculent de spacing/xs
             en plus : leur ombre ne dépasse pas sur un fond de dessin clair. */}
-        <div className="pointer-events-none absolute top-0 left-[calc(100%+var(--spacing-lg)+var(--divider-width))] flex h-full pl-sm [clip-path:inset(-100vh_-100vw_-100vh_0)]">
+        {/* Mobile : au-dessus de la barre (placées sur elle), découpées en bas : elles montent de dessous son
+            séparateur, à spacing/sm de lui, alignées sur sa marge gauche. */}
+        <div className="pointer-events-none absolute bottom-full left-0 flex pb-sm pl-md [clip-path:inset(-100vh_-100vw_0_-100vw)] tablet:top-0 tablet:bottom-auto tablet:left-[calc(100%+var(--spacing-lg)+var(--divider-width))] tablet:h-full tablet:pb-0 tablet:pl-sm tablet:[clip-path:inset(-100vh_-100vw_-100vh_0)]">
           <div
             inert={!open}
             className={[
               "pointer-events-auto flex items-center transition-[translate] duration-(--not-found-editor-options-duration) ease-(--motion-ease-out) motion-reduce:transition-none",
-              open ? "translate-none" : "-translate-x-[calc(100%+var(--spacing-sm)+var(--spacing-xs))]",
+              open
+                ? "translate-none"
+                : "translate-y-[calc(100%+var(--spacing-sm)+var(--spacing-xs))] tablet:translate-y-0 tablet:-translate-x-[calc(100%+var(--spacing-sm)+var(--spacing-xs))]",
             ].join(" ")}
           >
             {content}
@@ -694,85 +802,191 @@ export function MotifEditor() {
       </div>
     </>
   );
-  const { min, max } = eraserRange;
-
-  return (
-    <div className="fixed inset-0 z-20 flex flex-col bg-background-neutral-black">
-      {/* En-tête, au-dessus de la zone de dessin (le panneau d’export déborde dessus). */}
-      <div className="grid-layout relative z-3 h-(--button-size-sm) shrink-0">
-        <LogoButton color="white" className="col-span-2 col-start-1" />
-        <div className={`col-start-3 flex items-center gap-xxs ${headerActions}`}>
-          <IconButton
-            icon="ArrowCounterClockwise"
-            label={introuvable.editeur_annuler}
-            cursorLabel={introuvable.editeur_annuler}
-            variant="tertiary"
-            color="white"
-            disabled={!history.undo}
-            onClick={() => engine.current?.undo()}
-          />
-          <IconButton
-            icon="ArrowClockwise"
-            label={introuvable.editeur_refaire}
-            cursorLabel={introuvable.editeur_refaire}
-            variant="tertiary"
-            color="white"
-            disabled={!history.redo}
-            onClick={() => engine.current?.redo()}
-          />
-        </div>
-        {/* « Copier le lien » (colonnes 7-8, collé à droite, Figma 5923:33239) ; séparateur vertical à spacing/lg de
-            chaque côté, entre lui et « Télécharger en PNG » : au bord droit de la case, l'écart de la grille (spacing/lg)
-            le sépare du bouton suivant. */}
-        <div
-          className={`relative col-span-2 col-start-7 flex justify-end pr-[calc(var(--spacing-lg)+var(--divider-width))] ${headerActions}`}
+  /** Mobile : pop-up de « Terminer », comme le panneau d'export desktop (sous le séparateur de l'en-tête, aligné à
+   *  droite, glisse de dessous lui) : copier le lien, télécharger en PNG, valider le dessin (choix de l'utilisateur). */
+  const finishPanel = (
+    <div className="pointer-events-none absolute top-full right-(--grid-spacing) pt-sm [clip-path:inset(0_-100vw_-100vh_-100vw)]">
+      <div
+        {...options.row("finish")}
+        inert={options.open !== "finish"}
+        className={[
+          "pointer-events-auto flex w-max flex-col items-stretch gap-sm bg-background-buttons-neutral-black p-sm shadow-(--dropshadow-mid)",
+          "transition-[translate] duration-(--not-found-editor-options-duration) ease-(--motion-ease-out) motion-reduce:transition-none",
+          options.open === "finish"
+            ? "translate-none"
+            : "-translate-y-[calc(100%+var(--spacing-sm)+var(--spacing-xs))]",
+        ].join(" ")}
+      >
+        <TextualButton
+          variant="tertiary"
+          color="white"
+          icon="Share"
+          iconPosition="right"
+          onClick={() => {
+            options.close();
+            void copyLink();
+          }}
         >
-          <IconButton
-            icon="Share"
-            label={introuvable.editeur_copier_lien}
-            cursorLabel={introuvable.editeur_copier_lien}
-            variant="tertiary"
-            color="white"
-            onClick={copyLink}
-          />
-          <span
-            aria-hidden
-            className="absolute top-1/2 right-0 h-(--not-found-editor-header-divider-height) w-(--divider-width) -translate-y-1/2 bg-shape-neutral-white"
-          />
-        </div>
-        {/* « Télécharger en PNG » : sa propre pop-up des réglages de l'export, au survol seulement ; le clic télécharge
-            (demande de l'utilisateur). */}
-        <div {...options.row("download", hasDrawing)} className={`relative col-span-2 col-start-9 ${headerActions}`}>
-          <TextualButton
-            variant="tertiary"
-            color="white"
-            disabled={!hasDrawing}
-            icon="DownloadSimple"
-            iconPosition="right"
-            onClick={exportPng}
-          >
-            {introuvable.editeur_exporter}
-          </TextualButton>
-          {exportPanel("download")}
-        </div>
-        {/* Ouvre la fenêtre « Mon dessin » (MotifCard). */}
+          {introuvable.editeur_copier_lien}
+        </TextualButton>
+        <TextualButton
+          variant="tertiary"
+          color="white"
+          disabled={!hasDrawing}
+          icon="DownloadSimple"
+          iconPosition="right"
+          onClick={() => {
+            options.close();
+            void exportPng();
+          }}
+        >
+          {introuvable.editeur_exporter}
+        </TextualButton>
         <TextualButton
           {...(hasDrawing ? { color: "brand" as const } : { disabled: true as const, color: "white" as const })}
           icon="ArrowRight"
           iconPosition="right"
           onClick={openCard}
-          className={`col-span-2 col-start-11 ${headerActions}`}
         >
           {introuvable.editeur_valider}
         </TextualButton>
       </div>
-      <div aria-hidden className="h-(--divider-width) shrink-0 bg-shape-neutral-white" />
+    </div>
+  );
+  const { min, max } = eraserRange;
 
-      <div className="flex min-h-0 flex-1">
-        {/* Colonne d'outils, au-dessus de la zone de dessin (les options débordent dessus). */}
-        <div className="relative z-2 flex shrink-0">
-          <div className="flex flex-col items-center justify-between p-lg">
-            <div className="flex w-(--button-size-sm) flex-col items-start gap-lg">
+  return (
+    <div className="fixed inset-0 z-20 flex flex-col bg-background-neutral-black">
+      {wide ? (
+        <>
+          {/* En-tête, au-dessus de la zone de dessin (le panneau d’export déborde dessus). */}
+          <div className="grid-layout relative z-3 h-(--button-size-sm) shrink-0">
+            <LogoButton color="white" className="col-span-2 col-start-1" />
+            <div className={`col-start-3 flex items-center gap-xxs ${headerActions}`}>
+              <IconButton
+                icon="ArrowCounterClockwise"
+                label={introuvable.editeur_annuler}
+                cursorLabel={introuvable.editeur_annuler}
+                variant="tertiary"
+                color="white"
+                disabled={!history.undo}
+                onClick={() => engine.current?.undo()}
+              />
+              <IconButton
+                icon="ArrowClockwise"
+                label={introuvable.editeur_refaire}
+                cursorLabel={introuvable.editeur_refaire}
+                variant="tertiary"
+                color="white"
+                disabled={!history.redo}
+                onClick={() => engine.current?.redo()}
+              />
+            </div>
+            {/* « Copier le lien » (colonnes 7-8, collé à droite, Figma 5923:33239) ; séparateur vertical à spacing/lg de
+                chaque côté, entre lui et « Télécharger en PNG » : au bord droit de la case, l'écart de la grille
+                (spacing/lg) le sépare du bouton suivant. */}
+            <div
+              className={`relative col-span-2 col-start-7 flex justify-end pr-[calc(var(--spacing-lg)+var(--divider-width))] ${headerActions}`}
+            >
+              <IconButton
+                data-guide="3"
+                icon="Share"
+                label={introuvable.editeur_copier_lien}
+                cursorLabel={introuvable.editeur_copier_lien}
+                variant="tertiary"
+                color="white"
+                onClick={copyLink}
+              />
+              <span
+                aria-hidden
+                className="absolute top-1/2 right-0 h-(--not-found-editor-header-divider-height) w-(--divider-width) -translate-y-1/2 bg-shape-neutral-white"
+              />
+            </div>
+            {/* « Télécharger en PNG » : sa propre pop-up des réglages de l'export, au survol seulement ; le clic
+                télécharge (demande de l'utilisateur). */}
+            <div
+              {...options.row("download", hasDrawing)}
+              data-guide="3"
+              className={`relative col-span-2 col-start-9 ${headerActions}`}
+            >
+              <TextualButton
+                variant="tertiary"
+                color="white"
+                disabled={!hasDrawing}
+                icon="DownloadSimple"
+                iconPosition="right"
+                onClick={exportPng}
+              >
+                {introuvable.editeur_exporter}
+              </TextualButton>
+              {exportPanel("download")}
+            </div>
+            {/* Ouvre la fenêtre « Mon dessin » (MotifCard). */}
+            <TextualButton
+              {...(hasDrawing ? { color: "brand" as const } : { disabled: true as const, color: "white" as const })}
+              icon="ArrowRight"
+              iconPosition="right"
+              onClick={openCard}
+              data-guide="3"
+              className={`col-span-2 col-start-11 ${headerActions}`}
+            >
+              {introuvable.editeur_valider}
+            </TextualButton>
+          </div>
+          <div aria-hidden className="h-(--divider-width) shrink-0 bg-shape-neutral-white" />
+        </>
+      ) : (
+        /* Mobile : en-tête du site (menu burger), « Terminer » (une colonne, sans flèche) à la place de « contact », en noir comme l'en-tête desktop ; il ouvre la pop-up des
+           actions (choix de l'utilisateur). */
+        <div className="relative z-3 shrink-0">
+          <PageHeader
+            dark
+            mobileStart={
+              <div className={`flex items-center ${headerActions}`}>
+                <IconButton
+                  icon="ArrowCounterClockwise"
+                  label={introuvable.editeur_annuler}
+                  cursorLabel={introuvable.editeur_annuler}
+                  variant="tertiary"
+                  color="white"
+                  disabled={!history.undo}
+                  onClick={() => engine.current?.undo()}
+                />
+                <IconButton
+                  icon="ArrowClockwise"
+                  label={introuvable.editeur_refaire}
+                  cursorLabel={introuvable.editeur_refaire}
+                  variant="tertiary"
+                  color="white"
+                  disabled={!history.redo}
+                  onClick={() => engine.current?.redo()}
+                />
+              </div>
+            }
+            mobileAction={
+              <TextualButton
+                variant="tertiary"
+                color="white"
+                aria-expanded={options.open === "finish"}
+                onClick={() => (options.open === "finish" ? options.close() : options.show("finish"))}
+                data-guide="3"
+                className={headerActions}
+              >
+                {introuvable.editeur_terminer}
+              </TextualButton>
+            }
+          />
+          {finishPanel}
+        </div>
+      )}
+
+      <div className="flex min-h-0 flex-1 flex-col-reverse tablet:flex-row">
+        {/* Colonne d'outils, au-dessus de la zone de dessin (les options débordent dessus). Mobile : barre en bas,
+            défilante ; ses rangées sans position laissent leurs options (absolues) se placer sur ce bloc, hors de la
+            découpe du défilement. */}
+        <div className="relative z-2 flex shrink-0 flex-col-reverse tablet:flex-row">
+          <div className="flex items-center justify-between gap-lg overflow-x-auto p-md [scrollbar-width:none] tablet:flex-col tablet:overflow-visible tablet:p-lg">
+            <div className="flex shrink-0 items-start gap-lg tablet:w-(--button-size-sm) tablet:flex-col">
               {/* Fond du dessin (demande de l'utilisateur) : carré à la couleur du fond, puis un séparateur. */}
               {withOptions(
                 "canvas",
@@ -792,13 +1006,15 @@ export function MotifEditor() {
                   {colorField(canvasBg, changeCanvasBg, canvasPicker, () => setCanvasPicker((v) => !v))}
                 </div>,
               )}
-              <div aria-hidden className="h-(--divider-width) w-full bg-shape-neutral-white" />
+              <div aria-hidden className={toolDivider} />
               {toolButton("hand", ["Hand", "HandFill"], introuvable.editeur_main, undefined, ctrl)}
               {withOptions(
                 "brush",
-                toolButton("paint", ["PaintBrush", "PaintBrushFilled"], introuvable.editeur_pinceau, () =>
-                  options.show("brush"),
-                ),
+                <div data-guide="1">
+                  {toolButton("paint", ["PaintBrush", "PaintBrushFilled"], introuvable.editeur_pinceau, () =>
+                    options.show("brush"),
+                  )}
+                </div>,
                 <div className="flex items-center gap-sm">
                   {brushes.map((b, i) => (
                     <IconButton
@@ -814,6 +1030,7 @@ export function MotifEditor() {
                   ))}
                 </div>,
               )}
+              {toolButton("fill", ["PaintBucket", "PaintBucketFill"], introuvable.editeur_remplir)}
               {withOptions(
                 "eraser",
                 toolButton(
@@ -835,11 +1052,11 @@ export function MotifEditor() {
                   />
                 </div>,
               )}
-              {toolButton("fill", ["PaintBucket", "PaintBucketFill"], introuvable.editeur_remplir)}
-              <div aria-hidden className="h-(--divider-width) w-full bg-shape-neutral-white" />
+              <div aria-hidden className={toolDivider} />
               {withOptions(
                 "color",
                 <IconButton
+                  data-guide="2"
                   icon="DropSimpleFill"
                   iconTint={colorValue}
                   label={introuvable.editeur_couleur}
@@ -924,6 +1141,7 @@ export function MotifEditor() {
               {withOptions(
                 "size",
                 <IconButton
+                  data-guide="2"
                   icon="DotsNine"
                   label={introuvable.editeur_tailles}
                   cursorLabel={introuvable.editeur_tailles}
@@ -946,18 +1164,60 @@ export function MotifEditor() {
                   ))}
                 </div>,
               )}
+              {/* Mobile : zoom dans la barre, bouton loupe dont les options sont − , zoom en %, + (choix de
+                  l'utilisateur) ; tablette et desktop : zoom posé sur la zone de dessin. */}
+              {!wide &&
+                withOptions(
+                  "zoom",
+                  <IconButton
+                    icon="MagnifyingGlass"
+                    label={introuvable.editeur_zoom}
+                    cursorLabel={introuvable.editeur_zoom}
+                    variant="secondary"
+                    color="white"
+                    onClick={() => options.show("zoom")}
+                  />,
+                  <div className="flex items-center gap-sm">
+                    <IconButton
+                      icon="Minus"
+                      label={introuvable.editeur_dezoomer}
+                      iconShadow
+                      cursorLabel={introuvable.editeur_dezoomer}
+                      variant="tertiary"
+                      color="white"
+                      onClick={() => zoomBy(-1)}
+                    />
+                    <p
+                      aria-label={introuvable.editeur_zoom}
+                      className="type-caption-regular text-text-neutral-white [text-shadow:var(--dropshadow-mid-text)]"
+                    >
+                      {`${Math.round(zoom * 100)}%`}
+                    </p>
+                    <IconButton
+                      icon="Plus"
+                      label={introuvable.editeur_zoomer}
+                      iconShadow
+                      cursorLabel={introuvable.editeur_zoomer}
+                      variant="tertiary"
+                      color="white"
+                      onClick={() => zoomBy(1)}
+                    />
+                  </div>,
+                )}
             </div>
-            <div className="flex flex-col gap-lg">
+            <div className="flex shrink-0 gap-lg tablet:flex-col">
               {/* Aides (demande de l'utilisateur) : comme un outil, active avec l'icône pleine ; tertiary à l'essai. */}
-              <IconButton
-                icon={helps ? "QuestionFill" : "Question"}
-                label={introuvable.editeur_aides}
-                cursorLabel={introuvable.editeur_aides}
-                variant="tertiary"
-                color={helps ? "active" : "white"}
-                aria-pressed={helps}
-                onClick={() => toggleHelps(!helps)}
-              />
+              {!noHelps && (
+                <IconButton
+                  icon={helps ? "QuestionFill" : "Question"}
+                  label={introuvable.editeur_aides}
+                  cursorLabel={introuvable.editeur_aides}
+                  variant="tertiary"
+                  color={helps ? "active" : "white"}
+                  aria-pressed={helps}
+                  onClick={() => toggleHelps(!helps)}
+                />
+              )}
               <IconButton
                 icon="TrashSimple"
                 label={introuvable.editeur_effacer}
@@ -968,7 +1228,10 @@ export function MotifEditor() {
               />
             </div>
           </div>
-          <div aria-hidden className="w-(--divider-width) bg-shape-neutral-white" />
+          <div
+            aria-hidden
+            className="h-(--divider-width) bg-shape-neutral-white tablet:h-auto tablet:w-(--divider-width)"
+          />
         </div>
 
         {/* Zone de dessin et zoom */}
@@ -987,13 +1250,20 @@ export function MotifEditor() {
             aria-label={introuvable.editeur_zone}
             className="absolute inset-0 size-full touch-none"
           />
-          {helps && <MotifShortcuts onClose={() => toggleHelps(false)} />}
+          {MotifDevShapes && (
+            <MotifDevShapes
+              engine={engine}
+              area={canvasRef}
+              colors={() => ({ paint: resolveColor(colorValue), centre: resolveColor("--shape-brand-darkest") })}
+            />
+          )}
+          {helps && !guide && !noHelps && <MotifShortcuts onClose={() => toggleHelps(false)} />}
           {/* Zoom posé sur la zone de dessin : --not-found-editor-zoom-rest-opacity, opaque au survol de sa rangée
               (zone Figma 5912:32183) ; le dessin passe dessous, seuls les boutons arrêtent le pointeur. */}
           <div
             ref={zoomRef}
             className={[
-              "pointer-events-none absolute inset-x-0 bottom-0 flex items-center justify-end gap-sm px-lg *:pointer-events-auto",
+              "pointer-events-none absolute inset-x-0 bottom-0 hidden items-center tablet:flex justify-end gap-sm px-lg *:pointer-events-auto",
               "transition-opacity duration-(--motion-duration-fast) ease-(--motion-ease-out) focus-within:opacity-100",
               zoomHover ? "opacity-100" : "opacity-(--not-found-editor-zoom-rest-opacity)",
             ].join(" ")}
@@ -1049,6 +1319,17 @@ export function MotifEditor() {
           )}
         </div>
       </div>
+      {guide && <MotifGuide onClose={closeGuide} />}
+      {leaveTo && (
+        <MotifLeave
+          onStay={() => setLeaveTo(null)}
+          onLeave={() => {
+            // Plus de garde (dessin abandonné) : la fenêtre native ne s'ouvre pas en plus.
+            setHasDrawing(false);
+            router.push(leaveTo);
+          }}
+        />
+      )}
       {card && (
         <MotifCard
           drawing={card}

@@ -123,6 +123,7 @@
     drop-shadow(3px 3px 2px #00000080) drop-shadow(8px 6px 4px #00000066);
   --double-flower-height: 45rem; /* 720 : hauteur fixe du composant desktop et tablette (décision, Figma 721,33) */
   --double-flower-mobile-scene-height: 32.1875rem; /* 515 : hauteur fixe de la scène mobile dans Figma (sans variable) */
+  --double-flower-step-dot: var(--spacing-xs); /* mobile : pastilles de l'indicateur d'étapes, 8 comme le guide de l'éditeur (essai, choix de l'utilisateur) */
   --double-flower-credit-height: 3.25rem; /* 52 : hauteur fixe du copyright desktop dans Figma (sans variable) */
 
   /*
@@ -257,6 +258,7 @@
   --not-found-editor-card-stroke: var(--p-number-2); /* contour du dessin de la carte : 2 (pas de variable de trait, primitive) */
   --not-found-editor-card-qr-size: calc(var(--typography-line-height-sub-heading) + var(--spacing-xxs) + var(--typography-line-height-caption)); /* QR code : carré à la hauteur du nom et de l'adresse (66, Figma) */
   --not-found-editor-card-signature-size: var(--p-number-24); /* signature de la carte : 24 à l'essai (Figma 40, demande de l'utilisateur) */
+  --not-found-editor-leave-width: 33rem; /* éditeur : pop-up « Quitter l'éditeur ? », 528 (valeur d'essai) */
   --not-found-editor-card-separator: var(--p-number-3); /* trait sous le dessin de la carte : 3 (Figma, en dur) */
   --not-found-editor-shortcuts-interval: 15s; /* éditeur : raccourcis, changement des 3 lignes (demande de l'utilisateur) */
   --not-found-editor-eraser-wheel-step: 1.15; /* éditeur : Espace + molette, facteur de taille de la gomme par cran (valeur d'essai) */
@@ -268,6 +270,10 @@
   --not-found-editor-options-delay: 1s; /* éditeur : options d'un outil masquées 1 s après la sortie du pointeur (demande de l'utilisateur) */
   --not-found-editor-swatch-outline-offset: var(--p-number-3); /* éditeur : contour de la pastille choisie, décalé (aperçu C choisi par l'utilisateur) */
   --not-found-editor-export-margin: var(--p-number-24); /* éditeur : marge autour du dessin quand le PNG est recadré (demande de l'utilisateur) */
+  --not-found-editor-guide-width: 21.25rem; /* éditeur, guide de découverte : largeur de la carte, 340 (aperçu C, valeur d'essai) */
+  --not-found-editor-guide-veil: var(--faded-black-60); /* éditeur, guide : voile autour de l'élément présenté (aperçu C, valeur d'essai) */
+  --not-found-editor-guide-dot: var(--spacing-xs); /* éditeur, guide : pastilles du suivi d'étapes, 8 (aperçu C, valeur d'essai) */
+  --not-found-editor-guide-duration: var(--motion-duration-base); /* éditeur, guide : déplacement du cadre d'une étape à l'autre (valeur d'essai) */
   --not-found-button-width: 310px; /* bouton « Retourner à l'accueil » (Figma, en dur) */
   --not-found-hole-size: 12px; /* trou noir dans le logo (Figma node 5843:22086, en dur) */
   --not-found-hole-top: 304.39px; /* centre du trou, depuis le haut du logo (Figma, en dur) */
@@ -536,6 +542,7 @@
   /* Petite barre flottante (FloatingScrollBar, sans piste, demande de l'utilisateur) : valeurs d'essai. */
   --scroll-bar-float-min: var(--p-number-24); /* hauteur minimale du curseur */
   --scroll-bar-float-hide-delay: 1s; /* masquée ce délai après le dernier défilement (hors survol) */
+  --scroll-bar-float-hover-zone: var(--spacing-lg); /* survol : 24 autour du curseur (demande de l'utilisateur) */
 
   /*
    * dégradé — style Figma « shadowBehindVisual » : ombre simulée derrière le visuel (colorBackground).

@@ -1,7 +1,7 @@
 import { hiddenLogoSize, hiddenShapeSlug, type HiddenShapeData, type HiddenShapeId } from "./hidden-shapes";
 
 /*
- * Trace une forme de l'éditeur de motifs en logos de 4 px, à une taille donnée (règles de l'éditeur, motif-dessin.html) :
+ * Trace une forme de l'éditeur de motifs en logos de 4 px, à une taille donnée (règles de l'ancien éditeur, reprises dans MotifDevShapes) :
  * jaune = plein, jaune foncé = centre (couleur secondaire), noir = colorié (seuil d'un contour). Grille en quinconce du
  * motif. Formes 7 et plus (dessins de la page 404) : seuil des détails plus bas (0,3 au lieu de 0,5), pour garder les
  * traits fins.

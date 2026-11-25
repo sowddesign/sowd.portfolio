@@ -82,6 +82,9 @@ export async function decodeMotif(code: string): Promise<MotifSnapshot | null> {
   }
 }
 
+/** Éditeur demandé directement par l'adresse (#editeur : bouton « Accéder à l'éditeur » de la fin de la méthode). */
+export const editorRequested = () => new URLSearchParams(location.hash.slice(1)).has("editeur");
+
 /** Dessin partagé dans l'adresse de la page : identifiant de lien court ou code, ou null. */
 export function sharedLink(): { id: string } | { code: string } | null {
   const params = new URLSearchParams(location.hash.slice(1));

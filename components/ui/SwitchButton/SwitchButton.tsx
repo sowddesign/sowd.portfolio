@@ -14,7 +14,7 @@ import { buttonTones, colorTransition } from "../button-tones";
  * Survol et appui (demande de l'utilisateur : états du bouton, seul le rond change de couleur) : off comme l'icône
  * d'un tertiary brand (darkest, puis black) ; on : somber, puis darkest (le brand bright du tertiary black se
  * confondrait avec le rail).
- * Glissement « gouttelette » (proposition F, choix de l'utilisateur, aperçu tools/motif-editor/apercu-switch.html) :
+ * Glissement « gouttelette » (proposition F, choix de l'utilisateur) :
  * le rond part (--switch-knob-duration), une gouttelette de sa couleur (--switch-drop-size) reste en arrière puis le
  * rattrape (--switch-drop-duration) ; un filtre « goo » (flou puis seuil sur l'opacité) les fait fusionner comme deux
  * gouttes. Mouvement réduit : bascule sans glissement.

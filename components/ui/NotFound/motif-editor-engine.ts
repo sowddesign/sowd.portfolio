@@ -2,10 +2,10 @@ import { logoPatternPaths } from "../LogoPattern/logo-pattern-paths";
 import { tokenDuration } from "../token-duration";
 
 /*
- * Éditeur de dessin du motif logo (page 404, après « Dessiner ») — reprise optimisée de tools/motif-editor/motif-dessin.html.
+ * Éditeur de dessin du motif logo (page 404, après « Dessiner ») — reprise optimisée de l'ancien éditeur (supprimé).
  * Grille en quinconce du motif (pas, rangée et décalage du footer, repère interne du logo 442).
  *
- * Tailles (choix de l'utilisateur, option B de l'aperçu tools/motif-editor/apercu-tailles.html) : grilles emboîtées,
+ * Tailles (choix de l'utilisateur, option B de l'aperçu des tailles) : grilles emboîtées,
  * le dernier logo posé gagne. Les grilles sont centrées sur la même origine : le centre de chaque logo de 24 tombe sur un
  * centre de 12, lui-même sur un centre de 4 (24 = 2 × 12, 12 = 3 × 4). Un logo posé efface les logos d'autres tailles
  * qu'il recouvre (centres plus proches que OVERLAP × la moyenne des deux tailles) : aucun chevauchement.
@@ -87,6 +87,12 @@ export type MotifEditor = {
   exportPng: (options: { background: string | null; crop?: { margin: number } }) => Promise<Blob | null>;
   /** Dessin à partager : couleurs utilisées, puis logos dans l'ordre de pose. */
   snapshot: () => MotifSnapshot;
+  /** Efface le dessin puis pose une forme (outil local des formes), en une action, taille choisie, sur la partie visible : classify dit, pour
+   *  le centre d'un logo (px de la zone) et un rayon (px), s'il est plein, centre ou vide. */
+  stampShape: (
+    classify: (x: number, y: number, radius: number) => "paint" | "centre" | null,
+    colors: { paint: string; centre: string },
+  ) => void;
   /** Remplace le dessin par un dessin partagé (sans historique) ; logos hors du monde de cet écran ignorés. */
   load: (snapshot: MotifSnapshot) => void;
   destroy: () => void;
@@ -131,6 +137,15 @@ export function createMotifEditor(
   /* Palette : couleurs utilisées (indice 0 = couleur par défaut, shape/brand/brand). */
   const palette = [tokenColor(host, "--shape-brand-brand")];
   let colorIndex = 0;
+  /** Indice d'une couleur dans la palette, ajoutée au besoin (-1 si la palette est pleine). */
+  const paletteIndex = (color: string) => {
+    let i = palette.indexOf(color);
+    if (i < 0 && palette.length < 256) {
+      palette.push(color);
+      i = palette.length - 1;
+    }
+    return i;
+  };
 
   /* Monde : carré du plus grand côté de l'écran, pour couvrir rotation et redimensionnement sans reconstruire. */
   const worldSide = Math.max(screen.width, screen.height, window.innerWidth, window.innerHeight);
@@ -420,7 +435,8 @@ export function createMotifEditor(
     return false;
   };
   /** Parcours de voisin en voisin (6 voisins de la quinconce) depuis start, tant que accept(j) ; dans la zone de
-   *  dessin au zoom 1 (0..vw, 0..vh), qui sert de bord. */
+   *  dessin au zoom 1 (0..vw, 0..vh), qui sert de bord, débordée d'un logo de chaque côté (demande de l'utilisateur :
+   *  l'export recadré garde des logos entiers jusqu'au bord). */
   const flood = (g: Grid, start: number, accept: (j: number) => boolean) => {
     const seen = new Uint8Array(g.cells.length);
     const queue = [start];
@@ -445,7 +461,7 @@ export function createMotifEditor(
         seen[j] = 1;
         const x = centreX(g, j);
         const y = centreY(g, j);
-        if (x < 0 || y < 0 || x > vw || y > vh) continue;
+        if (x < -g.size || y < -g.size || x > vw + g.size || y > vh + g.size) continue;
         if (accept(j)) queue.push(j);
       }
     }
@@ -465,7 +481,7 @@ export function createMotifEditor(
   /* Pot de peinture, comme dans un logiciel de dessin (demande de l'utilisateur) :
      - sur un logo colorié : recolore les logos de même taille et de même couleur qui se touchent ;
      - sur le vide : remplit de logos de la taille choisie toute la zone vide qui se touche, jusqu'aux logos ou au bord
-       de la zone de dessin. */
+       de la zone de dessin, débordé d'un logo. */
   const fillAt = (sx: number, sy: number) => {
     const [wx, wy] = toWorld(sx, sy);
     const hit = paintedAt(wx, wy);
@@ -684,12 +700,35 @@ export function createMotifEditor(
       tool = on ? "erase" : chosen;
     },
     setColor(color) {
-      let i = palette.indexOf(color);
-      if (i < 0 && palette.length < 256) {
-        palette.push(color);
-        i = palette.length - 1;
-      }
+      const i = paletteIndex(color);
       if (i >= 0) colorIndex = i;
+    },
+    stampShape(classify, colors) {
+      if (mode !== "idle") return;
+      const ip = Math.max(0, paletteIndex(colors.paint));
+      const ic = Math.max(0, paletteIndex(colors.centre));
+      const [x0, y0] = toWorld(0, 0);
+      const [x1, y1] = toWorld(vw, vh);
+      begin();
+      // Dessin effacé avant la forme (demande de l'utilisateur), dans la même action : annuler le rend.
+      for (const g of grids.values()) for (let i = 0; i < g.cells.length; i++) if (g.cells[i]) setCell(g, i, 0, 0);
+      each(grid, x0, y0, x1, y1, (cell) => {
+        const cx = centreX(grid, cell);
+        const cy = centreY(grid, cell);
+        const kind = classify(cx * zoom + tx, cy * zoom + ty, grid.size * zoom * 0.45);
+        if (!kind) return;
+        // Comme le pinceau : logos d'autres tailles recouverts effacés.
+        for (const g of grids.values()) {
+          if (g === grid) continue;
+          within(g, cx, cy, ((grid.size + g.size) / 2) * OVERLAP, (i) => {
+            if (g.cells[i]) setCell(g, i, 0, 0);
+          });
+        }
+        setCell(grid, cell, ++seq, kind === "centre" ? ic : ip);
+      });
+      commit();
+      sprites.clear();
+      render();
     },
     setEraserSize(px) {
       eraserSize = px;
@@ -773,45 +812,58 @@ export function createMotifEditor(
     },
     exportPng({ background: fill, crop }) {
       // Dessin seul, sur la couleur de fond choisie (ou transparent).
-      let sx = 0;
-      let sy = 0;
-      let w = layer.width;
-      let h = layer.height;
-      let pad = 0;
+      const pad = crop ? Math.round(crop.margin * dpr) : 0;
+      const out = document.createElement("canvas");
+      const x = out.getContext("2d")!;
       if (crop) {
-        // Boîte des pixels peints du calque, plus la marge de chaque côté.
-        const data = lctx.getImageData(0, 0, layer.width, layer.height).data;
-        let x0 = layer.width;
-        let y0 = layer.height;
-        let x1 = -1;
-        let y1 = -1;
-        for (let y = 0; y < layer.height; y++) {
-          const row = y * layer.width;
-          for (let x = 0; x < layer.width; x++) {
-            if (!data[(row + x) * 4 + 3]) continue;
-            if (x < x0) x0 = x;
-            if (x > x1) x1 = x;
-            if (y < y0) y0 = y;
-            y1 = y;
+        // Dessin entier, logos complets (même à cheval sur le bord de l'écran ou hors de la vue zoomée) : boîte de tous
+        // les logos posés, contour compris, redessinés à la résolution affichée.
+        const all: { n: number; g: Grid; i: number }[] = [];
+        for (const g of grids.values())
+          for (let i = 0; i < g.cells.length; i++) if (g.cells[i]) all.push({ n: g.cells[i], g, i });
+        if (all.length) {
+          all.sort((a, b) => a.n - b.n);
+          const scale = zoom * dpr;
+          let bx0 = Infinity,
+            by0 = Infinity,
+            bx1 = -Infinity,
+            by1 = -Infinity;
+          for (const { g, i } of all) {
+            const half = g.size / 2 + (STROKE / 2) * g.k;
+            bx0 = Math.min(bx0, centreX(g, i) - half);
+            by0 = Math.min(by0, centreY(g, i) - half);
+            bx1 = Math.max(bx1, centreX(g, i) + half);
+            by1 = Math.max(by1, centreY(g, i) + half);
           }
-        }
-        if (x1 >= 0) {
-          sx = x0;
-          sy = y0;
-          w = x1 - x0 + 1;
-          h = y1 - y0 + 1;
-          pad = Math.round(crop.margin * dpr);
+          // Dessin qui dépasse un bord de la zone de dessin (remplissage débordé d'un logo) : coupé à ce bord, rangées
+          // et colonnes continues jusqu'au bord, sans bord de fond visible (demande de l'utilisateur).
+          bx0 = Math.max(0, bx0);
+          by0 = Math.max(0, by0);
+          bx1 = Math.min(vw, bx1);
+          by1 = Math.min(vh, by1);
+          out.width = Math.ceil((bx1 - bx0) * scale) + 2 * pad;
+          out.height = Math.ceil((by1 - by0) * scale) + 2 * pad;
+          if (fill) {
+            x.fillStyle = fill;
+            x.fillRect(0, 0, out.width, out.height);
+          }
+          for (const { g, i } of all) {
+            const sp = spriteOf(g.size, g.colors[i]);
+            const px = (centreX(g, i) - g.size / 2 - bx0) * scale + pad;
+            const py = (centreY(g, i) - g.size / 2 - by0) * scale + pad;
+            x.drawImage(sp.c, Math.round(px) - sp.pad, Math.round(py) - sp.pad);
+          }
+          return new Promise((resolve) => out.toBlob(resolve, "image/png"));
         }
       }
-      const out = document.createElement("canvas");
-      out.width = w + 2 * pad;
-      out.height = h + 2 * pad;
-      const x = out.getContext("2d")!;
+      // Sans recadrage (ou dessin vide) : la zone de dessin telle qu'affichée.
+      out.width = layer.width;
+      out.height = layer.height;
       if (fill) {
         x.fillStyle = fill;
         x.fillRect(0, 0, out.width, out.height);
       }
-      x.drawImage(layer, sx, sy, w, h, pad, pad, w, h);
+      x.drawImage(layer, 0, 0);
       return new Promise((resolve) => out.toBlob(resolve, "image/png"));
     },
     destroy() {
