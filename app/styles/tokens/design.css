@@ -243,7 +243,6 @@
    */
   --not-found-digit-height: 527px; /* « 4 » vectoriel (glyphe de Merriweather Sans Bold à 419 px, Figma en dur) : hauteur de l'ancien calque texte Figma */
   --not-found-logo-size: 400px; /* logo entre les deux « 4 » (Figma, en dur) */
-  --not-found-seed-size: 12.628px; /* graine en bas de l'écran, à moitié hors champ (Figma, en dur) */
   --not-found-sweep-radius: 120px; /* « Tout révéler » : rayon de la gomme qui balaie l'écran, × proportion de l'écran (valeur d'essai) */
   --not-found-sweep-duration: 1.6s; /* « Tout révéler » : durée du balayage complet (valeur d'essai) */
   --not-found-editor-button-size: 164px; /* bouton « Accéder à l'éditeur » au centre du logo, fleur plantée (relevé sur la maquette de l'utilisateur, à valider) */
@@ -275,11 +274,7 @@
   --not-found-editor-guide-dot: var(--spacing-xs); /* éditeur, guide : pastilles du suivi d'étapes, 8 (aperçu C, valeur d'essai) */
   --not-found-editor-guide-duration: var(--motion-duration-base); /* éditeur, guide : déplacement du cadre d'une étape à l'autre (valeur d'essai) */
   --not-found-button-width: 310px; /* bouton « Retourner à l'accueil » (Figma, en dur) */
-  --not-found-hole-size: 12px; /* trou noir dans le logo (Figma node 5843:22086, en dur) */
-  --not-found-hole-top: 304.39px; /* centre du trou, depuis le haut du logo (Figma, en dur) */
-  --not-found-drop-tolerance: 48px; /* graine lâchée à moins de cette distance du centre du trou (valeur d'essai) */
-  --not-found-sink-duration: var(--motion-duration-base); /* graine qui glisse dans le trou puis s'y enfonce (valeur d'essai) */
-  --not-found-fade-duration: 400ms; /* graine enfoncée : fondu des textes, du bouton, de la tige et du trou (valeur d'essai) */
+  --not-found-fade-duration: 400ms; /* fondu de la 404 (fleur plantée, ouverture de l'éditeur) (valeur d'essai) */
   --not-found-leaf-duration: 700ms; /* un « 4 » se replie et devient une feuille (valeur d'essai) */
   --not-found-spiral-duration: 1000ms; /* la feuille part en spirale et rentre dans le logo (valeur d'essai) */
   --not-found-stem-top: 356px; /* haut de la tige cachée, depuis le haut du logo (relevé sur la maquette de l'utilisateur, à valider) */

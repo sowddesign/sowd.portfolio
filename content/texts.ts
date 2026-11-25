@@ -61,6 +61,7 @@ export const commun = texts("commun.md", communSource, [
   "visuel_remettre_noir",
   "visuel_recommencer",
   "visuel_bien_joue",
+  "visuel_editeur",
   "pied_signature",
   "pied_annee",
   "pied_design_par",
@@ -81,6 +82,7 @@ export const commun = texts("commun.md", communSource, [
   "curseur_menu_fermer",
   "curseur_visuel_afficher",
   "curseur_visuel_remettre_noir",
+  "curseur_visuel_editeur",
   "curseur_voir_projet",
   "curseur_bientot",
   "curseur_photos_precedente",
@@ -267,7 +269,6 @@ export const introuvable = texts("pages/introuvable.md", introuvableSource, [
   "editeur_telecharge",
   "editeur_fichier",
   "indice",
-  "graine",
 ]);
 
 export const aPropos = texts(

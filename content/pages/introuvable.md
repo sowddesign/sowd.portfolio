@@ -17,7 +17,7 @@ acceder_editeur: Dessiner
 # Texte du curseur au survol de ce bouton
 curseur_editeur: Éditeur sowd
 # Bouton au centre du logo pendant le jeu : découvre toutes les formes cachées et la tige (nom et texte du curseur)
-tout_reveler: Tout révéler
+tout_reveler: Révéler tous les secrets
 
 # Éditeur de dessin (après « Dessiner »)
 # Guide de découverte, à la première ouverture de l'éditeur (3 étapes)
@@ -126,8 +126,6 @@ editeur_telecharge: Dessin téléchargé, tu le retrouveras dans tes télécharg
 # Nom du fichier exporté
 editeur_fichier: dessin.png
 # Indice de la page secrète
-indice: Cette page est secrète, mais de par les secrets qu’elle renferme. Sauras-tu tous les découvrir?
+indice: Cette page est remplie de secrets. Sauras-tu tous les découvrir?
 
-# Graine à tirer (lecteur d'écran)
-graine: Graine à tirer jusqu’au logo
 ---

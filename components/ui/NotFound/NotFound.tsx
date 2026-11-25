@@ -30,7 +30,6 @@ const MotifEditor = dynamic(() => import("./MotifEditor").then((m) => m.MotifEdi
  * Page 404 — Figma « Frame 1000005344 » (fichier portfolio, node 5843:21876), desktop, tests.
  * « 4 » + logo (toUseLogo) + « 4 » centrés ; dessous, titre, texte, bouton vers l'accueil et indice ;
  * tige cachée sous le logo, qui se dessine au survol (HiddenStem).
- * Graine à tirer jusqu'au trou du logo (SeedStem) : mise de côté (demande de l'utilisateur), on y reviendra peut-être.
  * Tige entièrement découverte : fondu des textes, du bouton, de la tige et du trou ; les « 4 » deviennent des feuilles qui
  * rentrent en spirale dans le logo, qui tourne (plant-sequence). Mouvement réduit : les « 4 » disparaissent d'un coup.
  * « Tout révéler » (œil au centre du logo) : balayage en allers-retours qui découvre tout (reveal-sweep), puis la séquence.
@@ -87,7 +86,7 @@ export function NotFound() {
   const leavesRef = useRef<SVGSVGElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
   const leftDigitRef = useRef<HTMLSpanElement | null>(null);
-  /** Séquence après la graine enfoncée : planted (fondu, feuilles, logo qui tourne), done (fin), editor (éditeur). */
+  /** Séquence après la tige révélée : planted (fondu, feuilles, logo qui tourne), done (fin), editor (éditeur). */
   const [phase, setPhase] = useState<"play" | "planted" | "done" | "editor">("play");
   /* Lien de partage d'un dessin (#dessin=…, #d=…) ou #editeur (fin de la méthode) : l'éditeur s'ouvre directement,
      sans la 404 (demandes de l'utilisateur). */
@@ -186,7 +185,7 @@ export function NotFound() {
               {...editorCursor.handlers}
             >
               {/* Couleurs (demande de l'utilisateur) : fond somber et texte blanc au repos, survol et clic du primary
-                brand. Un mot puis l'icône PaintBrush en dessous, centrés (choix de l'utilisateur). */}
+                brand. Icône PaintBrush seule, centrée (demande de l'utilisateur). */}
               <TextualButton
                 onClick={openEditor}
                 className={[
@@ -196,15 +195,15 @@ export function NotFound() {
                   "active:bg-background-buttons-neutral-black! active:text-text-brand-bright!",
                 ].join(" ")}
               >
-                {/* Mobile : pinceau seul (choix de l'utilisateur), le mot reste lu par les lecteurs d'écran. */}
+                {/* Pinceau seul sur tous les écrans (demande de l'utilisateur), le mot reste lu par les lecteurs d'écran. */}
                 <span className="flex flex-col items-center gap-xs">
-                  <span className={layout?.name === "mobile" ? "sr-only" : ""}>{introuvable.acceder_editeur}</span>
+                  <span className="sr-only">{introuvable.acceder_editeur}</span>
                   <Icon name="PaintBrush" size="var(--icon-md)" />
                 </span>
               </TextualButton>
               {editorCursor.node}
             </div>
-            {/* Jeu : au centre du logo, bouton brand tertiary « Tout révéler » (demande de l'utilisateur). */}
+            {/* Jeu : au centre du logo, bouton brand tertiary « Révéler tous les secrets » (demande de l'utilisateur). */}
             <div
               className={`absolute top-1/2 left-1/2 -translate-1/2 ${fade} ${sweeping ? "pointer-events-none opacity-0" : ""}`}
             >

@@ -22,6 +22,8 @@ import { reducedMotionQuery, touchQuery, useMediaQuery } from "../use-media-quer
  * - en cours (au moins un logo coloré) : œil + bouton reset (iconButton primary black) ;
  * - terminé (dernier logo coloré) : le reset part, l'œil devient le textualButton « Bien joué ! Recommencer » ;
  * - clic sur l'œil : tous les logos en brand, même textualButton avec seulement « Recommencer ».
+ * - terminé ou révélé : en dessous, iconButton pinceau vers l'éditeur de dessin, aux couleurs du bouton « Dessiner » de
+ *   la 404 (demandes de l'utilisateur).
  * Reset et « Recommencer » remettent tous les logos en noir (retour au départ).
  *
  * Mise en page (Figma) : boutons en colonne alignés à droite (œil en haut, reset en dessous), écart spacing/sm ;
@@ -29,6 +31,9 @@ import { reducedMotionQuery, touchQuery, useMediaQuery } from "../use-media-quer
  */
 
 type Logo = ReturnType<typeof patternLogos>[number];
+
+/** Éditeur de dessin du motif : page 404, ouverte directement sur l'éditeur. */
+const EDITOR_HREF = "/page-introuvable#editeur";
 
 // Durée pendant laquelle le coloriage est désactivé après un reset (ms, demandée par l'utilisateur).
 const RESET_COOLDOWN = 1000;
@@ -118,12 +123,30 @@ export function FooterVisual({ className = "" }: FooterVisualProps) {
       {touch && !started && !done && <PaintHint animated={!reducedMotion} />}
 
       {done ? (
-        // Largeur ajustée au contenu (le textualButton occupe toute la largeur de son parent).
-        <div className="relative">
-          <TextualButton variant="primary" color="white" icon="ArrowCounterClockwise" iconPosition="right" onClick={restart}>
-            <span className="whitespace-nowrap">{paintedAll && !revealed ? commun.visuel_bien_joue : commun.visuel_recommencer}</span>
-          </TextualButton>
-        </div>
+        <>
+          {/* Largeur ajustée au contenu (le textualButton occupe toute la largeur de son parent). */}
+          <div className="relative">
+            <TextualButton variant="primary" color="white" icon="ArrowCounterClockwise" iconPosition="right" onClick={restart}>
+              <span className="whitespace-nowrap">{paintedAll && !revealed ? commun.visuel_bien_joue : commun.visuel_recommencer}</span>
+            </TextualButton>
+          </div>
+          {/* Pinceau sous « Recommencer » (tout coloré ou révélé, demande de l'utilisateur) : ouvre l'éditeur de dessin
+              de la 404 (#editeur), aligné à droite comme l'œil. */}
+          <IconButton
+            icon="PaintBrush"
+            label={commun.visuel_editeur}
+            cursorLabel={commun.curseur_visuel_editeur}
+            color="white"
+            href={EDITOR_HREF}
+            // Couleurs du bouton « Dessiner » de la page 404 (demande de l'utilisateur) : somber et blanc, bright et noir
+            // au survol, noir et bright à l'appui.
+            className={[
+              "relative bg-background-buttons-brand-somber! *:text-text-neutral-white!",
+              "hover:bg-background-buttons-brand-bright! hover:*:text-text-neutral-black!",
+              "active:bg-background-buttons-neutral-black! active:*:text-text-brand-bright!",
+            ].join(" ")}
+          />
+        </>
       ) : (
         <IconButton
           icon="Eye"

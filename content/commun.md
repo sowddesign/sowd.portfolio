@@ -49,6 +49,8 @@ visuel_afficher: Afficher tous les logos
 visuel_remettre_noir: Remettre les logos en noir
 visuel_recommencer: Recommencer
 visuel_bien_joue: Bien joué ! Recommencer
+# Bouton pinceau sous « Recommencer » (tout coloré ou révélé) : ouvre l'éditeur de dessin (lecteur d'écran)
+visuel_editeur: Ouvrir l’éditeur de dessin
 
 # Bas du pied de page
 pied_signature: sowd.design
@@ -86,6 +88,7 @@ curseur_menu_ouvrir: Naviguer
 curseur_menu_fermer: Fermer
 curseur_visuel_afficher: Afficher
 curseur_visuel_remettre_noir: Recommencer
+curseur_visuel_editeur: Éditeur sowd
 curseur_voir_projet: Voir le projet
 curseur_bientot: Bientôt disponible
 curseur_photos_precedente: Précédente

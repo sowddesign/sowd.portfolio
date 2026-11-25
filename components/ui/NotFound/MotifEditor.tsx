@@ -909,13 +909,18 @@ export function MotifEditor() {
               data-guide="3"
               className={`relative col-span-2 col-start-9 ${headerActions}`}
             >
+              {/* Réglages ouverts : primary jusqu'à leur fermeture ou l'appui, qui télécharge et les ferme (demande de
+                  l'utilisateur). */}
               <TextualButton
-                variant="tertiary"
+                variant={options.open === "download" && hasDrawing ? "primary" : "tertiary"}
                 color="white"
                 disabled={!hasDrawing}
                 icon="DownloadSimple"
                 iconPosition="right"
-                onClick={exportPng}
+                onClick={() => {
+                  options.close();
+                  void exportPng();
+                }}
               >
                 {introuvable.editeur_exporter}
               </TextualButton>
