@@ -22,6 +22,10 @@ tags:
 
 # Nom du fichier image de la tuile, placé dans public/projects/mon-projet/ (obligatoire)
 image: flashinvaders.webp
+
+# Recadrage de l'image (facultatif) : hauteur du point à placer au centre du cadre quand l'image est coupée,
+# en % depuis le haut de l'image (ex. 84% = le logo en bas de l'image). Sans cette ligne : centre de l'image.
+cadrage: 84%
 ---
 
 Texte de la page projet (pas encore affiché).

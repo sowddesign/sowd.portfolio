@@ -64,10 +64,7 @@ import { readingServerSnapshot, readingSnapshot, saveReading, subscribeReading }
  *   L'adresse suit la page ouverte (useAddressSync) : rechargement et lien partagé rouvrent cette page.
  */
 
-/** Adresse d'une page de la méthode, ex. methodeHref("design-system") → "/?methode=design-system". */
-export function methodeHref(slug: string) {
-  return `/?methode=${encodeURIComponent(slug)}`;
-}
+export { methodeHref } from "./methode-href";
 
 /** Page visée par l'adresse (?methode=…) : ouverte (étape, page) à l'image suivante, une fois l'affichage
     desktop ou mobile choisi (l'autre affichage, monté un instant, est annulé).

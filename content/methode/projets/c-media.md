@@ -31,7 +31,7 @@ J’ai travaillé aux côtés d’un lead designer (le designer référent de l�
 <<
 
 - UX / UI Designer
-- Design system manager
+- Design System Manager
 
 ||
 

@@ -5,10 +5,12 @@ import { ImageLightboxGroup } from "@/components/ui/ImageLightbox";
 import { OthersProjects } from "@/components/ui/OthersProjects";
 import { getProjects } from "@/lib/projects";
 import { CMediaContent } from "./CMediaContent";
+import { FlashInvadersContent } from "./FlashInvadersContent";
 
 /*
  * Page d'un projet (/projects/<slug>), générée depuis content/projects/<slug>/index.md.
- * En-tête avec photo (headPage Container) — détails = type, titre = title, photo = image, tags = tags.
+ * En-tête avec photo (headPage Container) — détails = type, titre = title, photo = image ; sans les tags sur la photo
+ * (demande de l'utilisateur : ils sont déjà dans le contexte de la page ; ils restent sur les tuiles).
  * Contenu propre à chaque projet qui a sa maquette (CONTENTS), suivi des autres projets (othersProject).
  * Les projets sans maquette n'ont pour l'instant que l'en-tête.
  * params est lu dans un enfant sous <Suspense> (Partial Prefetching de Next 16) : le cadre de la page
@@ -18,6 +20,7 @@ import { CMediaContent } from "./CMediaContent";
 /** Contenu de page par projet (nom du dossier dans content/projects/). */
 const CONTENTS: Record<string, ComponentType> = {
   "c-media": CMediaContent,
+  flashinvaders: FlashInvadersContent,
 };
 
 export function generateStaticParams() {
@@ -35,15 +38,18 @@ async function ProjectBody({ params }: { params: PageProps<"/projects/[slug]">["
   const Content = CONTENTS[slug];
   return (
     <>
-      <HeadPageContainer details={project.type} title={project.title} image={project.image} tags={project.tags} />
+      <HeadPageContainer details={project.type} title={project.title} image={project.image} imageFocus={project.imageFocus} tags={[]} />
       {Content && (
         <>
           <ImageLightboxGroup>
-            <Content />
+            {/* Limite de longueur des lignes de texte (paragraphes et éléments de liste), pour toutes les pages projet. */}
+            <div className="flex w-full flex-col [&_li]:max-w-(--project-text-max-width) [&_p]:max-w-(--project-text-max-width)">
+              <Content />
+            </div>
           </ImageLightboxGroup>
           <OthersProjects
             currentSlug={slug}
-            projects={projects.map(({ slug, title, year, image, href, isNew, available }) => ({ slug, title, year, image, href, isNew, available }))}
+            projects={projects.map(({ slug, title, year, image, imageFocus, href, isNew, available }) => ({ slug, title, year, image, imageFocus, href, isNew, available }))}
           />
         </>
       )}

@@ -73,7 +73,7 @@ function Definition({ groups, mobile }: { groups: MethodeDefinitionGroup[]; mobi
           <div key={i} className={`flex flex-col ${spacing.line}`}>
             {group.lines.map((line, j) => (
               <p key={j} className="type-body-regular max-w-(--methode-text-max-width) text-pretty">
-                <RichLines lines={[line]} size="body" linkCursorLabel={commun.curseur_voir_projet} />
+                <RichLines lines={[line]} size="body" linkCursorLabel={commun.curseur_voir_projet} newTab />
               </p>
             ))}
           </div>
@@ -81,7 +81,7 @@ function Definition({ groups, mobile }: { groups: MethodeDefinitionGroup[]; mobi
           <div key={i} className={`flex flex-col ${spacing.sub}`}>
             {group.title && (
               <p className="type-body-accentuation text-pretty">
-                <RichLines lines={[group.title]} size="body" />
+                <RichLines lines={[group.title]} size="body" newTab />
               </p>
             )}
             <ol className={mobile ? `flex flex-col ${spacing.sub}` : "grid grid-cols-2 gap-lg"}>
@@ -89,7 +89,7 @@ function Definition({ groups, mobile }: { groups: MethodeDefinitionGroup[]; mobi
                 <li key={number} className="flex items-start gap-sm">
                   <span className="type-body-accentuation w-(--p-number-20) shrink-0">{number}</span>
                   <p className="type-body-regular max-w-(--methode-text-max-width) min-w-0 flex-1 text-pretty">
-                    <RichLines lines={[line]} size="body" linkCursorLabel={commun.curseur_voir_projet} />
+                    <RichLines lines={[line]} size="body" linkCursorLabel={commun.curseur_voir_projet} newTab />
                   </p>
                 </li>
               ))}
@@ -380,6 +380,8 @@ export function MethodePage({
       icon={compactNav ? undefined : "ArrowUpRight"}
       iconPosition="right"
       href={content.project.href}
+      // Renvoi vers une autre page : nouvel onglet (demande de l'utilisateur).
+      newTab
       // Projet pas encore accessible (« off » dans content/projects/ordre.yaml) : bouton grisé (demande de l'utilisateur).
       disabled={!content.project.available}
     >

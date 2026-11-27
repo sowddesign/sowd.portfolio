@@ -13,5 +13,11 @@
 @custom-variant desktop (@media (width > 1300px));
 
 /* Seuils propres à un composant (décisions de l'utilisateur) :
- *   schéma d'équipe UX : format mobile jusqu'à 900px inclus → schema-equipe: au-delà. */
-@custom-variant schema-equipe (@media (width > 900px));
+ *   schéma d'équipe UX : selon la largeur du schéma lui-même (requête de conteneur), pour que les textes ne se
+ *   chevauchent pas dans une colonne étroite : format réduit jusqu'à 780px de large, desktop au-delà (largeur mesurée :
+ *   au-delà, les intitulés et les liens du milieu tiennent dans leurs cases sans se chevaucher). Intitulés courts du format réduit : voir le composant. */
+@custom-variant schema-equipe (@container schema-equipe (width > 780px));
+/*   page projet C-Média : une colonne en mobile, mise en page 4 colonnes au-delà de 740px (choix de l'utilisateur). */
+@custom-variant project-desktop (@media (width > 740px)); /* mise en page 4 colonnes dès la tablette */
+/*   au-delà de 972px : textes et écarts à leur taille desktop (en tablette : réduits, choix de l'utilisateur). */
+@custom-variant project-wide (@media (width > 972px));

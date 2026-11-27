@@ -33,7 +33,7 @@ Il a été pensé pour expliquer mon métier à tout le monde, y compris à ceux
 
 ||
 
-- Design system manager
+- Design System Manager
 - Chargé de documentation
 
 >>

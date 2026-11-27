@@ -5,6 +5,7 @@ import projetsSource from "./pages/projets.md";
 import introuvableSource from "./pages/introuvable.md";
 import communSource from "./commun.md";
 import cMediaSource from "./projects/c-media/page.md";
+import flashInvadersSource from "./projects/flashinvaders/page.md";
 import { iconNames, type IconName } from "@/components/ui/Icon/icon-names";
 
 /*
@@ -411,12 +412,15 @@ export const cMedia = texts(
     "equipe_texte_4",
     "schema_lead",
     "schema_lead_label",
+    "schema_lead_court",
     "schema_po",
     "schema_po_label",
     "schema_moi",
     "schema_moi_label",
+    "schema_moi_court",
     "schema_devs",
     "schema_devs_label",
+    "schema_devs_court",
     "schema_validation",
     "schema_cadrage",
     "schema_specifications_desktop",
@@ -467,5 +471,123 @@ export const cMedia = texts(
     "appris_4_texte",
     "appris_4_suite",
   ],
-  ["contexte_liste", "entreprise_canaux"],
+  ["contexte_liste", "entreprise_canaux", "roles"],
 );
+
+/** Liste de blocs attendue dans un fichier de textes, chaque bloc avec les champs donnés. */
+function blocks<const F extends string>(
+  file: string,
+  source: Record<string, string | string[] | Record<string, string>[]>,
+  key: string,
+  fields: readonly F[],
+) {
+  const value = source[key];
+  if (!Array.isArray(value) || value.some((item) => typeof item !== "object")) {
+    throw new Error(`content/${file} : la liste de blocs « ${key} » est manquante.`);
+  }
+  (value as Record<string, string>[]).forEach((block, i) => {
+    for (const field of fields) {
+      if (typeof block[field] !== "string") throw new Error(`content/${file} : « ${field} » manque dans le bloc ${i + 1} de « ${key} ».`);
+    }
+  });
+  return value as Record<F, string>[];
+}
+
+const FLASH_INVADERS = "projects/flashinvaders/page.md";
+
+/** Page projet Flash Invaders (content/projects/flashinvaders/page.md). */
+export const flashInvaders = {
+  ...texts(
+    FLASH_INVADERS,
+    flashInvadersSource,
+    [
+      "contexte_titre",
+      "contexte_note",
+      "objectif",
+      "voir_methode_observation",
+      "voir_methode_user_journey",
+      "phase_1_titre",
+      "phase_1_numero",
+      "phase_1_sous_titre",
+      "entretiens_titre",
+      "entretiens_sous_titre",
+      "entretiens_duree_label",
+      "entretiens_duree",
+      "entretiens_objectif",
+      "entretiens_criteres_label",
+      "entretiens_questions_label",
+      "audit_titre",
+      "audit_sous_titre",
+      "audit_positifs_label",
+      "audit_negatifs_label",
+      "audit_axes_label",
+      "benchmark_titre",
+      "benchmark_sous_titre",
+      "benchmark_retenir_label",
+      "benchmark_eviter_label",
+      "observation_titre",
+      "observation_organisation_label",
+      "observation_organisation",
+      "observation_deroule_label",
+      "observation_bonus_label",
+      "observation_bonus",
+      "observation_apports_label",
+      "questionnaire_titre",
+      "questionnaire_deroule_label",
+      "questionnaire_deroule",
+      "questionnaire_lien_label",
+      "questionnaire_lien_texte",
+      "questionnaire_lien",
+      "questionnaire_resultats_label",
+      "phase_2_titre",
+      "phase_2_numero",
+      "phase_2_sous_titre",
+      "personas_titre",
+      "user_journey_titre",
+      "user_journey_sous_titre",
+      "phase_3_titre",
+      "phase_3_numero",
+      "phase_3_sous_titre",
+      "arborescence_titre",
+      "arborescence_audit_label",
+      "arborescence_audit",
+      "arborescence_legende_note",
+      "wireframe_titre",
+      "wireframe_sous_titre",
+      "wireframe_embed",
+      "design_system_titre",
+      "phase_4_titre",
+      "phase_4_numero",
+      "phase_4_sous_titre",
+      "prototype_titre",
+      "prototype_sous_titre",
+      "presentation_titre",
+      "presentation_sous_titre",
+      "presentation_embed",
+    ],
+    [
+      "contexte_paragraphes",
+      "roles",
+      "entretiens_criteres",
+      "audit_positifs",
+      "audit_negatifs",
+      "audit_axes",
+      "benchmark_retenir",
+      "benchmark_eviter",
+      "observation_deroule",
+      "user_journey_texte",
+    ],
+  ),
+  entretiens_questions: blocks(FLASH_INVADERS, flashInvadersSource, "entretiens_questions", ["question", "objectif"]),
+  observation_apports: blocks(FLASH_INVADERS, flashInvadersSource, "observation_apports", ["constat", "refonte"]),
+  questionnaire_resultats: blocks(FLASH_INVADERS, flashInvadersSource, "questionnaire_resultats", ["chiffre", "legende"]),
+  personas: blocks(FLASH_INVADERS, flashInvadersSource, "personas", ["cible", "prenom", "description", "image"]),
+  arborescence_legende: blocks(FLASH_INVADERS, flashInvadersSource, "arborescence_legende", ["page", "nom"]),
+  arborescence_postits: blocks(FLASH_INVADERS, flashInvadersSource, "arborescence_postits", [
+    "ligne",
+    "colonne",
+    "page",
+    "texte",
+    "etiquette",
+  ]),
+};

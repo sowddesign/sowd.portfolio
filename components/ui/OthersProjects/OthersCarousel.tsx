@@ -1,7 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import { useRef, useState, type PointerEvent } from "react";
+import { CoverImage } from "../CoverImage";
 import { ProjetHubContainer } from "../ProjetHubContainer";
 import { tokenDuration } from "../token-duration";
 import { reducedMotionQuery, useMediaQuery } from "../use-media-query";
@@ -156,14 +156,7 @@ export function OthersCarousel({ cards }: { cards: OtherProject[] }) {
                 href={project.href}
                 available={project.available}
                 image={
-                  <Image
-                    src={project.image}
-                    alt=""
-                    fill
-                    sizes="75vw"
-                    draggable={false}
-                    className="object-cover"
-                  />
+                  <CoverImage src={project.image} focus={project.imageFocus} sizes="75vw" draggable={false} />
                 }
               />
             </div>

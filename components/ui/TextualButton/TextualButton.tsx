@@ -1,6 +1,7 @@
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 import Link from "next/link";
 import { Icon, type IconName } from "../Icon";
+import { newTabProps } from "../link-target";
 import {
   buttonTones,
   colorTransition,
@@ -137,7 +138,7 @@ export function TextualButton({
 
   if (href !== undefined && !disabled && (newTab || /^https?:\/\//.test(href))) {
     return (
-      <a href={href} target="_blank" rel="noopener noreferrer" className={rootClassName}>
+      <a href={href} {...newTabProps(href)} className={rootClassName}>
         {content}
       </a>
     );

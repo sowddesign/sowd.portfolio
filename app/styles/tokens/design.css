@@ -495,10 +495,21 @@
   --schema-equipe-annotation-row-mobile: calc(var(--icon-lg) + var(--schema-equipe-annotation-space) * 2); /* 52 */
   --schema-equipe-logo-size: var(--p-number-22); /* 22 : logo devant « Moi » */
 
-  /* Pages projet — flèche entre ce que j'ai appris et ce que j'aimerais faire (Figma 10, sans variable). */
-  --project-arrow-space: 0.625rem; /* 10 */
-  /* Pages projet — logo C-Media (Figma 347 de large, sans variable). */
-  --project-c-media-logo-width: 21.6875rem; /* 347 */
+  /* Pages projet — texte courant : 71 caractères par ligne au plus, comme la méthode (demande de l'utilisateur),
+     calculé sur la taille body du texte des pages projet (0,464 × taille par caractère → 71 × 0,464 ≈ 33). */
+  --project-text-max-width: calc(33 * var(--typography-size-body));
+  /* Pages projet — images, logos et embeds hors desktop (une colonne) : pas plus larges que le texte, pour garder
+     des tailles cohérentes en tablette (demande de l'utilisateur). */
+  --project-media-max-width: var(--project-text-max-width);
+  /* Page Flash Invaders — arborescence en post-it : largeur du tableau (Figma 1392), défilé horizontalement
+     quand l'écran est plus étroit ; pastilles de la légende (Figma 80, sans variable). */
+  --project-flash-board-width: 87rem; /* 1392 */
+  --project-flash-legend-swatch: var(--p-number-80);
+  /* Page Flash Invaders — largeur de la vidéo du prototype (choix de l'utilisateur : ≈ 270 × 580). */
+  --project-flash-video-width: 16.875rem; /* 270 */
+
+  /* Pages projet — images des projets en 4 colonnes : pas plus larges que dans la maquette (Figma 684), demande de l'utilisateur. */
+  --project-image-max-width: 42.75rem; /* 684 */
 
   /* projetHubContainer « autres » — hauteur de la carte (Figma 230, sans variable). */
   --projet-hub-autres-height: 14.375rem; /* 230 */

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useLayoutEffect, useRef } from "react";
 import { useCursorLabel } from "../CursorLabel";
+import { newTabProps } from "../link-target";
 
 /*
  * Lien dans un texte — styles Figma captionText/hyperlien et body/hyperlien :
@@ -28,15 +29,18 @@ export type HyperLinkProps = {
   /** Texte du lien (texte seul : il est recopié pour tracer le second trait). */
   children: string;
   /** Taille du texte autour : captionText ou body. */
-  size?: "caption" | "body";
+  /** project : taille du texte des pages projet en 4 colonnes (body, caption en tablette, voir breakpoints.css). */
+  size?: "caption" | "body" | "project";
   /** Texte qui remplace le curseur au survol (CursorLabel). */
   cursorLabel?: string;
   /** Fond sous le lien : adapte l'état « déjà visité » (dark = fond sombre). */
   background?: "light" | "dark";
+  /** Ouvre la destination dans un nouvel onglet (toujours le cas pour un lien externe). */
+  newTab?: boolean;
   className?: string;
 };
 
-export function HyperLink({ href, children, size = "caption", cursorLabel, background = "light", className = "" }: HyperLinkProps) {
+export function HyperLink({ href, children, size = "caption", cursorLabel, background = "light", newTab = false, className = "" }: HyperLinkProps) {
   const external = /^https?:\/\//.test(href);
   /* Lien interne : navigation du site sans rechargement (next/link). */
   const Anchor = external ? "a" : Link;
@@ -88,11 +92,15 @@ export function HyperLink({ href, children, size = "caption", cursorLabel, backg
     <Anchor
       ref={linkRef}
       href={href}
-      {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+      {...(external || newTab ? newTabProps(href) : {})}
       {...cursor.handlers}
       className={[
         "group/link",
-        size === "caption" ? "type-caption-hyperlien" : "type-body-hyperlien",
+        size === "caption"
+          ? "type-caption-hyperlien"
+          : size === "project"
+            ? "type-body-hyperlien project-desktop:type-caption-hyperlien project-wide:type-body-hyperlien"
+            : "type-body-hyperlien",
         "transition-colors duration-(--motion-duration-fast) ease-(--motion-ease-out) motion-reduce:transition-none",
         background === "dark"
           ? "visited:text-text-neutral-white visited:decoration-border-brand-whitish"

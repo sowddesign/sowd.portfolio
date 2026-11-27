@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { CoverImage } from "@/components/ui/CoverImage";
 import { PageHead } from "@/components/ui/PageHead";
 import { ProjetHubContainer } from "@/components/ui/ProjetHubContainer";
 import { projets } from "@/content/texts";
@@ -20,7 +20,7 @@ function ProjectTile({ project, sizes }: { project: Project; sizes: string }) {
       year={project.year}
       tags={project.tags}
       isNew={project.isNew}
-      image={<Image src={project.image} alt="" fill sizes={sizes} className="object-cover" />}
+      image={<CoverImage src={project.image} focus={project.imageFocus} sizes={sizes} />}
       href={project.href}
       available={project.available}
     />

@@ -28,6 +28,8 @@ export type Project = {
   isNew: boolean;
   /** Chemin public de l'image de la tuile, ex. /projects/mon-projet/cover.jpg. */
   image: string;
+  /** Hauteur du point de la cover à centrer dans son cadre (0 haut, 1 bas), ligne « cadrage » de index.md. */
+  imageFocus?: number;
   href: string;
   /** Tuile « new » pour le projet nouveau, « default » sinon. */
   layout: "default" | "new" | "autres";
@@ -51,13 +53,15 @@ function readProject(slug: string): Omit<Project, "isNew" | "layout" | "availabl
   if (!match) fail(slug, "l'en-tête doit être entouré de deux lignes « --- ».");
 
   const data = (parse(match[1]) ?? {}) as Record<string, unknown>;
-  const { title, type, year, tags = [], image } = data;
+  const { title, type, year, tags = [], image, cadrage } = data;
 
   if (typeof title !== "string" || !title) fail(slug, "« title » est obligatoire.");
   if (year === undefined || year === null || year === "") fail(slug, "« year » est obligatoire.");
   if (typeof image !== "string" || !image) fail(slug, "« image » est obligatoire (nom du fichier, ex. cover.jpg).");
   if (!existsSync(path.join(IMAGES_DIR, slug, image))) fail(slug, `l'image « ${image} » est introuvable dans public/projects/${slug}/.`);
   if (!Array.isArray(tags)) fail(slug, "« tags » doit être une liste.");
+  const focus = cadrage === undefined ? undefined : Number(String(cadrage).replace("%", "").trim()) / 100;
+  if (focus !== undefined && !(focus >= 0 && focus <= 1)) fail(slug, "« cadrage » doit être un pourcentage de 0 % à 100 %, ex. 84 %.");
 
   return {
     slug,
@@ -66,6 +70,7 @@ function readProject(slug: string): Omit<Project, "isNew" | "layout" | "availabl
     year: String(year),
     tags: tags.map(String),
     image: `/projects/${slug}/${image}`,
+    imageFocus: focus,
     href: `/projects/${slug}`,
     content: match[2].trim(),
   };

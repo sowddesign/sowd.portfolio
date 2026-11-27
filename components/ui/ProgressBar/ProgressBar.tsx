@@ -15,7 +15,7 @@ import { useEffect, useRef, useState } from "react";
  * Animation « liquide contenu » (ballottement, variante A choisie par l'utilisateur, tokens --progress-bar-*) :
  * le remplissage rattrape la valeur avec un ressort amorti, et le bord droit qui progresse penche d'avant en arrière
  * (deux ondes superposées), d'autant plus que le liquide avance vite (au repos : --progress-bar-edge-rest). L'onde reste dans la barre.
- * Mouvement réduit : remplissage direct, bord droit.
+ * Mouvement réduit ou linear : remplissage direct, bord droit.
  *
  * Remplissage de la tuile « Bonus » (NavSideMenus, propositions d'animation à l'essai) : color « darkest »
  * (background/brand/darkest, couleur de la tuile Bonus), fillParent (hauteur du parent au lieu de --progress-bar-height),
@@ -35,6 +35,8 @@ export type ProgressBarProps = {
   backward?: boolean;
   /** Suit la valeur sans ressort (glisser). */
   immediate?: boolean;
+  /** Avancée linéaire, sans animation : remplissage direct et bord droit (barre de lecture vidéo au repos). */
+  linear?: boolean;
   "aria-label"?: string;
   /** Barre décorative, doublée par un autre contrôle accessible (barre de lecture vidéo). */
   "aria-hidden"?: boolean;
@@ -78,6 +80,7 @@ export function ProgressBar({
   onFilled,
   backward = false,
   immediate = false,
+  linear = false,
   "aria-label": ariaLabel,
   "aria-hidden": ariaHidden,
   className = "",
@@ -107,6 +110,11 @@ export function ProgressBar({
   useEffect(() => {
     immediateRef.current = immediate;
   }, [immediate]);
+  const linearRef = useRef(linear);
+  useEffect(() => {
+    linearRef.current = linear;
+    wakeRef.current();
+  }, [linear]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -114,6 +122,8 @@ export function ProgressBar({
     if (!canvas || !g) return;
 
     const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+    /* Sans animation : mouvement réduit demandé, ou barre linéaire. */
+    const still = () => reducedMotion.matches || linearRef.current;
     const wave = readWave(canvas);
     const omega = 4.5 / wave.catchUp;
     const initial = initialRef.current;
@@ -139,8 +149,8 @@ export function ProgressBar({
       if (up) g.moveTo(0, H);
       else g.moveTo(0, 0);
       // Bord droit : deux ondes superposées le font ballotter, leur amplitude suit l'élan du liquide.
-      const amp = reducedMotion.matches ? 0 : (wave.rest + wave.amplitude * state.energy) * dpr;
-      const ripple = reducedMotion.matches ? 0 : wave.rippleAmplitude * state.energy * dpr;
+      const amp = still() ? 0 : (wave.rest + wave.amplitude * state.energy) * dpr;
+      const ripple = still() ? 0 : wave.rippleAmplitude * state.energy * dpr;
       const steps = 24;
       for (let i = 0; i <= steps; i++) {
         const u = i / steps;
@@ -160,7 +170,7 @@ export function ProgressBar({
       last = now;
       state.t += dt;
       const target = targetRef.current;
-      if (reducedMotion.matches) {
+      if (still()) {
         state.d = target;
         state.v = 0;
         state.energy = 0;
@@ -183,7 +193,7 @@ export function ProgressBar({
       }
       const settled =
         Math.abs(target - state.d) < 1e-4 && Math.abs(state.v) < 1e-4 && state.energy < 1e-3 && wave.rest === 0;
-      if (settled || reducedMotion.matches) {
+      if (settled || still()) {
         state.d = target;
         draw();
         frame = 0;
