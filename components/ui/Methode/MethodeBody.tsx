@@ -250,7 +250,7 @@ function ZoomableImage({
 function TextLines({ lines, small = false }: { lines: MdLine[]; small?: boolean }) {
   return (
     <p className={`${small ? "type-caption-regular" : "type-body-regular"} max-w-(--methode-text-max-width) text-pretty`}>
-      <RichLines lines={lines} size={small ? "caption" : "body"} linkCursorLabel={commun.curseur_voir_projet} />
+      <RichLines lines={lines} size={small ? "caption" : "body"} linkCursorLabel={commun.curseur_voir_projet} newTab />
     </p>
   );
 }
@@ -287,7 +287,7 @@ function Element({
     case "subtitle":
       return (
         <p className="type-body-accentuation text-pretty">
-          <RichLines lines={[item.line]} size="body" linkCursorLabel={commun.curseur_voir_projet} />
+          <RichLines lines={[item.line]} size="body" linkCursorLabel={commun.curseur_voir_projet} newTab />
         </p>
       );
     case "text":
@@ -297,7 +297,7 @@ function Element({
     case "caption":
       return (
         <p className="type-caption-small-italic text-pretty whitespace-pre-wrap">
-          <RichLines lines={item.lines} linkCursorLabel={commun.curseur_voir_projet} />
+          <RichLines lines={item.lines} linkCursorLabel={commun.curseur_voir_projet} newTab />
         </p>
       );
     case "numbered":
@@ -320,7 +320,7 @@ function Element({
                   <Paragraphs lines={paragraphs} small={smallParagraphs} spacing={spacing} />
                   {notes?.map((line, i) => (
                     <p key={i} className="type-caption-small-italic text-pretty">
-                      <RichLines lines={[line]} linkCursorLabel={commun.curseur_voir_projet} />
+                      <RichLines lines={[line]} linkCursorLabel={commun.curseur_voir_projet} newTab />
                     </p>
                   ))}
                 </div>
@@ -337,7 +337,7 @@ function Element({
               key={i}
               className={`max-w-(--methode-text-max-width) ${item.captions?.[i] ? spacing.bulletNoteBottom : ""}`}
             >
-              <RichLines lines={[line]} size="body" linkCursorLabel={commun.curseur_voir_projet} />
+              <RichLines lines={[line]} size="body" linkCursorLabel={commun.curseur_voir_projet} newTab />
               {/* Caption « {petit} » collée sous la puce, plus loin de la puce suivante (choix de l'utilisateur). */}
               {item.captions?.[i] && (
                 <div className={spacing.bulletNoteTop}>
@@ -356,13 +356,13 @@ function Element({
       return (
         <div className={`flex flex-col ${item.smallLines?.length ? spacing.note : spacing.line}`}>
           <p className="type-body-accentuation max-w-(--methode-text-max-width) text-pretty">
-            <RichLines lines={[item.title]} size="body" linkCursorLabel={commun.curseur_voir_projet} />
+            <RichLines lines={[item.title]} size="body" linkCursorLabel={commun.curseur_voir_projet} newTab />
           </p>
           {item.smallLines?.length ? (
             <Paragraphs lines={item.lines} small={item.smallLines} spacing={spacing} />
           ) : (
             <p className="type-body-regular max-w-(--methode-text-max-width) text-pretty">
-              <RichLines lines={item.lines} size="body" linkCursorLabel={commun.curseur_voir_projet} />
+              <RichLines lines={item.lines} size="body" linkCursorLabel={commun.curseur_voir_projet} newTab />
             </p>
           )}
         </div>
@@ -406,7 +406,7 @@ function Element({
         <div className={`flex flex-col ${spacing.line}`}>
           <p className="type-extra-dataviz">{item.value}</p>
           <p className="type-body-regular max-w-(--methode-text-max-width) text-pretty">
-            <RichLines lines={[item.label]} size="body" />
+            <RichLines lines={[item.label]} size="body" newTab />
           </p>
         </div>
       );
@@ -561,14 +561,14 @@ export function MethodePartView({
     <div className={`flex flex-col ${spacing.part}`}>
       {part.title && (
         <h4 className="type-subheading text-pretty">
-          <RichLines lines={[part.title]} size="body" />
+          <RichLines lines={[part.title]} size="body" newTab />
         </h4>
       )}
       {part.subparts.map((sub, i) => (
         <div key={i} className={`flex flex-col ${spacing.sub}`}>
           {sub.title && (
             <h5 className="type-body-accentuation text-pretty">
-              <RichLines lines={[sub.title]} size="body" />
+              <RichLines lines={[sub.title]} size="body" newTab />
             </h5>
           )}
           <MethodeBlocks blocks={sub.blocks} mobile={mobile} zoomable={zoomable} />

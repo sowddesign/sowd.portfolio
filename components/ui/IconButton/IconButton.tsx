@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import type { ButtonHTMLAttributes } from "react";
+import type { ButtonHTMLAttributes, CSSProperties } from "react";
 import { useCursorLabel } from "../CursorLabel";
 import { Icon, type IconName } from "../Icon";
 import {
@@ -33,6 +33,15 @@ type BaseProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "color" | "disabl
   cursorLabel: string | null;
   /** Propriété Figma « style ». */
   variant?: IconButtonVariant;
+  /** Couleur de l'icône seule, sans changer le fond ni le contour (retour visuel : touche Contrôle dans l'éditeur de
+   *  dessin, icône en couleur active, demande de l'utilisateur). */
+  iconColor?: IconButtonColor;
+  /** Couleur libre de l'icône (valeur CSS, ex. « var(--shape-brand-bright) » ou « #de70a7 »), à tous les états : outil
+   *  Couleur de l'éditeur de dessin, icône à la couleur choisie (demande de l'utilisateur). Prioritaire sur iconColor. */
+  iconTint?: string;
+  /** Ombre dropshadow/mid sous l'icône (bouton sans fond posé sur un dessin coloré : zoom de l'éditeur, demande de
+   *  l'utilisateur). Posée sur un conteneur de l'icône : le masque de l'icône la couperait. */
+  iconShadow?: boolean;
   /** Destination : rend un lien (next/link) au lieu d'un bouton. */
   href?: string;
   /** Icône tournée de --motion-icon-turn (ex. Plus qui devient X), en --motion-duration-fast, --motion-ease-out
@@ -76,11 +85,20 @@ export function IconButton({
   type = "button",
   href,
   turned,
+  iconColor,
+  iconTint,
+  iconShadow = false,
   ...rest
 }: IconButtonProps) {
-  const tone = disabled
+  const baseTone = disabled
     ? disabledButtonTones[variant][color as ButtonDisabledColor]
     : buttonTones[variant][color];
+  const tone =
+    iconTint && !disabled
+      ? { ...baseTone, icon: "text-(--icon-tint)" }
+      : iconColor && !disabled
+        ? { ...baseTone, icon: buttonTones[variant][iconColor].icon }
+        : baseTone;
   const cursor = useCursorLabel(disabled ? undefined : (cursorLabel ?? undefined));
 
   const rootClassName = [
@@ -95,7 +113,13 @@ export function IconButton({
   const content = (
     <>
       {turned === undefined ? (
-        <Icon name={icon} size="var(--icon-md)" className={`${colorTransition} ${tone.icon}`} />
+        iconShadow ? (
+          <span className="flex [filter:var(--dropshadow-mid-filter)]">
+            <Icon name={icon} size="var(--icon-md)" className={`${colorTransition} ${tone.icon}`} />
+          </span>
+        ) : (
+          <Icon name={icon} size="var(--icon-md)" className={`${colorTransition} ${tone.icon}`} />
+        )
       ) : (
         <span
           className={`flex transition-transform duration-(--motion-duration-fast) ease-(--motion-ease-out) motion-reduce:transition-none ${
@@ -137,7 +161,15 @@ export function IconButton({
   }
 
   return (
-    <button type={type} disabled={disabled} aria-label={label} className={rootClassName} {...rest} {...cursor.handlers}>
+    <button
+      type={type}
+      disabled={disabled}
+      aria-label={label}
+      className={rootClassName}
+      {...rest}
+      style={iconTint ? ({ ...rest.style, "--icon-tint": iconTint } as CSSProperties) : rest.style}
+      {...cursor.handlers}
+    >
       {content}
     </button>
   );

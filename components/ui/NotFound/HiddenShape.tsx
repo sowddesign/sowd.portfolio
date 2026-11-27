@@ -20,6 +20,10 @@ const GRID_STEP = 384.54;
 /** Marge autour des logos pour le contour. */
 const PAD = 1;
 
+/** Événement (sur window) qui découvre les logos autour d'un point écran : bouton « Tout révéler » de la 404. */
+export const hiddenShapeSweepEvent = "not-found-sweep";
+export type HiddenShapeSweep = { x: number; y: number; radius: number };
+
 export function HiddenShape({
   shape,
   scale = 1,
@@ -98,19 +102,20 @@ export function HiddenShape({
       }
       return true;
     };
-    const move = (event: PointerEvent) => {
+    /** Découvre les logos à moins de r (repère de la forme) du point écran (clientX, clientY). */
+    const revealAt = (clientX: number, clientY: number, r: number) => {
       if (finished) return;
       const box = canvas.getBoundingClientRect();
       // Repère de la forme (avant réduction).
-      const x = (event.clientX - box.left) / scale - PAD;
-      const y = (event.clientY - box.top) / scale - PAD;
-      if (x < -radius || y < -radius || x > shape.width + radius || y > shape.height + radius) return;
+      const x = (clientX - box.left) / scale - PAD;
+      const y = (clientY - box.top) / scale - PAD;
+      if (x < -r || y < -r || x > shape.width + r || y > shape.height + r) return;
       let changed = false;
       for (let i = 0; i < count; i++) {
         if (seen[i]) continue;
         const cx = cells[2 * i] + hiddenLogoSize / 2;
         const cy = cells[2 * i + 1] + hiddenLogoSize / 2;
-        if ((cx - x) ** 2 + (cy - y) ** 2 > radius * radius) continue;
+        if ((cx - x) ** 2 + (cy - y) ** 2 > r * r) continue;
         seen[i] = 1;
         changed = true;
         stamp(i);
@@ -120,8 +125,18 @@ export function HiddenShape({
         done.current();
       }
     };
+    const move = (event: PointerEvent) => revealAt(event.clientX, event.clientY, radius);
+    // « Tout révéler » : grande gomme qui balaie l'écran (rayon en px écran).
+    const sweep = (event: Event) => {
+      const { x, y, radius: r } = (event as CustomEvent<HiddenShapeSweep>).detail;
+      revealAt(x, y, r / scale);
+    };
     window.addEventListener("pointermove", move);
-    return () => window.removeEventListener("pointermove", move);
+    window.addEventListener(hiddenShapeSweepEvent, sweep);
+    return () => {
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener(hiddenShapeSweepEvent, sweep);
+    };
   }, [shape, scale]);
 
   return (

@@ -1,9 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { commun } from "@/content/texts";
 import { Icon } from "../Icon";
+import { CoverImage } from "../CoverImage";
 import { ProjetHubContainer } from "../ProjetHubContainer";
 import { OthersCarousel } from "./OthersCarousel";
 
@@ -25,6 +25,8 @@ export type OtherProject = {
   title: string;
   year: string;
   image: string;
+  /** Point de la cover centré dans son cadre (0 haut, 1 bas), voir CoverImage. */
+  imageFocus?: number;
   href: string;
   isNew: boolean;
   /** Faux : « Bientôt disponible », carte non cliquable. */
@@ -85,13 +87,7 @@ export function OthersProjects({ projects, currentSlug, className = "" }: Others
             href={project.href}
             available={project.available}
             image={
-              <Image
-                src={project.image}
-                alt=""
-                fill
-                sizes="33vw"
-                className="object-cover"
-              />
+              <CoverImage src={project.image} focus={project.imageFocus} sizes="33vw" />
             }
             className="flex-1"
           />

@@ -19,16 +19,26 @@ const colorClasses: Record<TextColor, string> = {
 
 export type RichLinesProps = {
   lines: MdLine[];
-  size?: "caption" | "body";
+  /** project : taille du texte des pages projet en 4 colonnes (body, caption en tablette). */
+  size?: "caption" | "body" | "project";
   /** Texte au curseur des liens internes (ex. « Voir le projet »). */
   linkCursorLabel?: string;
+  /** Fond sous le texte : adapte l'état « déjà visité » des liens. */
+  background?: "light" | "dark";
+  /** Liens ouverts dans un nouvel onglet (liens des fiches méthode, demande de l'utilisateur). */
+  newTab?: boolean;
 };
 
 /** Gras : graisse typography/weight/paragraph/accentuation. */
 const bold = "[font-weight:var(--typography-weight-paragraph-accentuation)]";
 
-export function RichLines({ lines, size = "caption", linkCursorLabel }: RichLinesProps) {
-  const italic = size === "caption" ? "type-caption-italic" : "type-body-italic";
+export function RichLines({ lines, size = "caption", linkCursorLabel, background = "light", newTab = false }: RichLinesProps) {
+  const italic =
+    size === "caption"
+      ? "type-caption-italic"
+      : size === "project"
+        ? "type-body-italic project-desktop:type-caption-italic project-wide:type-body-italic"
+        : "type-body-italic";
 
   return lines.map((line, i) => (
     <span key={i}>
@@ -39,6 +49,8 @@ export function RichLines({ lines, size = "caption", linkCursorLabel }: RichLine
             key={j}
             href={href}
             size={size}
+            background={background}
+            newTab={newTab}
             cursorLabel={/^https?:\/\//.test(href) ? undefined : linkCursorLabel}
           >
             {text}

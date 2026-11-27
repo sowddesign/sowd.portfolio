@@ -33,7 +33,7 @@ Elle repose sur la **[gamification]{dark}** : l’utilisation de mécanismes de 
 
 ||
 
-- Design system manager
+- Design System Manager
 - Chargé de documentation
 
 >>

@@ -1,7 +1,7 @@
 "use client";
 
 import { commun } from "@/content/texts";
-import { useEffect, useId, useRef, useState, type MouseEvent } from "react";
+import { useEffect, useId, useRef, useState, type MouseEvent, type ReactNode } from "react";
 import { IconButton } from "../IconButton";
 import { LogoButton } from "../LogoButton";
 import { MeContacterContent } from "../MeContacterContent";
@@ -26,13 +26,19 @@ import { pageHrefs, useActivePage, type PageKey } from "../navigation";
 export type PageHeaderProps = {
   /** Force la page active (UI kit) ; par défaut, déduite de l'URL. */
   activePage?: PageKey;
+  /** Mobile : bouton à la place de « contact » (éditeur de dessin de la 404 : « Terminer »). */
+  mobileAction?: ReactNode;
+  /** Mobile : boutons après le menu (éditeur de dessin de la 404 : annuler, refaire). */
+  mobileStart?: ReactNode;
+  /** Fond noir, boutons et trait blancs (éditeur de dessin de la 404 sur mobile, comme son en-tête desktop). */
+  dark?: boolean;
   className?: string;
 };
 
 /** Lignes de texte animées une à une, dans l'ordre du document. */
 const menuLines = "p, a, button";
 
-export function PageHeader({ activePage, className = "" }: PageHeaderProps) {
+export function PageHeader({ activePage, mobileAction, mobileStart, dark = false, className = "" }: PageHeaderProps) {
   const active = useActivePage(activePage);
   const colorFor = (page: PageKey) => (active === page ? "active" : "black");
   const [open, setOpen] = useState(false);
@@ -75,6 +81,13 @@ export function PageHeader({ activePage, className = "" }: PageHeaderProps) {
     };
   }, [open]);
 
+  // Boutons ajoutés (mobileStart, mobileAction) : masqués en fondu pendant que le menu est ouvert, remis ensuite
+  // (demande de l'utilisateur), sur la durée du rideau.
+  const slot = [
+    "transition-opacity duration-(--motion-duration-base) ease-(--motion-ease-out) motion-reduce:transition-none",
+    open ? "pointer-events-none opacity-0" : "opacity-100",
+  ].join(" ");
+
   // Un lien du menu referme le menu (y compris les ancres de la page courante).
   const closeOnLink = (event: MouseEvent<HTMLDivElement>) => {
     if ((event.target as Element).closest("a")) setOpen(false);
@@ -83,14 +96,14 @@ export function PageHeader({ activePage, className = "" }: PageHeaderProps) {
   return (
     <header
       ref={headerRef}
-      className={`sticky top-0 z-10 flex w-full flex-col bg-background-neutral-white ${className}`}
+      className={`sticky top-0 z-10 flex w-full flex-col ${dark ? "bg-background-neutral-black" : "bg-background-neutral-white"} ${className}`}
     >
       <div className="grid-layout h-(--button-size-sm) tablet:h-auto">
         {/* Mobile : bouton menu (List / X) et contact. */}
         <div data-intro-hide className="col-span-1 flex items-center tablet:hidden">
           <IconButton
             variant="tertiary"
-            color="black"
+            color={dark ? "white" : "black"}
             icon={open ? "X" : "List"}
             label={open ? commun.menu_fermer : commun.menu_ouvrir}
             cursorLabel={open ? commun.curseur_menu_fermer : commun.curseur_menu_ouvrir}
@@ -99,16 +112,29 @@ export function PageHeader({ activePage, className = "" }: PageHeaderProps) {
             onClick={() => setOpen((value) => !value)}
           />
         </div>
-        <div data-intro-hide className="col-span-2 col-start-3 tablet:hidden">
-          <TextualButton
-            variant="tertiary"
-            color={colorFor("contact")}
-            icon="ArrowRight"
-            iconPosition="right"
-            href={pageHrefs.contact}
-          >
-            {commun.entete_contact}
-          </TextualButton>
+        {/* Colonne 2 (éditeur de la 404 : annuler, refaire) ; deux boutons débordent un peu dans la gouttière. */}
+        {mobileStart && (
+          <div data-intro-hide inert={open} className={`col-start-2 flex items-center tablet:hidden ${slot}`}>
+            {mobileStart}
+          </div>
+        )}
+        {/* Bouton à la place de « contact » : une colonne, la dernière (éditeur de dessin de la 404). */}
+        <div
+          data-intro-hide
+          inert={open && !!mobileAction}
+          className={`${mobileAction ? `col-start-4 ${slot}` : "col-span-2 col-start-3"} tablet:hidden`}
+        >
+          {mobileAction ?? (
+            <TextualButton
+              variant="tertiary"
+              color={colorFor("contact")}
+              icon="ArrowRight"
+              iconPosition="right"
+              href={pageHrefs.contact}
+            >
+              {commun.entete_contact}
+            </TextualButton>
+          )}
         </div>
 
         {/* Tablette et desktop : logo, pages et contact, un bouton par colonne (choix de l'utilisateur : plus de menu
@@ -166,7 +192,7 @@ export function PageHeader({ activePage, className = "" }: PageHeaderProps) {
       {/* dividerBar sous l'en-tête. */}
       <span
         aria-hidden
-        className="w-full shrink-0 border-t border-shape-neutral-black"
+        className={`w-full shrink-0 border-t ${dark ? "border-shape-neutral-white" : "border-shape-neutral-black"}`}
       />
 
       {/* Menu ouvert (mobile) : toute la hauteur restante de l'écran sous l'en-tête. */}

@@ -13,6 +13,12 @@ contexte_liste:
   - travailler sur des projets réels
   - collaborer avec les équipes produit et développement
   - participer à la mise en place d’un design system complet.
+# Mes rôles (repris de l’introduction au projet de la méthode)
+roles:
+  - UX / UI Designer
+  - Design System Manager
+  - Prototype
+  - Documentation
 
 # L’entreprise
 entreprise_titre: L’entreprise
@@ -39,12 +45,18 @@ equipe_texte_4: "Une rencontre avec l’équipe de développement nous a permis 
 # Schéma de l’équipe
 schema_lead: Lead UX/UI Designer
 schema_lead_label: Tuteur
+# Version courte, affichée quand le schéma est en format réduit (colonne étroite, mobile)
+schema_lead_court: Lead designer
 schema_po: PO/PM
 schema_po_label: Équipe produit
 schema_moi: Alternant UX/UI Designer
 schema_moi_label: Moi
+# Version courte quand le libellé « Moi » est au-dessus (format complet du schéma)
+schema_moi_court: UX/UI Designer
 schema_devs: Développeurs
 schema_devs_label: Équipe développement
+# Version courte, affichée quand le schéma est en format réduit
+schema_devs_court: Devs
 schema_validation: "Validation  et  entraide"
 schema_cadrage: Cadrage des besoins
 schema_specifications_desktop: "Spécifications   designs  &  parcours"

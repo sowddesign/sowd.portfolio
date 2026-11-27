@@ -2,7 +2,7 @@ import { leafDefs } from "../SiteIntro";
 import { tokenDuration } from "../token-duration";
 
 /*
- * Page 404, graine enfoncée dans le trou (demande de l'utilisateur, première version à régler en test) :
+ * Page 404, tige révélée (demande de l'utilisateur, première version à régler en test) :
  * principe de l'arrivée de l'intro, à l'envers. Dans l'intro, des pétales partent du logo en spirale et deviennent
  * les lettres ; ici, chaque « 4 » se replie (rotation et rebond de l'intro, inversés) et devient une feuille de
  * l'intro, qui part en spirale et rentre dans le logo. Le logo tourne pendant toute la séquence et « avale »

@@ -199,8 +199,8 @@ const summary: KitSummaryGroup[] = [
     items: [
       /* Adresse inconnue : affiche app/not-found.tsx. */
       { href: "/page-introuvable", label: "Page 404" },
-      /* Éditeur de formes du motif, servi par app/ui-kit/dessin en développement seulement. */
-      { href: "/ui-kit/dessin/motif-dessin.html", label: "Création de dessin" },
+      /* Éditeur de dessin de la 404, ouvert directement (#editeur) ; formes 1 à 5 en local seulement. */
+      { href: "/page-introuvable#editeur", label: "Création de dessin" },
     ],
   },
 ];

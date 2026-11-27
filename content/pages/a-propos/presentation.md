@@ -24,7 +24,7 @@ Avant de comprendre que ma vocation était l'UX/UI, mon parcours atypique m'a fa
 - [game designer]{bright}, en jeu vidéo et en jeu de société ;
 - [testeur qualité]{bright} pour des jeux d'argent en ligne vendus dans le monde entier ;
 - [assistant chef de projet]{bright} sur l'omnicanalité et la conversion de prospects en clients ;
-- [designer UX/UI]{bright} et [design system manager]{bright} pour trois progiciels.
+- [designer UX/UI]{bright} et [Design System Manager]{bright} pour trois progiciels.
 
 ***
 

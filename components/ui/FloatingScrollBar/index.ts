@@ -1,0 +1,1 @@
+export { FloatingScrollBar } from "./FloatingScrollBar";

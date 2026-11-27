@@ -49,6 +49,8 @@ visuel_afficher: Afficher tous les logos
 visuel_remettre_noir: Remettre les logos en noir
 visuel_recommencer: Recommencer
 visuel_bien_joue: Bien joué ! Recommencer
+# Bouton pinceau sous « Recommencer » (tout coloré ou révélé) : ouvre l'éditeur de dessin (lecteur d'écran)
+visuel_editeur: Ouvrir l’éditeur de dessin
 
 # Bas du pied de page
 pied_signature: sowd.design
@@ -86,6 +88,7 @@ curseur_menu_ouvrir: Naviguer
 curseur_menu_fermer: Fermer
 curseur_visuel_afficher: Afficher
 curseur_visuel_remettre_noir: Recommencer
+curseur_visuel_editeur: Éditeur sowd
 curseur_voir_projet: Voir le projet
 curseur_bientot: Bientôt disponible
 curseur_photos_precedente: Précédente
@@ -182,12 +185,13 @@ methode_terminees: Terminés
 methode_bonus: Bonus
 methode_bonus_texte: Lecture complétée
 # Page bonus : premier bouton sous l'image (le second reprend methode_etape_suivante), puis son adresse
-methode_bonus_page_secrete: Voir la page secrète
+methode_bonus_page_secrete: Accéder à l’éditeur
 # Texte court du bouton, quand le texte ne tient pas sur une ligne (comme les autres pages de la méthode)
-methode_bonus_page_secrete_court: Page secrète
-methode_bonus_page_secrete_lien: /page-secrete
+methode_bonus_page_secrete_court: Éditeur
+# Adresse : la page secrète, éditeur de dessin ouvert directement (#editeur)
+methode_bonus_page_secrete_lien: /page-secrete#editeur
 # Bouton de téléchargement dans l'image (image haute qualité) : texte accessible et texte au curseur
 methode_bonus_telecharger: Télécharger
 # Légende sous l'image, sans lien
-methode_bonus_legende: Réalisé par sowd avec l'éditeur de la page secrète.
+methode_bonus_legende: Réalisé par Tom Lamy avec l’éditeur sowd.
 ---

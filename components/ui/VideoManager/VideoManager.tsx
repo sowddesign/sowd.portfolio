@@ -315,6 +315,8 @@ export function VideoManager({ videoRef, fullscreenRef, className = "" }: VideoM
           color="white"
           backward
           immediate={clicked}
+          // Barre de 1 px (default) : avancée linéaire, sans animation (demande de l'utilisateur).
+          linear={!shown}
           aria-hidden
           className="absolute! inset-0 h-full!"
         />

@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { CoverImage } from "../CoverImage";
 import { useRef } from "react";
 import { commun } from "@/content/texts";
 import { PageHead } from "../PageHead";
@@ -34,13 +34,15 @@ export type HeadPageContainerProps = {
   details?: string;
   /** Chemin public de la photo, ex. /projects/graine/cover.png. */
   image: string;
+  /** Point de la photo centré dans son cadre (0 haut, 1 bas), voir CoverImage. */
+  imageFocus?: number;
   tags: string[];
   /** Balise du titre : h1 s'il nomme la page, h2 sous un pageHead H1. */
   headingLevel?: "h1" | "h2";
   className?: string;
 };
 
-export function HeadPageContainer({ title, details, image, tags, headingLevel = "h1", className = "" }: HeadPageContainerProps) {
+export function HeadPageContainer({ title, details, image, imageFocus, tags, headingLevel = "h1", className = "" }: HeadPageContainerProps) {
   const visual = useRef<HTMLDivElement>(null);
   const { state, progress } = useVisualsLoading(visual);
   return (
@@ -69,12 +71,11 @@ export function HeadPageContainer({ title, details, image, tags, headingLevel = 
             "tablet:order-3 tablet:h-auto tablet:gap-lg tablet:p-lg",
           ].join(" ")}
         >
-          <Image
+          <CoverImage
             src={image}
-            alt=""
-            fill
+            focus={imageFocus}
             sizes="(width > 740px) 50vw, 100vw"
-            className={`object-cover transition-opacity duration-(--site-intro-reveal-duration) ease-(--motion-ease-out) ${
+            className={`transition-opacity duration-(--site-intro-reveal-duration) ease-(--motion-ease-out) ${
               state === "ready" ? "opacity-100" : "opacity-0"
             }`}
           />

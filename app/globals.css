@@ -27,6 +27,12 @@
 ::-webkit-scrollbar-corner {
   background: var(--shape-neutral-white);
 }
+/* Trait noir de 1 px (--divider-width) à gauche de la piste verticale, toutes tailles (essai demandé par l'utilisateur,
+   absent de Figma) : la piste blanche se détache d'un fond blanc. */
+::-webkit-scrollbar-track:vertical {
+  /* Ombre intérieure plutôt que bordure : dessinée par tous les moteurs WebKit/Blink sur la piste. */
+  box-shadow: inset max(1px, var(--divider-width)) 0 0 var(--shape-neutral-black);
+}
 ::-webkit-scrollbar-thumb {
   background-color: var(--shape-neutral-black);
   background-clip: content-box;
@@ -46,6 +52,13 @@
   --scroll-bar-thumb: var(--icon-xs);
   --scroll-bar-gap: var(--p-number-4);
   --scroll-bar-corner: var(--corner-xs);
+}
+/* Barre native masquée : la zone affiche à la place la petite barre flottante (FloatingScrollBar). */
+.scroll-bar-none {
+  scrollbar-width: none;
+}
+.scroll-bar-none::-webkit-scrollbar {
+  display: none;
 }
 .scroll-bar-discreet {
   --scroll-bar-thumb: var(--scroll-bar-discreet-thumb);

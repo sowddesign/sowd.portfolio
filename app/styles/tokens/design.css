@@ -53,6 +53,7 @@
   /* typography/font — familles chargées par next/font dans app/layout.tsx */
   --typography-font-h1: var(--font-plus-jakarta-sans), sans-serif;
   --typography-font-h2h4: var(--font-merriweather-sans), sans-serif;
+  --typography-font-signature: var(--font-mrs-saint-delafield), cursive; /* signature de la carte « Mon dessin » (Figma) */
   --typography-font-h3: var(--font-plus-jakarta-sans), sans-serif;
   --typography-font-body: var(--font-plus-jakarta-sans), sans-serif;
   --typography-font-caption: var(--font-plus-jakarta-sans), sans-serif;
@@ -108,6 +109,8 @@
   --dropshadow-low: 1.5px 2px 4px 0 #00000073, 2px 2px 4px 0 #00000040;
   /* Même style dropshadow/low en filtre, pour une ombre posée sur un groupe sans fond (elle suit le texte et les icônes). */
   --dropshadow-low-filter: drop-shadow(1.5px 2px 4px #00000073) drop-shadow(2px 2px 4px #00000040);
+  /* Même style dropshadow/mid en filtre (barre de la gomme et icônes du zoom de l'éditeur, posées sur le dessin). */
+  --dropshadow-mid-filter: drop-shadow(1.5px 1.5px 1.5px #00000059) drop-shadow(4px 4px 2px #0000004d);
   /* Même style dropshadow/mid en ombre de texte (text-shadow n'accepte pas d'étalement). */
   --dropshadow-mid-text: 1.5px 1.5px 1.5px #00000059, 4px 4px 2px #0000004d;
 
@@ -120,6 +123,7 @@
     drop-shadow(3px 3px 2px #00000080) drop-shadow(8px 6px 4px #00000066);
   --double-flower-height: 45rem; /* 720 : hauteur fixe du composant desktop et tablette (décision, Figma 721,33) */
   --double-flower-mobile-scene-height: 32.1875rem; /* 515 : hauteur fixe de la scène mobile dans Figma (sans variable) */
+  --double-flower-step-dot: var(--spacing-xs); /* mobile : pastilles de l'indicateur d'étapes, 8 comme le guide de l'éditeur (essai, choix de l'utilisateur) */
   --double-flower-credit-height: 3.25rem; /* 52 : hauteur fixe du copyright desktop dans Figma (sans variable) */
 
   /*
@@ -154,6 +158,34 @@
   --time-manager-bar-overlap: var(--p-number-4); /* 4 : la barre descend de 4 sur le bouton (Figma y = 4) */
   --time-manager-handle-size: var(--p-number-12); /* 12 × 12 : rond de réglage (décision de l'utilisateur) */
   --time-manager-hover-zone: var(--spacing-sm); /* 12 : marge autour de la barre qui garde l'état hovered */
+  /*
+   * switch — interrupteur (Figma 5923:33190 : tailles en dur, sans variable).
+   */
+  --switch-width: var(--p-number-48); /* 48 : rail */
+  --switch-height: var(--p-number-24); /* 24 : rail */
+  --switch-padding: var(--p-number-2); /* 2 : marge entre le rail et le rond (rond 20 × 20) */
+  /* Glissement « gouttelette » (proposition F choisie par l'utilisateur, valeurs de l'aperçu) : le rond part, une
+     gouttelette reste en arrière puis le rattrape et se fond dedans. */
+  --switch-drop-size: var(--p-number-14); /* gouttelette, centrée dans le rail */
+  --switch-knob-duration: 220ms; /* glissement du rond */
+  --switch-knob-ease: var(--motion-ease-out);
+  --switch-drop-duration: 460ms; /* gouttelette, plus lente : elle rattrape le rond */
+  --switch-drop-ease: cubic-bezier(0.6, 0, 0.2, 1);
+  --switch-color-duration: var(--motion-duration-base); /* changement de couleur du rond et du rail */
+  /*
+   * slider — curseur de réglage horizontal (gomme de l'éditeur, Figma 5912:32535 détaché : épaisseur 4, poignée 12 en dur),
+   * mêmes tailles que la barre de volume.
+   */
+  --slider-thickness: var(--time-manager-bar-thickness); /* 4 */
+  --slider-handle-size: var(--time-manager-handle-size); /* 12 × 12 */
+  --slider-hit-zone: var(--spacing-sm); /* 12 : zone de prise autour de la barre (comme la barre de volume) */
+  /*
+   * colorPicker — modificateur de couleur (éditeur de dessin, Figma 5929:33931, version sombre demandée par l'utilisateur).
+   */
+  --color-picker-width: calc(5 * var(--button-size-sm) + 4 * var(--spacing-sm)); /* 268 : largeur des 5 pastilles d'une rangée */
+  --color-picker-hue-height: var(--p-number-12); /* barre de nuance (Figma, en dur) */
+  --color-picker-cursor-size: var(--p-number-12); /* curseur du cadre (Figma Ellipse 1, en dur) */
+  --color-picker-hue-cursor-size: var(--p-number-16); /* curseur de nuance (Figma Ellipse 2, en dur) */
   /* Ouverture « graine » (variante F choisie par l'utilisateur) : l'icône tourne, la goutte apparaît au pied de la
      barre et gonfle comme une graine, puis la tige pousse et la soulève jusqu'au niveau. Valeurs de test. */
   --time-manager-turn-duration: var(--motion-duration-base); /* quart de tour de l'icône */
@@ -211,14 +243,38 @@
    */
   --not-found-digit-height: 527px; /* « 4 » vectoriel (glyphe de Merriweather Sans Bold à 419 px, Figma en dur) : hauteur de l'ancien calque texte Figma */
   --not-found-logo-size: 400px; /* logo entre les deux « 4 » (Figma, en dur) */
-  --not-found-seed-size: 12.628px; /* graine en bas de l'écran, à moitié hors champ (Figma, en dur) */
+  --not-found-sweep-radius: 120px; /* « Tout révéler » : rayon de la gomme qui balaie l'écran, × proportion de l'écran (valeur d'essai) */
+  --not-found-sweep-duration: 1.6s; /* « Tout révéler » : durée du balayage complet (valeur d'essai) */
   --not-found-editor-button-size: 164px; /* bouton « Accéder à l'éditeur » au centre du logo, fleur plantée (relevé sur la maquette de l'utilisateur, à valider) */
+  --not-found-editor-eraser-size: 32px; /* éditeur : diamètre de la gomme au départ (valeur d'essai) */
+  --not-found-editor-eraser-min: 8px; /* éditeur : diamètre minimal de la gomme (valeur d'essai) */
+  --not-found-editor-eraser-max: 160px; /* éditeur : diamètre maximal de la gomme (valeur d'essai) */
+  --not-found-editor-zoom-max: 4; /* éditeur : zoom maximal au pincement (valeur d'essai) */
+  --not-found-editor-pinch-grace: 250ms; /* éditeur : trait annulé si le second doigt arrive avant ce délai (valeur d'essai) */
+  --not-found-editor-header-divider-height: var(--p-number-32); /* éditeur : séparateur vertical de l'en-tête (Figma 5923:33255, en dur) */
+  --not-found-editor-zoom-step: 1.25; /* éditeur : facteur de zoom des boutons − / + (valeur d'essai) */
+  --not-found-editor-card-width: 46.5rem; /* éditeur : fenêtre « Mon dessin », 744 (Figma 5937:35424, en dur) */
+  --not-found-editor-card-stroke: var(--p-number-2); /* contour du dessin de la carte : 2 (pas de variable de trait, primitive) */
+  --not-found-editor-card-qr-size: calc(var(--typography-line-height-sub-heading) + var(--spacing-xxs) + var(--typography-line-height-caption)); /* QR code : carré à la hauteur du nom et de l'adresse (66, Figma) */
+  --not-found-editor-card-signature-size: var(--p-number-24); /* signature de la carte : 24 à l'essai (Figma 40, demande de l'utilisateur) */
+  --not-found-editor-leave-width: 33rem; /* éditeur : pop-up « Quitter l'éditeur ? », 528 (valeur d'essai) */
+  --not-found-editor-card-separator: var(--p-number-3); /* trait sous le dessin de la carte : 3 (Figma, en dur) */
+  --not-found-editor-shortcuts-interval: 15s; /* éditeur : raccourcis, changement des 3 lignes (demande de l'utilisateur) */
+  --not-found-editor-eraser-wheel-step: 1.15; /* éditeur : Espace + molette, facteur de taille de la gomme par cran (valeur d'essai) */
+  --not-found-editor-brush-medium: 3; /* éditeur : pinceau dotMedium, diamètre en logos (« 3 logos », à ajuster) */
+  --not-found-editor-brush-large: 6; /* éditeur : pinceau dotLarge, diamètre en logos (« 6 logos », à ajuster) */
+  --not-found-editor-options-duration: var(--motion-duration-base); /* éditeur : glissement des options depuis le séparateur (valeur d'essai) */
+  --not-found-editor-zoom-rest-opacity: 0.4; /* éditeur : zoom à 40 %, opaque au survol de sa rangée (demande de l'utilisateur) */
+  --not-found-editor-wheel-settle: 150ms; /* éditeur : Contrôle + molette, rendu net après ce temps sans molette (valeur d'essai) */
+  --not-found-editor-options-delay: 1s; /* éditeur : options d'un outil masquées 1 s après la sortie du pointeur (demande de l'utilisateur) */
+  --not-found-editor-swatch-outline-offset: var(--p-number-3); /* éditeur : contour de la pastille choisie, décalé (aperçu C choisi par l'utilisateur) */
+  --not-found-editor-export-margin: var(--p-number-24); /* éditeur : marge autour du dessin quand le PNG est recadré (demande de l'utilisateur) */
+  --not-found-editor-guide-width: 21.25rem; /* éditeur, guide de découverte : largeur de la carte, 340 (aperçu C, valeur d'essai) */
+  --not-found-editor-guide-veil: var(--faded-black-60); /* éditeur, guide : voile autour de l'élément présenté (aperçu C, valeur d'essai) */
+  --not-found-editor-guide-dot: var(--spacing-xs); /* éditeur, guide : pastilles du suivi d'étapes, 8 (aperçu C, valeur d'essai) */
+  --not-found-editor-guide-duration: var(--motion-duration-base); /* éditeur, guide : déplacement du cadre d'une étape à l'autre (valeur d'essai) */
   --not-found-button-width: 310px; /* bouton « Retourner à l'accueil » (Figma, en dur) */
-  --not-found-hole-size: 12px; /* trou noir dans le logo (Figma node 5843:22086, en dur) */
-  --not-found-hole-top: 304.39px; /* centre du trou, depuis le haut du logo (Figma, en dur) */
-  --not-found-drop-tolerance: 48px; /* graine lâchée à moins de cette distance du centre du trou (valeur d'essai) */
-  --not-found-sink-duration: var(--motion-duration-base); /* graine qui glisse dans le trou puis s'y enfonce (valeur d'essai) */
-  --not-found-fade-duration: 400ms; /* graine enfoncée : fondu des textes, du bouton, de la tige et du trou (valeur d'essai) */
+  --not-found-fade-duration: 400ms; /* fondu de la 404 (fleur plantée, ouverture de l'éditeur) (valeur d'essai) */
   --not-found-leaf-duration: 700ms; /* un « 4 » se replie et devient une feuille (valeur d'essai) */
   --not-found-spiral-duration: 1000ms; /* la feuille part en spirale et rentre dans le logo (valeur d'essai) */
   --not-found-stem-top: 356px; /* haut de la tige cachée, depuis le haut du logo (relevé sur la maquette de l'utilisateur, à valider) */
@@ -439,10 +495,21 @@
   --schema-equipe-annotation-row-mobile: calc(var(--icon-lg) + var(--schema-equipe-annotation-space) * 2); /* 52 */
   --schema-equipe-logo-size: var(--p-number-22); /* 22 : logo devant « Moi » */
 
-  /* Pages projet — flèche entre ce que j'ai appris et ce que j'aimerais faire (Figma 10, sans variable). */
-  --project-arrow-space: 0.625rem; /* 10 */
-  /* Pages projet — logo C-Media (Figma 347 de large, sans variable). */
-  --project-c-media-logo-width: 21.6875rem; /* 347 */
+  /* Pages projet — texte courant : 71 caractères par ligne au plus, comme la méthode (demande de l'utilisateur),
+     calculé sur la taille body du texte des pages projet (0,464 × taille par caractère → 71 × 0,464 ≈ 33). */
+  --project-text-max-width: calc(33 * var(--typography-size-body));
+  /* Pages projet — images, logos et embeds hors desktop (une colonne) : pas plus larges que le texte, pour garder
+     des tailles cohérentes en tablette (demande de l'utilisateur). */
+  --project-media-max-width: var(--project-text-max-width);
+  /* Page Flash Invaders — arborescence en post-it : largeur du tableau (Figma 1392), défilé horizontalement
+     quand l'écran est plus étroit ; pastilles de la légende (Figma 80, sans variable). */
+  --project-flash-board-width: 87rem; /* 1392 */
+  --project-flash-legend-swatch: var(--p-number-80);
+  /* Page Flash Invaders — largeur de la vidéo du prototype (choix de l'utilisateur : ≈ 270 × 580). */
+  --project-flash-video-width: 16.875rem; /* 270 */
+
+  /* Pages projet — images des projets en 4 colonnes : pas plus larges que dans la maquette (Figma 684), demande de l'utilisateur. */
+  --project-image-max-width: 42.75rem; /* 684 */
 
   /* projetHubContainer « autres » — hauteur de la carte (Figma 230, sans variable). */
   --projet-hub-autres-height: 14.375rem; /* 230 */
@@ -478,6 +545,10 @@
   /* Arrondi proportionnel à celui de la grande barre (corner/xs 2 sur un curseur de 8, soit 1 sur 4) : même rendu
      visuel (demande de l'utilisateur) ; corner/xs sur 4 de large donnerait un bout entièrement rond. */
   --scroll-bar-discreet-corner: var(--p-number-1);
+  /* Petite barre flottante (FloatingScrollBar, sans piste, demande de l'utilisateur) : valeurs d'essai. */
+  --scroll-bar-float-min: var(--p-number-24); /* hauteur minimale du curseur */
+  --scroll-bar-float-hide-delay: 1s; /* masquée ce délai après le dernier défilement (hors survol) */
+  --scroll-bar-float-hover-zone: var(--spacing-lg); /* survol : 24 autour du curseur (demande de l'utilisateur) */
 
   /*
    * dégradé — style Figma « shadowBehindVisual » : ombre simulée derrière le visuel (colorBackground).

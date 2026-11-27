@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useLayoutEffect, useRef } from "react";
 import { useCursorLabel } from "../CursorLabel";
+import { newTabProps } from "../link-target";
 
 /*
  * Lien dans un texte — styles Figma captionText/hyperlien et body/hyperlien :
@@ -13,7 +14,8 @@ import { useCursorLabel } from "../CursorLabel";
  *   (--motion-duration-base, --motion-ease-out, comme le tracé des boutons secondary) et repart en arrière ;
  * - appui : texte text/brand/dark et traits border/brand/darkest (fondu --motion-duration-fast) ;
  * - lien déjà visité : texte text/neutral/black et trait border/brand/darkest
- *   (les navigateurs n'autorisent que des changements de couleur sur :visited).
+ *   (les navigateurs n'autorisent que des changements de couleur sur :visited) ;
+ *   sur fond sombre (background="dark") : texte text/neutral/white et trait border/brand/whitish.
  * Le second trait est une copie du texte (data-text) transparente et soulignée,
  * pour suivre exactement le soulignement du lien, jambages compris.
  * Lien sur plusieurs lignes (demande de l'utilisateur) : la copie est faite mot par mot, et chaque mot se trace
@@ -27,13 +29,18 @@ export type HyperLinkProps = {
   /** Texte du lien (texte seul : il est recopié pour tracer le second trait). */
   children: string;
   /** Taille du texte autour : captionText ou body. */
-  size?: "caption" | "body";
+  /** project : taille du texte des pages projet en 4 colonnes (body, caption en tablette, voir breakpoints.css). */
+  size?: "caption" | "body" | "project";
   /** Texte qui remplace le curseur au survol (CursorLabel). */
   cursorLabel?: string;
+  /** Fond sous le lien : adapte l'état « déjà visité » (dark = fond sombre). */
+  background?: "light" | "dark";
+  /** Ouvre la destination dans un nouvel onglet (toujours le cas pour un lien externe). */
+  newTab?: boolean;
   className?: string;
 };
 
-export function HyperLink({ href, children, size = "caption", cursorLabel, className = "" }: HyperLinkProps) {
+export function HyperLink({ href, children, size = "caption", cursorLabel, background = "light", newTab = false, className = "" }: HyperLinkProps) {
   const external = /^https?:\/\//.test(href);
   /* Lien interne : navigation du site sans rechargement (next/link). */
   const Anchor = external ? "a" : Link;
@@ -48,6 +55,15 @@ export function HyperLink({ href, children, size = "caption", cursorLabel, class
     if (!link || words.length < 2) return;
     const measure = () => {
       const spans = Array.from(link.querySelectorAll<HTMLElement>("[data-text]"));
+      /* Jonction entre deux mots calée sur un pixel entier de l'écran : sinon le soulignement montre
+         une fine coupure à l'endroit où les mots se touchent (pixel à moitié peint de chaque côté).
+         L'espace de fin du mot est élargi de la fraction manquante (word-spacing). */
+      const ratio = window.devicePixelRatio || 1;
+      spans.forEach((span) => span.style.removeProperty("word-spacing"));
+      spans.slice(0, -1).forEach((span) => {
+        const right = span.getBoundingClientRect().right * ratio;
+        span.style.wordSpacing = `${(Math.ceil(right) - right) / ratio}px`;
+      });
       const widths = spans.map((span) => span.getBoundingClientRect().width);
       const total = widths.reduce((sum, width) => sum + width, 0) || 1;
       let before = 0;
@@ -62,7 +78,12 @@ export function HyperLink({ href, children, size = "caption", cursorLabel, class
     measure();
     const observer = new ResizeObserver(measure);
     observer.observe(link);
-    return () => observer.disconnect();
+    /* Le lien peut se déplacer sans changer de taille (fenêtre, zoom) : la jonction est recalée. */
+    window.addEventListener("resize", measure);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", measure);
+    };
   }, [words.length, children]);
 
   const multiple = words.length > 1;
@@ -71,13 +92,19 @@ export function HyperLink({ href, children, size = "caption", cursorLabel, class
     <Anchor
       ref={linkRef}
       href={href}
-      {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+      {...(external || newTab ? newTabProps(href) : {})}
       {...cursor.handlers}
       className={[
         "group/link",
-        size === "caption" ? "type-caption-hyperlien" : "type-body-hyperlien",
+        size === "caption"
+          ? "type-caption-hyperlien"
+          : size === "project"
+            ? "type-body-hyperlien project-desktop:type-caption-hyperlien project-wide:type-body-hyperlien"
+            : "type-body-hyperlien",
         "transition-colors duration-(--motion-duration-fast) ease-(--motion-ease-out) motion-reduce:transition-none",
-        "visited:text-text-neutral-black visited:decoration-border-brand-darkest",
+        background === "dark"
+          ? "visited:text-text-neutral-white visited:decoration-border-brand-whitish"
+          : "visited:text-text-neutral-black visited:decoration-border-brand-darkest",
         "active:text-text-brand-dark active:decoration-border-brand-darkest",
         cursor.className,
         className,
